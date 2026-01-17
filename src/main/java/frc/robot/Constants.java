@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meter;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -17,6 +19,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final double MetersToFeet = 3.28084;
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -32,8 +35,15 @@ public final class Constants {
     public static final int ClimbPrime = 13;
     public static final int ClimbFollow = 14;
   }
+
   public static class NeoVortex {
     public static final int StallCurrent = 211;
     public static final double CurrentThreshhold = 40;
-   }
+  }
+
+  public static class DriveTrain {
+    public static final double WheelDiameter = (4/12)/MetersToFeet;
+    public static final double RotationsToMeters = Math.PI * WheelDiameter;
+public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet)/RotationsToMeters;
+  }
 }
