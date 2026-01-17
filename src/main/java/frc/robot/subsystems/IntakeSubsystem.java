@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -42,5 +43,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public boolean isHopperFull() {
         return !hopperFullSensor.get();
+    }
+    
+    @Override
+    public void periodic() {
+        int numberBoolean = isHopperFull()?1:0;
+        SmartDashboard.putNumber("Hopper Full Status", numberBoolean);
     }
 }
