@@ -21,6 +21,14 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  public static class DigitalChannels {
+    public static final int HopperFull = 0;
+  }
+
+  public static class MotorSpeeds {
+    public static final double IntakeSpeed = 0.75;
+  }
+
   public static class MotorIDs {
     public static final int[] DriveIDs = new int[] { 0, 1, 2, 3 };
     public static final int[] SteerIDs = new int[] { 4, 5, 6, 7 };
