@@ -29,6 +29,11 @@ public final class Constants {
     public static final double IntakeSpeed = 0.75;
   }
 
+  public static class ButtonIDs {
+    public static final int Intake = 0;
+    public static final int Outtake = 1;
+  }
+
   public static class MotorIDs {
     public static final int[] DriveIDs = new int[] { 0, 1, 2, 3 };
     public static final int[] SteerIDs = new int[] { 4, 5, 6, 7 };
