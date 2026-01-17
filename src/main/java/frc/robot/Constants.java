@@ -31,6 +31,9 @@ public final class Constants {
     public static final int IntakeFollow = 12;
     public static final int ClimbPrime = 13;
     public static final int ClimbFollow = 14;
-
   }
+  public static class NeoVortex {
+    public static final int StallCurrent = 211;
+    public static final double CurrentThreshhold = 40;
+   }
 }
