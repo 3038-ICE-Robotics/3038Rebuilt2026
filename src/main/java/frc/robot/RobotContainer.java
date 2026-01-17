@@ -8,7 +8,11 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -21,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private CommandJoystick commandJoystick0;
+  private IntakeSubsystem intake;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -28,6 +34,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // set stuff
+    commandJoystick0 = new CommandJoystick(0);
+    intake = new IntakeSubsystem();
     // Configure the trigger bindings
     configureBindings();
   }
@@ -45,6 +54,15 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+    commandJoystick0.button(Constants.ButtonIDs.Intake)
+        .onTrue(new InstantCommand(intake::startIntake)).and(() -> !commandJoystick0.getHID().getRawButton(Constants.ButtonIDs.Outtake))
+        .onFalse(new InstantCommand(intake::stop));
+    commandJoystick0.button(Constants.ButtonIDs.Outtake)
+        .onTrue(new InstantCommand(intake::startOuttake)).and(() -> !commandJoystick0.getHID().getRawButton(Constants.ButtonIDs.Intake))
+        .onFalse(new InstantCommand(intake::stop));
+
+        //.onTrue(new IntakeCommand(intake))
+        //.onFalse(new StopIntakeCommand(intake));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

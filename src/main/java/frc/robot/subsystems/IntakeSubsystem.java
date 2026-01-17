@@ -36,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
         intakePrime.set(-Constants.MotorSpeeds.IntakeSpeed);
     }
 
-    public void endIntake() {
+    public void stop() {
         intakePrime.set(0);
     }
 
