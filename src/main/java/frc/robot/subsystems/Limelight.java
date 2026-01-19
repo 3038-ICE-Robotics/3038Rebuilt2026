@@ -11,7 +11,10 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.CLMath;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
+import frc.robot.inputs.LimelightInputs;
 
 public class Limelight {
     
@@ -38,15 +41,15 @@ public class Limelight {
     SmartDashboard.putBoolean("Vision/Extra/trusted", false);
 
     // logs active selected path
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput(
-              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
+    // PathPlannerLogging.setLogActivePathCallback(
+    //     (activePath) -> {
+    //       Logger.recordOutput(
+    //           "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+    //     });
+    // PathPlannerLogging.setLogTargetPoseCallback(
+    //     (targetPose) -> {
+    //       Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+    //     });
   }
 
   public static Limelight getInstance() {
@@ -77,43 +80,21 @@ public class Limelight {
    */
   public Pair<Pose2d, LimelightInputs> getTrustedPose() {
     Pose2d poseA = limelightA.megaTag2Pose2d;
-    Pose2d poseB = limelightB.megaTag2Pose2d;
-    Pose2d poseC = limelightC.megaTag2Pose2d;
     // we aren't using isTrustworthy here becuase as LL readings have gotten more
     // reliable, we care
     // less about tag distance
     Boolean poseATrust = false;
-    Boolean poseBTrust = false;
-    Boolean poseCTrust = false;
-    if (poseA != null && limelightA.isConnected && limelightA.getClosestTagDistCameraSpace() < MAX_TAG_DISTANCE) {
+    if (poseA != null && limelightA.isConnected && limelightA.getClosestTagDistCameraSpace() < Constants.Limelight.MaxTagDistance) {
       poseATrust = isInField(limelightA);
     }
-    if (poseB != null && limelightB.isConnected && limelightB.getClosestTagDistCameraSpace() < MAX_TAG_DISTANCE) {
-      poseBTrust = isInField(limelightB);
-    }
-    if (poseC != null && limelightC.isConnected && limelightC.getClosestTagDistCameraSpace() < MAX_TAG_DISTANCE) {
-      poseCTrust = isInField(limelightC);
-    }
-
     logTrustToSmartDashboard(poseATrust, limelightA, "Left");
-    logTrustToSmartDashboard(poseBTrust, limelightB, "Right");
-    logTrustToSmartDashboard(poseCTrust, limelightC, "Extra");
 
     // if the limelight positions will be merged, let SmartDashboard know!
     boolean mergingPoses = false;
-    if (poseATrust && poseBTrust || poseBTrust && poseCTrust || poseATrust && poseCTrust) {
-      mergingPoses = true;
-    }
     SmartDashboard.putBoolean("LL poses merged", mergingPoses);
     List<LimelightInputs> limelightNames = new ArrayList<>();
     if (poseATrust) {
       limelightNames.add(limelightA);
-    }
-    if (poseBTrust) {
-      limelightNames.add(limelightB);
-    }
-    if (poseCTrust) {
-      limelightNames.add(limelightC);
     }
     if (limelightNames.size() == 0) {
       return null;
@@ -140,19 +121,19 @@ public class Limelight {
     Pose2d pose1 = limelightNames.get(0).megaTag2Pose2d;
     Pose2d pose2 = limelightNames.get(1).megaTag2Pose2d;
 
-    Logger.recordOutput("mergedPose/pose1", pose1);
-    Logger.recordOutput("mergedPose/pose2", pose2);
+    // Logger.recordOutput("mergedPose/pose1", pose1);
+    // Logger.recordOutput("mergedPose/pose2", pose2);
 
     double LL1FOM = getLLFOM(limelightNames.get(0));
     double LL2FOM = getLLFOM(limelightNames.get(1));
     double confidenceSource1 = 1 / Math.pow(LL1FOM, 2);
     double confidenceSource2 = 1 / Math.pow(LL2FOM, 2);
-    Pose2d scaledPose1 = MythicalMath.multiplyOnlyPos(pose1, confidenceSource1);
-    Pose2d scaledPose2 = MythicalMath.multiplyOnlyPos(pose2, confidenceSource2);
+    Pose2d scaledPose1 = CLMath.MultiplyPose(pose1, confidenceSource1);
+    Pose2d scaledPose2 = CLMath.MultiplyPose(pose2, confidenceSource2);
 
     if (limelightNames.size() == 2) {
-      Pose2d newPose = MythicalMath.divideOnlyPos(
-          (MythicalMath.addOnlyPosTogether(scaledPose1, scaledPose2)),
+      Pose2d newPose = CLMath.DividePose(
+          (CLMath.AddPose(scaledPose1, scaledPose2)),
           (confidenceSource1 + confidenceSource2));
       pose1 = newPose;
     }
@@ -161,10 +142,10 @@ public class Limelight {
       Pose2d pose3 = limelightNames.get(2).megaTag2Pose2d;
       double LL3FOM = getLLFOM(limelightNames.get(2));
       double confidenceSource3 = 1 / Math.pow(LL3FOM, 2);
-      Pose2d scaledPose3 = MythicalMath.multiplyOnlyPos(pose3, confidenceSource3);
-      Pose2d newPose = MythicalMath.divideOnlyPos(
-          MythicalMath.addOnlyPosTogether(
-              MythicalMath.addOnlyPosTogether(scaledPose1, scaledPose2), scaledPose3),
+      Pose2d scaledPose3 = CLMath.MultiplyPose(pose3, confidenceSource3);
+      Pose2d newPose = CLMath.DividePose(
+          CLMath.AddPose(
+              CLMath.AddPose(scaledPose1, scaledPose2), scaledPose3),
           (confidenceSource1 + confidenceSource2 + confidenceSource3));
       pose1 = newPose;
     }
@@ -184,7 +165,7 @@ public class Limelight {
     double limelight1z = LimelightHelpers.getTargetPose3d_CameraSpace(limelightName).getZ();
     // use those coordinates to find the distance to the closest apriltag for each
     // limelight
-    double distance1 = MythicalMath.DistanceFromOrigin3d(limelight1x, limelight1y, limelight1z);
+    double distance1 = CLMath.DistanceFromOrigin3d(limelight1x, limelight1y, limelight1z);
     return distance1;
   }
 
@@ -251,7 +232,7 @@ public class Limelight {
         + tagCountValue
         + xyValue
         + xyValue;
-    Logger.recordOutput("Vision/LLFOM/" + limelightInputs.name, LLFOM);
+    // Logger.recordOutput("Vision/LLFOM/" + limelightInputs.name, LLFOM);
     return LLFOM;
   }
 
@@ -281,18 +262,14 @@ public class Limelight {
    * @return
    */
   private boolean isInField(LimelightInputs limelight) {
-    return (limelight.megaTag2Pose2d.getX() < FIELD_CORNER.getX()
+    return (limelight.megaTag2Pose2d.getX() < Constants.Limelight.FieldCorner.getX()
         && limelight.megaTag2Pose2d.getX() > 0.0
-        && limelight.megaTag2Pose2d.getY() < FIELD_CORNER.getY()
+        && limelight.megaTag2Pose2d.getY() < Constants.Limelight.FieldCorner.getY()
         && limelight.megaTag2Pose2d.getY() > 0.0);
   }
 
   public void periodic() {
     limelightA.updateInputs();
-    limelightB.updateInputs();
-    limelightC.updateInputs();
-    Logger.processInputs("Limelights/Left", limelightA);
-    Logger.processInputs("Limelights/Right", limelightB);
-    Logger.processInputs("Limelights/Extra", limelightC);
+    // Logger.processInputs("Limelights/Left", limelightA);
   }
 }

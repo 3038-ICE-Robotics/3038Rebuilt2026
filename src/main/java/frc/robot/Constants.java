@@ -6,8 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Meter;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 /**
@@ -54,13 +56,30 @@ public final class Constants {
     public static final double RotationkI = 0;
     public static final double RotationkD = 0;
     public static final double RotationTolerance = 0;
-    public static final String [] MotorKeys = new String[] {"FL", "FR", "BL", "BR"};
+    public static final String[] MotorKeys = new String[] { "FL", "FR", "BL", "BR" };
     public static final Pose2d DriveOdometryOrigin = new Pose2d(5, 5, new Rotation2d());
-    public static final double MaxVelocityMPS = 5; //measure actual velocity
-    public static final double DriveDeadbandMPS = 1; //measure
+    public static final double MaxVelocityMPS = 5; // measure actual velocity
+    public static final double DriveDeadbandMPS = 1; // measure
+    public static final PIDController DRIVE_TO_POSE_X_CONTROLLER = getTranslationPIDController();
+    public static final PIDController DRIVE_TO_POSE_Y_CONTROLLER = getTranslationPIDController();
+
+    public static PIDController getTranslationPIDController() {
+      PIDController transltionController = new PIDController(5, 0, 0);
+      transltionController.setIZone(0.025);
+      transltionController.setIntegratorRange(-0.25, 0.25);
+      return transltionController;
+    }
   }
+
   public static class Limelight {
     public static final String LimelightName = "LimelightA";
+    public static final Translation2d FieldCorner = new Translation2d(17.54, 8.02);
+    public static final double MaxTagDistance = 3;
+  }
+
+  public static class Field {
+    public static final Translation2d BlueHub = new Translation2d(4.6, 4);
+    public static final Translation2d RedHub = new Translation2d(11.9, 4);
   }
 
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(null);

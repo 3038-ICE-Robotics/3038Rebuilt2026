@@ -34,10 +34,16 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
+import frc.robot.inputs.LimelightInputs;
 
 public class DriveSubsystem extends SubsystemBase {
     // These are our swerve drive kinematics and Pigeon (gyroscope)
     public SwerveDriveKinematics kinematics = Constants.kinematics;
+
+    public double gyroTimeStamp = 0;
+
+    public static Pose2d robotPosition = new Pose2d();
 
     // private final Pigeon2 pigeon = new Pigeon2(DRIVETRAIN_PIGEON_ID,
     // CANIVORE_DRIVETRAIN);
@@ -84,7 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
                 (poses) -> m_field.getObject("path").setPoses(poses));
         SmartDashboard.putData("Field", m_field);
         SmartDashboard.putBoolean("Vision/force use limelight", false);
-       
+
         gyro.calibrate();
         // Creates and configures each of the four swerve modules used in the
         // drivetrain, along with their motor loggers.
@@ -156,11 +162,11 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the pitch, returned as a double
      */
     public double getPigeonPitch() {
-        return 0; //TODO upgrade sensor
+        return 0; // TODO upgrade sensor
     }
 
     public double getPigeonRoll() {
-        return 0; //TODO upgrade sensor
+        return 0; // TODO upgrade sensor
     }
 
     /**
@@ -194,7 +200,11 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the positions of the swerve modules
      */
     public SwerveModulePosition[] getModulePositions() {
-        return inputs.swerveModulePositions;
+        SwerveModulePosition[] positions = new SwerveModulePosition[4];
+        for (int index = 0; index < positions.length; index++) {
+            positions[index] = modules[index].getPosition();
+        }
+        return positions;
     }
 
     /**
@@ -203,7 +213,11 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the speeds and angles of the swerve modules
      */
     public SwerveModuleState[] getModuleStates() {
-        return inputs.swerveModuleStates;
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        for (int index = 0; index < states.length; index++) {
+            states[index] = modules[index].getState();
+        }
+        return states;
     }
 
     /**
@@ -268,7 +282,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(
-                desiredStates, MAX_VELOCITY_METERS_PER_SECOND);
+                desiredStates, Constants.DriveTrain.MaxVelocityMPS);
         for (int i = 0; i < 4; i++) {
             setModule(i, desiredStates[i]);
         }
@@ -299,19 +313,19 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public void drive(ChassisSpeeds chassisSpeeds) {
         if (Preferences.getBoolean("AntiTipActive", false)) {
-            if (inputs.roll > 3) {
+            if (getPigeonRoll() > 3) {
                 chassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond
-                        + (inputs.roll / 10);
-            } else if (inputs.roll < -3) {
+                        + (getPigeonRoll() / 10);
+            } else if (getPigeonRoll() < -3) {
                 chassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond
-                        + (-inputs.roll / 10);
+                        + (-getPigeonRoll() / 10);
             }
-            if (inputs.pitch > 3) {
+            if (getPigeonPitch() > 3) {
                 chassisSpeeds.vyMetersPerSecond = chassisSpeeds.vyMetersPerSecond
-                        + (inputs.pitch / 10);
-            } else if (inputs.pitch < -3) {
+                        + (getPigeonPitch() / 10);
+            } else if (getPigeonPitch() < -3) {
                 chassisSpeeds.vyMetersPerSecond = chassisSpeeds.vyMetersPerSecond
-                        + (-inputs.pitch / 10);
+                        + (-getPigeonPitch() / 10);
             }
         }
         if (DriverStation.isTest()) {
@@ -353,7 +367,7 @@ public class DriveSubsystem extends SubsystemBase {
      * Updates the odometry
      */
     public void updateOdometry() {
-        odometer.updateWithTime(inputs.gyroTimeStamp, getGyroscopeRotation(), getModulePositions());
+        odometer.updateWithTime(gyroTimeStamp, getGyroscopeRotation(), getModulePositions());
     }
 
     /**
@@ -367,23 +381,8 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public void updateOdometryWithVision() {
         LimelightHelpers.SetRobotOrientation(
-                APRILTAG_LIMELIGHTA_NAME,
-                odometer.getEstimatedPosition().getRotation().getDegrees(),
-                0,
-                0,
-                0,
-                0,
-                0);
-        LimelightHelpers.SetRobotOrientation(
-                APRILTAG_LIMELIGHTB_NAME,
-                odometer.getEstimatedPosition().getRotation().getDegrees(),
-                0,
-                0,
-                0,
-                0,
-                0);
-        LimelightHelpers.SetRobotOrientation(
-                APRILTAG_LIMELIGHTC_NAME,
+
+                Constants.Limelight.LimelightName,
                 odometer.getEstimatedPosition().getRotation().getDegrees(),
                 0,
                 0,
@@ -394,7 +393,7 @@ public class DriveSubsystem extends SubsystemBase {
         Pair<Pose2d, LimelightInputs> estimate = limelight.getTrustedPose();
         if (estimate != null) {
             boolean doRejectUpdate = false;
-            if (Math.abs(pigeon.getAngularVelocityZWorld().getValueAsDouble()) > 720) {
+            if (Math.abs(gyro.getRate()) > 720) {
                 doRejectUpdate = true;
             }
             if (estimate.getSecond().tagCount == 0) {
@@ -402,9 +401,9 @@ public class DriveSubsystem extends SubsystemBase {
             }
             if (!doRejectUpdate) {
                 odometer.addVisionMeasurement(estimate.getFirst(), estimate.getSecond().timeStampSeconds);
-                RobotState.getInstance().LimelightsUpdated = true;
-            } else {
-                RobotState.getInstance().LimelightsUpdated = false;
+                // RobotState.getInstance().LimelightsUpdated = true;
+                // } else {
+                // RobotState.getInstance().LimelightsUpdated = false;
             }
         }
     }
@@ -479,11 +478,13 @@ public class DriveSubsystem extends SubsystemBase {
     public void moveTowardsPose(Pose2d pose) {
         // set the targets for the PID loops
         setRotationTarget(pose.getRotation().getDegrees());
-        DRIVE_TO_POSE_X_CONTROLLER.setSetpoint(pose.getX());
-        DRIVE_TO_POSE_Y_CONTROLLER.setSetpoint(pose.getY());
+        Constants.DriveTrain.DRIVE_TO_POSE_X_CONTROLLER.setSetpoint(pose.getX());
+        Constants.DriveTrain.DRIVE_TO_POSE_Y_CONTROLLER.setSetpoint(pose.getY());
         // calculate speeds using PID loops
-        double xSpeed = DRIVE_TO_POSE_X_CONTROLLER.calculate(odometer.getEstimatedPosition().getX());
-        double ySpeed = DRIVE_TO_POSE_Y_CONTROLLER.calculate(odometer.getEstimatedPosition().getY());
+        double xSpeed = Constants.DriveTrain.DRIVE_TO_POSE_X_CONTROLLER
+                .calculate(odometer.getEstimatedPosition().getX());
+        double ySpeed = Constants.DriveTrain.DRIVE_TO_POSE_Y_CONTROLLER
+                .calculate(odometer.getEstimatedPosition().getY());
         SmartDashboard.putNumber("TARGETINGPOSE/calculatedyspeed", ySpeed);
         SmartDashboard.putNumber("TARGETINGPOSE/calculatedxspeed", xSpeed);
 
@@ -522,8 +523,8 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the distance of error, in meters
      */
     public double getPositionTargetingError() {
-        double xError = DRIVE_TO_POSE_X_CONTROLLER.getError();
-        double yError = DRIVE_TO_POSE_Y_CONTROLLER.getError();
+        double xError = Constants.DriveTrain.DRIVE_TO_POSE_X_CONTROLLER.getError();
+        double yError = Constants.DriveTrain.DRIVE_TO_POSE_Y_CONTROLLER.getError();
         return Math.sqrt(Math.pow(xError, 2) + Math.pow(yError, 2));
     }
 
@@ -537,7 +538,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the distance of error, in meters
      */
     public double getPositionTargetingErrorBarge() {
-        return DRIVE_TO_POSE_X_CONTROLLER.getError();
+        return Constants.DriveTrain.DRIVE_TO_POSE_X_CONTROLLER.getError();
     }
 
     public boolean isAtRotationTarget() {
@@ -563,9 +564,9 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(
                 "DRIVETRAIN/degrees per second", Math.toDegrees(getChassisSpeeds().omegaRadiansPerSecond));
 
-        Logger.recordOutput("MyStates", getModuleStates());
-        Logger.recordOutput("Position", odometer.getEstimatedPosition());
-        Logger.recordOutput("Gyro", getGyroscopeRotation());
+        // Logger.recordOutput("MyStates", getModuleStates());
+        // Logger.recordOutput("Position", odometer.getEstimatedPosition());
+        // Logger.recordOutput("Gyro", getGyroscopeRotation());
     }
 
     // This is the things the subsystem does periodically.
@@ -581,33 +582,35 @@ public class DriveSubsystem extends SubsystemBase {
         if (Preferences.getBoolean("Use Limelight", false)) {
             updateOdometryWithVision();
         } else {
-            RobotState.getInstance().LimelightsUpdated = false;
+            // RobotState.getInstance().LimelightsUpdated = false;
         }
 
         m_field.setRobotPose(odometer.getEstimatedPosition());
-        RobotState.getInstance().odometerOrientation = getOdometryRotation().getDegrees();
+        // RobotState.getInstance().odometerOrientation =
+        // getOdometryRotation().getDegrees();
         // updates logging for all drive motors on the swerve modules
 
         for (int i = 0; i < 4; i++) {
             if (Preferences.getBoolean("Motor Logging", false)) {
-                motorLoggers[i].log(modules[i].getDriveMotor());
+                // motorLoggers[i].log(modules[i].getDriveMotor());
             }
         }
-        RobotState.getInstance().robotPosition = getPose();
+        robotPosition = getPose();
         logDrivetrainData();
     }
 
     private void updateInputs() {
-        for (int i = 0; i < 4; i++) {
-            inputs.swerveModuleStates[i] = modules[i].getState();
-            inputs.swerveModulePositions[i] = modules[i].getPosition();
-        }
-        inputs.gyroScopeRotation = pigeon.getRotation2d();
-        inputs.pitch = pigeon.getPitch().getValueAsDouble();
-        inputs.roll = pigeon.getRoll().getValueAsDouble();
-        inputs.gyroTimeStamp = Timer.getFPGATimestamp();
-        inputs.angularVelocity = pigeon.getAngularVelocityZWorld().getValueAsDouble();
-        Logger.processInputs("Drivetrain", inputs);
+        // for (int i = 0; i < 4; i++) {
+        // inputs.swerveModuleStates[i] = modules[i].getState();
+        // inputs.swerveModulePositions[i] = modules[i].getPosition();
+        // }
+        // inputs.gyroScopeRotation = pigeon.getRotation2d();
+        // inputs.pitch = pigeon.getPitch().getValueAsDouble();
+        // inputs.roll = pigeon.getRoll().getValueAsDouble();
+        gyroTimeStamp = Timer.getFPGATimestamp();
+        // inputs.angularVelocity =
+        // pigeon.getAngularVelocityZWorld().getValueAsDouble();
+        // Logger.processInputs("Drivetrain", inputs);
     }
 
     /**
@@ -621,11 +624,11 @@ public class DriveSubsystem extends SubsystemBase {
         // triangle for robot angle
         Optional<Alliance> alliance = DriverStation.getAlliance();
         if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-            deltaY = Math.abs(dtvalues.getY() - Field.RED_HUB_COORDINATE.getY());
-            deltaX = Math.abs(dtvalues.getX() - Field.RED_HUB_COORDINATE.getX());
+            deltaY = Math.abs(dtvalues.getY() - Constants.Field.RedHub.getY());
+            deltaX = Math.abs(dtvalues.getX() - Constants.Field.RedHub.getX());
         } else {
-            deltaY = Math.abs(dtvalues.getY() - Field.BLUE_HUB_COORDINATE.getY());
-            deltaX = Math.abs(dtvalues.getX() - Field.BLUE_HUB_COORDINATE.getX());
+            deltaY = Math.abs(dtvalues.getY() - Constants.Field.BlueHub.getY());
+            deltaX = Math.abs(dtvalues.getX() - Constants.Field.BlueHub.getX());
         }
         double distanceToHub2D = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         // we need to add here a way to calculate the length of the ball's flight path
@@ -643,13 +646,13 @@ public class DriveSubsystem extends SubsystemBase {
          */
         double desiredAngle;
         if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
-            if (dtvalues.getY() >= Field.BLUE_HUB_COORDINATE.getY()) {
+            if (dtvalues.getY() >= Constants.Field.BlueHub.getY()) {
                 desiredAngle = 0 - Math.atan(deltaY / deltaX);
             } else {
                 desiredAngle = 0 + Math.atan(deltaY / deltaX);
             }
         } else {
-            if (dtvalues.getY() >= Field.RED_HUB_COORDINATE.getY()) {
+            if (dtvalues.getY() >= Constants.Field.RedHub.getY()) {
                 desiredAngle = Math.PI + Math.atan(deltaY / deltaX);
             } else {
                 desiredAngle = Math.PI - Math.atan(deltaY / deltaX);
@@ -659,17 +662,17 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public static double getDistanceToHub() {
-        Pose2d dtvalues = RobotState.getInstance().robotPosition;
+        Pose2d dtvalues = robotPosition;
         double deltaX;
         double deltaY;
         // triangle for robot angle
         Optional<Alliance> alliance = DriverStation.getAlliance();
         if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-            deltaY = Math.abs(dtvalues.getY() - Field.RED_HUB_COORDINATE.getY());
-            deltaX = Math.abs(dtvalues.getX() - Field.RED_HUB_COORDINATE.getX());
+            deltaY = Math.abs(dtvalues.getY() - Constants.Field.RedHub.getY());
+            deltaX = Math.abs(dtvalues.getX() - Constants.Field.RedHub.getX());
         } else {
-            deltaY = Math.abs(dtvalues.getY() - Field.BLUE_HUB_COORDINATE.getY());
-            deltaX = Math.abs(dtvalues.getX() - Field.BLUE_HUB_COORDINATE.getX());
+            deltaY = Math.abs(dtvalues.getY() - Constants.Field.BlueHub.getY());
+            deltaX = Math.abs(dtvalues.getX() - Constants.Field.BlueHub.getX());
         }
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
