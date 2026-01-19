@@ -6,6 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Meter;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -20,6 +24,7 @@ import static edu.wpi.first.units.Units.Meter;
  */
 public final class Constants {
   public static final double MetersToFeet = 3.28084;
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -42,8 +47,21 @@ public final class Constants {
   }
 
   public static class DriveTrain {
-    public static final double WheelDiameter = (4/12)/MetersToFeet;
+    public static final double WheelDiameter = (4 / 12) / MetersToFeet;
     public static final double RotationsToMeters = Math.PI * WheelDiameter;
-public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet)/RotationsToMeters;
+    public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet) / RotationsToMeters;
+    public static final double RotationkP = 0;
+    public static final double RotationkI = 0;
+    public static final double RotationkD = 0;
+    public static final double RotationTolerance = 0;
+    public static final String [] MotorKeys = new String[] {"FL", "FR", "BL", "BR"};
+    public static final Pose2d DriveOdometryOrigin = new Pose2d(5, 5, new Rotation2d());
+    public static final double MaxVelocityMPS = 5; //measure actual velocity
+    public static final double DriveDeadbandMPS = 1; //measure
   }
+  public static class Limelight {
+    public static final String LimelightName = "LimelightA";
+  }
+
+  public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(null);
 }

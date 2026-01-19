@@ -55,16 +55,14 @@ public class SwerveModule {
      * @param steerMotorChannel   (steering motor id, integer)
      * @param steerEncoderChannel (steering encoder id, integer)
      * @param steerEncoderOffset  (how far the wheel is offset, rotation2d)
-     * @param canivoreName        (name of the canivore, string)
      */
     public SwerveModule(
             String moduleName,
             int driveMotorChannel,
             int steerMotorChannel,
-            int steerEncoderChannel,
-            Rotation2d steerEncoderOffset,
-            String canivoreName) {
-        driveMotor = new SparkFlex(steerEncoderChannel, null);
+            Rotation2d steerEncoderOffset
+            ) {
+        driveMotor = new SparkFlex(driveMotorChannel, null);
         steerMotor = new SparkMax(steerMotorChannel, null);
         swerveEncoder = steerMotor.getAbsoluteEncoder();
         driveControl = driveMotor.getClosedLoopController();
