@@ -11,6 +11,8 @@ import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
 
 import java.io.IOException;
 import java.util.function.DoubleSupplier;
@@ -22,8 +24,9 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -59,6 +62,8 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private CommandJoystick commandJoystick0;
+  private IntakeSubsystem intake;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -70,6 +75,9 @@ public class RobotContainer {
     ControllerSidewaysAxisSupplier = () -> modifyAxis(-lJoystick.getX(), 0);
     ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0);
     ControllerZAxisSupplier = () -> modifyAxis(-rJoystick.getX(), 0);
+    // set stuff
+    commandJoystick0 = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
+    intake = new IntakeSubsystem();
     // Configure the trigger bindings
     configureBindings();
     driveTrainInit();
@@ -129,6 +137,15 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+    commandJoystick0.button(Constants.ButtonIDs.Intake)
+        .onTrue(new InstantCommand(intake::startIntake)).and(() -> !commandJoystick0.getHID().getRawButton(Constants.ButtonIDs.Outtake))
+        .onFalse(new InstantCommand(intake::stop));
+    commandJoystick0.button(Constants.ButtonIDs.Outtake)
+        .onTrue(new InstantCommand(intake::startOuttake)).and(() -> !commandJoystick0.getHID().getRawButton(Constants.ButtonIDs.Intake))
+        .onFalse(new InstantCommand(intake::stop));
+
+        //.onTrue(new IntakeCommand(intake))
+        //.onFalse(new StopIntakeCommand(intake));
   }
 
   /**
