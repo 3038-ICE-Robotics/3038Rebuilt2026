@@ -26,19 +26,21 @@ public class ClimberSubsystem extends SubsystemBase {
         climberPrime = new SparkMax(Constants.MotorIDs.ClimbPrime, MotorType.kBrushless);
         climberFollow = new SparkMax(Constants.MotorIDs.ClimbFollow, MotorType.kBrushless);
         climbHeight = climberPrime.getAlternateEncoder();
+        //moves arm down.
         retract = new FunctionalCommand(() -> {
             setSpeed(-.5);
         }, () -> {
         }, interrupted -> {
             setSpeed(0);
         }, this::isHome);
+        //moves arm up.
         extend = new FunctionalCommand(() -> {
             setSpeed(.5);
         }, () -> {
         }, interrupted -> {
             setSpeed(0);
         }, this::isExtended);
-        // TODO: Make use of constant for the channe
+        // TODO: Make use of constant for the channel
     }
 
     public double getCurrentHeight() {
