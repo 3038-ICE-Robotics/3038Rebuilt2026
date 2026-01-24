@@ -54,14 +54,15 @@ public class TranferSubsystem extends SubsystemBase {
     public boolean isBallStuck() {
         ampSum = 0;
         for (double d : ampHistory) {
-            ampSum+=d;
+            ampSum += d;
         }
-        return ampSum>=ampThreshold;
+        return ampSum >= ampThreshold;
     }
 
     @Override
     public void periodic() {
-        ampHistory [nextIndex] = standardAmp-0;
-        nextIndex= (nextIndex+1) %ampHistory.length;
+        ampHistory[nextIndex] = standardAmp - backMotor.getOutputCurrent();
+        nextIndex = (nextIndex + 1) % ampHistory.length;
     }
+    
 }

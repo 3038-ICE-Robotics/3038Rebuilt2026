@@ -23,6 +23,7 @@ public final class Constants {
 
   public static class DigitalChannels {
     public static final int HopperFull = 0;
+    public static final int HopperEmpty =1;
   }
 
   public static class MotorSpeeds {
