@@ -9,9 +9,12 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SystemCommands;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TransferSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 
 import java.io.IOException;
@@ -47,6 +50,7 @@ public class RobotContainer {
   DoubleSupplier ControllerZAxisSupplier;
   Joystick lJoystick;
   Joystick rJoystick;
+  SystemCommands fullCommands;
 
   private void driveTrainInit() {
     drivetrain = new DriveSubsystem();
@@ -62,8 +66,11 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private CommandJoystick commandJoystick0;
+  private CommandJoystick commandJoystickL;
+  private CommandJoystick commandJoystickR;
   private IntakeSubsystem intake;
+  private ShooterSubsystem shooter;
+  private TransferSubsystem transfer;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -76,8 +83,11 @@ public class RobotContainer {
     ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0);
     ControllerZAxisSupplier = () -> modifyAxis(-rJoystick.getX(), 0);
     // set stuff
-    commandJoystick0 = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
+    commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
     intake = new IntakeSubsystem();
+    shooter = new ShooterSubsystem();
+    transfer = new TransferSubsystem();
+    fullCommands = new SystemCommands(intake, transfer, shooter);
     // Configure the trigger bindings
     configureBindings();
     driveTrainInit();
@@ -91,32 +101,35 @@ public class RobotContainer {
     value = Math.copySign(value * value, value);
     return value;
   }
-//Pathplanner TODO 
+  // Pathplanner TODO
   // private void configureDriveTrain() {
-  //   try {
-  //     AutoBuilder.configure(
-  //         drivetrain::getPose, // Pose2d supplier
-  //         drivetrain::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-  //         drivetrain::getChassisSpeeds,
-  //         (speeds) -> drivetrain.drive(speeds),
-  //         new PPHolonomicDriveController(
-  //             new com.pathplanner.lib.config.PIDConstants(
-  //                 k_XY_P, k_XY_I,
-  //                 k_XY_D), // PID constants to correct for translation error (used to create the X
-  //             // and Y PID controllers)
-  //             new com.pathplanner.lib.config.PIDConstants(
-  //                 k_THETA_P, k_THETA_I,
-  //                 k_THETA_D) // PID constants to correct for rotation error (used to create the
-  //         // rotation controller)
-  //         ),
-  //         RobotConfig.fromGUISettings(),
-  //         () -> DriverStation.getAlliance().get().equals(Alliance.Red),
-  //         drivetrain);
-  //   } catch (org.json.simple.parser.ParseException a) {
-  //     System.out.println("got ParseException trying to configure AutoBuilder");
-  //   } catch (IOException b) {
-  //     System.out.println("got IOException thrown trying to configure autobuilder " + b.getMessage());
-  //   }
+  // try {
+  // AutoBuilder.configure(
+  // drivetrain::getPose, // Pose2d supplier
+  // drivetrain::resetOdometry, // Pose2d consumer, used to reset odometry at the
+  // beginning of auto
+  // drivetrain::getChassisSpeeds,
+  // (speeds) -> drivetrain.drive(speeds),
+  // new PPHolonomicDriveController(
+  // new com.pathplanner.lib.config.PIDConstants(
+  // k_XY_P, k_XY_I,
+  // k_XY_D), // PID constants to correct for translation error (used to create
+  // the X
+  // // and Y PID controllers)
+  // new com.pathplanner.lib.config.PIDConstants(
+  // k_THETA_P, k_THETA_I,
+  // k_THETA_D) // PID constants to correct for rotation error (used to create the
+  // // rotation controller)
+  // ),
+  // RobotConfig.fromGUISettings(),
+  // () -> DriverStation.getAlliance().get().equals(Alliance.Red),
+  // drivetrain);
+  // } catch (org.json.simple.parser.ParseException a) {
+  // System.out.println("got ParseException trying to configure AutoBuilder");
+  // } catch (IOException b) {
+  // System.out.println("got IOException thrown trying to configure autobuilder "
+  // + b.getMessage());
+  // }
   // }
 
   /**
@@ -137,15 +150,28 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
-    commandJoystick0.button(Constants.ButtonIDs.Intake)
-        .onTrue(new InstantCommand(intake::startIntake)).and(() -> !commandJoystick0.getHID().getRawButton(Constants.ButtonIDs.Outtake))
+    commandJoystickL.button(Constants.LeftButtonIDs.Intake)
+        .onTrue(new InstantCommand(intake::startIntake))
+        .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Outtake))
         .onFalse(new InstantCommand(intake::stop));
-    commandJoystick0.button(Constants.ButtonIDs.Outtake)
-        .onTrue(new InstantCommand(intake::startOuttake)).and(() -> !commandJoystick0.getHID().getRawButton(Constants.ButtonIDs.Intake))
+    commandJoystickL.button(Constants.LeftButtonIDs.Outtake)
+        .onTrue(new InstantCommand(intake::startOuttake))
+        .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Intake))
         .onFalse(new InstantCommand(intake::stop));
-
-        //.onTrue(new IntakeCommand(intake))
-        //.onFalse(new StopIntakeCommand(intake));
+    commandJoystickL.button(Constants.LeftButtonIDs.IntakeToHopper)
+        .onTrue(fullCommands.intakeBall)
+        .onFalse(new InstantCommand(fullCommands.intakeBall::cancel));
+    commandJoystickL.button(Constants.LeftButtonIDs.OutTakeFull)
+        .onTrue(fullCommands.outtakeBall)
+        .onFalse(new InstantCommand(fullCommands.outtakeBall::cancel));
+    commandJoystickR.button(Constants.RightButtonIDs.ShootFromHopper)
+        .onTrue(fullCommands.shootBallFromHopper)
+        .onFalse(new InstantCommand(fullCommands.shootBallFromHopper::cancel));
+    commandJoystickR.button(Constants.RightButtonIDs.ShootFromIntake)
+        .onTrue(fullCommands.shootBallFromGround)
+        .onFalse(new InstantCommand(fullCommands.shootBallFromGround::cancel));
+    // .onTrue(new IntakeCommand(intake))
+    // .onFalse(new StopIntakeCommand(intake));
   }
 
   /**

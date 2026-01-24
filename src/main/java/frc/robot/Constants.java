@@ -34,16 +34,24 @@ public final class Constants {
 
   public static class DigitalChannels {
     public static final int HopperFull = 0;
-    public static final int HopperEmpty =1;
+    public static final int HopperEmpty = 1;
   }
 
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.75;
   }
 
-  public static class ButtonIDs {
-    public static final int Intake = 0;
-    public static final int Outtake = 1;
+  public static class LeftButtonIDs {
+    public static final int Intake = 10;
+    public static final int Outtake = 9;
+    public static final int IntakeToHopper = 1;
+    public static final int OutTakeFull = 2;
+  }
+
+  public static class RightButtonIDs {
+    public static final int ShootFromHopper = 1;
+    public static final int ShootFromIntake = 2;
+
   }
 
   public static class MotorIDs {
@@ -65,8 +73,8 @@ public final class Constants {
 
   public static class DriveTrain {
     public static final double WheelDiameter = (4 / 12) / MetersToFeet;
-    public static final double DrivetrainTrackWidth = (20.5/12.0)/MetersToFeet;
-    public static final double DrivetrainWheelbase = (20.5/12.0)/MetersToFeet;
+    public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;
+    public static final double DrivetrainWheelbase = (20.5 / 12.0) / MetersToFeet;
     public static final double RotationsToMeters = Math.PI * WheelDiameter;
     public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet) / RotationsToMeters;
     public static final double RotationkP = 0;
@@ -77,7 +85,7 @@ public final class Constants {
     public static final Pose2d DriveOdometryOrigin = new Pose2d(5, 5, new Rotation2d());
     public static final double MaxVelocityMPS = 5; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
-        / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; //measure
+        / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure
     public static final double DriveDeadbandMPS = 1; // measure
     public static final PIDController DRIVE_TO_POSE_X_CONTROLLER = getTranslationPIDController();
     public static final PIDController DRIVE_TO_POSE_Y_CONTROLLER = getTranslationPIDController();

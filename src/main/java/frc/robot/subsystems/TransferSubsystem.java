@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class TranferSubsystem extends SubsystemBase {
+public class TransferSubsystem extends SubsystemBase {
     private SparkFlex frontMotor;
     private SparkFlex backMotor;
     private DigitalInput emptySensor;
@@ -21,7 +21,7 @@ public class TranferSubsystem extends SubsystemBase {
     private double ampSum = 0;
     private double ampThreshold = 10;
 
-    public TranferSubsystem() {
+    public TransferSubsystem() {
         frontMotor = new SparkFlex(Constants.MotorIDs.IntakeFollow, MotorType.kBrushless);
         backMotor = new SparkFlex(Constants.MotorIDs.Transfer, MotorType.kBrushless);
         emptySensor = new DigitalInput(Constants.DigitalChannels.HopperEmpty);

@@ -4,16 +4,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.TranferSubsystem;
+import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-
+// Work on calling buttons next week.
 public class SystemCommands {
     public Command intakeBall;
     public Command outtakeBall;
     public Command shootBallFromGround;
     public Command shootBallFromHopper;
 
-    public SystemCommands(IntakeSubsystem intake, TranferSubsystem transfer, ShooterSubsystem shooter) {
+    public SystemCommands(IntakeSubsystem intake, TransferSubsystem transfer, ShooterSubsystem shooter) {
         // Takes in balls to use later.
         intakeBall = new FunctionalCommand(() -> {
             intake.startIntake();
