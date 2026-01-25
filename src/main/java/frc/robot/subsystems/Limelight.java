@@ -20,7 +20,8 @@ public class Limelight {
     
   private static Limelight limelight;
   /** DO NOT edit anywhere other than periodic() of Limelight class */
-  public LimelightInputs limelightA = new LimelightInputs(Constants.Limelight.LimelightName);
+  public LimelightInputs limelightA = new LimelightInputs(Constants.Limelight.A.Name);
+  public LimelightInputs limelightB = new LimelightInputs(Constants.Limelight.B.Name);
   public static final AprilTagFieldLayout FIELD_LAYOUT;
 
   static {
@@ -80,14 +81,20 @@ public class Limelight {
    */
   public Pair<Pose2d, LimelightInputs> getTrustedPose() {
     Pose2d poseA = limelightA.megaTag2Pose2d;
+    Pose2d poseB = limelightB.megaTag2Pose2d;
     // we aren't using isTrustworthy here becuase as LL readings have gotten more
     // reliable, we care
     // less about tag distance
     Boolean poseATrust = false;
+    Boolean poseBTrust = false;
     if (poseA != null && limelightA.isConnected && limelightA.getClosestTagDistCameraSpace() < Constants.Limelight.MaxTagDistance) {
       poseATrust = isInField(limelightA);
     }
-    logTrustToSmartDashboard(poseATrust, limelightA, "Left");
+    if (poseB != null && limelightB.isConnected && limelightB.getClosestTagDistCameraSpace() < Constants.Limelight.MaxTagDistance) {
+      poseBTrust = isInField(limelightB);
+    }
+    logTrustToSmartDashboard(poseATrust, limelightA, Constants.Limelight.A.Title);
+    logTrustToSmartDashboard(poseBTrust, limelightB, Constants.Limelight.B.Title);
 
     // if the limelight positions will be merged, let SmartDashboard know!
     boolean mergingPoses = false;
@@ -95,6 +102,9 @@ public class Limelight {
     List<LimelightInputs> limelightNames = new ArrayList<>();
     if (poseATrust) {
       limelightNames.add(limelightA);
+    }
+    if (poseBTrust) {
+      limelightNames.add(limelightB);
     }
     if (limelightNames.size() == 0) {
       return null;
@@ -270,6 +280,7 @@ public class Limelight {
 
   public void periodic() {
     limelightA.updateInputs();
+    limelightB.updateInputs();
     // Logger.processInputs("Limelights/Left", limelightA);
   }
 }

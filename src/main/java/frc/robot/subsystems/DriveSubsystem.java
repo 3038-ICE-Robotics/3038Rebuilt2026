@@ -382,13 +382,22 @@ public class DriveSubsystem extends SubsystemBase {
     public void updateOdometryWithVision() {
         LimelightHelpers.SetRobotOrientation(
 
-                Constants.Limelight.LimelightName,
+                Constants.Limelight.A.Name,
                 odometer.getEstimatedPosition().getRotation().getDegrees(),
-                0,
-                0,
-                0,
-                0,
-                0);
+                Constants.Limelight.A.YawRate,
+                Constants.Limelight.A.Pitch,
+                Constants.Limelight.A.PitchRate,
+                Constants.Limelight.A.Roll,
+                Constants.Limelight.A.RollRate);
+        LimelightHelpers.SetRobotOrientation(
+
+                Constants.Limelight.B.Name,
+                odometer.getEstimatedPosition().getRotation().getDegrees(),
+                Constants.Limelight.B.YawRate,
+                Constants.Limelight.B.Pitch,
+                Constants.Limelight.B.PitchRate,
+                Constants.Limelight.B.Roll,
+                Constants.Limelight.B.RollRate);
 
         Pair<Pose2d, LimelightInputs> estimate = limelight.getTrustedPose();
         if (estimate != null) {

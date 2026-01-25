@@ -91,7 +91,24 @@ public final class Constants {
   }
 
   public static class Limelight {
-    public static final String LimelightName = "LimelightA";
+    public static class A {
+      public static final String Name = "LimelightA";
+      public static final String Title = "Limelight A";
+      public static final double YawRate = 0;
+      public static final double Pitch = 0;
+      public static final double PitchRate = 0;
+      public static final double Roll = 0;
+      public static final double RollRate = 0;
+    }
+    public static class B {
+      public static final String Name = "LimelightB";
+      public static final String Title = "Limelight B";
+      public static final double YawRate = 0;
+      public static final double Pitch = 0;
+      public static final double PitchRate = 0;
+      public static final double Roll = 0;
+      public static final double RollRate = 0;
+    }
     public static final Translation2d FieldCorner = new Translation2d(17.54, 8.02);
     public static final double MaxTagDistance = 3;
   }
@@ -101,5 +118,9 @@ public final class Constants {
     public static final Translation2d RedHub = new Translation2d(11.9, 4);
   }
 
-  public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(null);
+  public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+      new Translation2d(DriveTrain.DrivetrainWheelbase / 2, DriveTrain.DrivetrainTrackWidth / 2),
+      new Translation2d(DriveTrain.DrivetrainWheelbase / 2, -DriveTrain.DrivetrainTrackWidth / 2),
+      new Translation2d(-DriveTrain.DrivetrainWheelbase / 2, DriveTrain.DrivetrainTrackWidth / 2),
+      new Translation2d(-DriveTrain.DrivetrainWheelbase / 2, -DriveTrain.DrivetrainTrackWidth / 2));
 }
