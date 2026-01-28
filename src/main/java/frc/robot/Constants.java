@@ -46,6 +46,8 @@ public final class Constants {
     public static final int Outtake = 9;
     public static final int IntakeToHopper = 1;
     public static final int OutTakeFull = 2;
+    public static final int ExtendClimber = 7;
+    public static final int RetractClimber = 6;
   }
 
   public static class RightButtonIDs {

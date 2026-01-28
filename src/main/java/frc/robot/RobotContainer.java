@@ -10,6 +10,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SystemCommands;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -71,7 +72,7 @@ public class RobotContainer {
   private IntakeSubsystem intake;
   private ShooterSubsystem shooter;
   private TransferSubsystem transfer;
-
+  private ClimberSubsystem climber;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -88,6 +89,7 @@ public class RobotContainer {
     shooter = new ShooterSubsystem();
     transfer = new TransferSubsystem();
     fullCommands = new SystemCommands(intake, transfer, shooter);
+    climber = new ClimberSubsystem();
     // Configure the trigger bindings
     configureBindings();
     driveTrainInit();
@@ -170,6 +172,12 @@ public class RobotContainer {
     commandJoystickR.button(Constants.RightButtonIDs.ShootFromIntake)
         .onTrue(fullCommands.shootBallFromGround)
         .onFalse(new InstantCommand(fullCommands.shootBallFromGround::cancel));
+    commandJoystickL.button(Constants.LeftButtonIDs.ExtendClimber)
+        .onTrue(climber.extend)
+        .onFalse(new InstantCommand(climber.extend::cancel));
+    commandJoystickL.button(Constants.LeftButtonIDs.RetractClimber)
+        .onTrue(climber.retract)
+        .onFalse(new InstantCommand(climber.retract::cancel));
     // .onTrue(new IntakeCommand(intake))
     // .onFalse(new StopIntakeCommand(intake));
   }
