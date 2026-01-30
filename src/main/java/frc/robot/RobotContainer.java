@@ -150,14 +150,16 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
-    commandJoystickL.button(Constants.LeftButtonIDs.Intake)
-        .onTrue(new InstantCommand(intake::startIntake))
-        .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Outtake))
-        .onFalse(new InstantCommand(intake::stop));
-    commandJoystickL.button(Constants.LeftButtonIDs.Outtake)
-        .onTrue(new InstantCommand(intake::startOuttake))
-        .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Intake))
-        .onFalse(new InstantCommand(intake::stop));
+    // // Run intake while holding the intake button, and stop intake on release
+    // commandJoystickL.button(Constants.LeftButtonIDs.Intake)
+    //     .onTrue(new InstantCommand(intake::startIntake))
+    //     .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Outtake))
+    //     .onFalse(new InstantCommand(intake::stop));
+    // // Run outtake while holding the outtake button, and stop outtake on release
+    // commandJoystickL.button(Constants.LeftButtonIDs.Outtake)
+    //     .onTrue(new InstantCommand(intake::startOuttake))
+    //     .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Intake))
+    //     .onFalse(new InstantCommand(intake::stop));
     commandJoystickL.button(Constants.LeftButtonIDs.IntakeToHopper)
         .onTrue(fullCommands.intakeBall)
         .onFalse(new InstantCommand(fullCommands.intakeBall::cancel));
