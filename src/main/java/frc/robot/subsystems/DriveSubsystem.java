@@ -8,6 +8,10 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.revrobotics.spark.SparkFlex;
 
@@ -75,6 +79,8 @@ public class DriveSubsystem extends SubsystemBase {
     PIDController speedController;
     PIDController rotationSpeedController;
 
+    
+
     public DriveSubsystem() {
         // inputs = new DrivetrainInputsAutoLogged();
         rotationSpeedController = new PIDController(
@@ -122,6 +128,11 @@ public class DriveSubsystem extends SubsystemBase {
         odometer.setVisionMeasurementStdDevs(VecBuilder.fill(0.5, 0.5, 99999999));
     }
 
+    private Object driveRobotRelative(ChassisSpeeds speeds) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'driveRobotRelative'");
+    }
+
     // This is the main 'get' section
     /**
      * Gets the robot pose.
@@ -130,6 +141,14 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public Pose2d getPose() {
         return odometer.getEstimatedPosition();
+    }
+
+    public void resetPose(Pose2d robotPosition) {
+        odometer.resetPose(robotPosition);
+    }
+
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return kinematics.toChassisSpeeds();
     }
 
     /**

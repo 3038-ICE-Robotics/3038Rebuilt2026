@@ -81,7 +81,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     driveTrainInit();
-    // configureDriveTrain();
+    configureAutoBuilder();
   }
 
   private double modifyAxis(double value, double deadband) {
@@ -91,33 +91,37 @@ public class RobotContainer {
     value = Math.copySign(value * value, value);
     return value;
   }
-//Pathplanner TODO 
-  // private void configureDriveTrain() {
-  //   try {
-  //     AutoBuilder.configure(
-  //         drivetrain::getPose, // Pose2d supplier
-  //         drivetrain::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-  //         drivetrain::getChassisSpeeds,
-  //         (speeds) -> drivetrain.drive(speeds),
-  //         new PPHolonomicDriveController(
-  //             new com.pathplanner.lib.config.PIDConstants(
-  //                 k_XY_P, k_XY_I,
-  //                 k_XY_D), // PID constants to correct for translation error (used to create the X
-  //             // and Y PID controllers)
-  //             new com.pathplanner.lib.config.PIDConstants(
-  //                 k_THETA_P, k_THETA_I,
-  //                 k_THETA_D) // PID constants to correct for rotation error (used to create the
-  //         // rotation controller)
-  //         ),
-  //         RobotConfig.fromGUISettings(),
-  //         () -> DriverStation.getAlliance().get().equals(Alliance.Red),
-  //         drivetrain);
-  //   } catch (org.json.simple.parser.ParseException a) {
-  //     System.out.println("got ParseException trying to configure AutoBuilder");
-  //   } catch (IOException b) {
-  //     System.out.println("got IOException thrown trying to configure autobuilder " + b.getMessage());
-  //   }
-  // }
+//Pathplanner TODO
+
+
+
+  private void configureAutoBuilder() {
+    try {
+      AutoBuilder.configure(
+          drivetrain::getPose, // Pose2d supplier
+          drivetrain::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+          drivetrain::getChassisSpeeds,
+          (speeds) -> drivetrain.drive(speeds),
+          new PPHolonomicDriveController(
+              new com.pathplanner.lib.config.PIDConstants(
+                  Constants.DriveTrain.TranslationkP, Constants.DriveTrain.TranslationkI,
+                  Constants.DriveTrain.TranslationkD), // PID constants to correct for translation error (used to create the X
+              // and Y PID controllers)
+              new com.pathplanner.lib.config.PIDConstants(
+                  Constants.DriveTrain.RotationkP, Constants.DriveTrain.RotationkI,
+                  Constants.DriveTrain.RotationkD) // PID constants to correct for rotation error (used to create the
+          // rotation controller)
+          ),
+          RobotConfig.fromGUISettings(),
+          () -> DriverStation.getAlliance().get().equals(Alliance.Red),
+          drivetrain);
+    } catch (org.json.simple.parser.ParseException a) {
+      System.out.println("got ParseException trying to configure AutoBuilder");
+    } catch (IOException b) {
+      System.out.println("got IOException thrown trying to configure autobuilder " + b.getMessage());
+    }
+    Autos.loadAutos();
+  }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
