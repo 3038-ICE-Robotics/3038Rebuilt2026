@@ -26,6 +26,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -78,8 +80,6 @@ public class DriveSubsystem extends SubsystemBase {
     // MotorLogger[] motorLoggers;
     PIDController speedController;
     PIDController rotationSpeedController;
-
-    
 
     public DriveSubsystem() {
         // inputs = new DrivetrainInputsAutoLogged();
@@ -596,6 +596,34 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("pose2d X", getPose().getX());
         SmartDashboard.putNumber("pose2d Y", getPose().getY());
         updateOdometry();
+        SmartDashboard.putData("Swerve Drive", new Sendable() {
+            @Override
+            public void initSendable(SendableBuilder builder) {
+                builder.setSmartDashboardType("SwerveDrive");
+
+                builder.addDoubleProperty("Front Left Angle", () -> modules[0].getRotation().getRadians(), in -> {
+                });
+                builder.addDoubleProperty("Front Left Velocity", () -> modules[0].getSpeedMetersPerSecond(), in -> {
+                });
+
+                builder.addDoubleProperty("Front Right Angle", () -> modules[1].getRotation().getRadians(), in -> {
+                });
+                builder.addDoubleProperty("Front Right Velocity", () -> modules[1].getSpeedMetersPerSecond(), in -> {
+                });
+
+                builder.addDoubleProperty("Back Left Angle", () -> modules[2].getRotation().getRadians(), in -> {
+                });
+                builder.addDoubleProperty("Back Left Velocity", () -> modules[2].getSpeedMetersPerSecond(), in -> {
+                });
+
+                builder.addDoubleProperty("Back Right Angle", () -> modules[3].getRotation().getRadians(), in -> {
+                });
+                builder.addDoubleProperty("Back Right Velocity", () -> modules[3].getSpeedMetersPerSecond(), in -> {
+                });
+
+                builder.addDoubleProperty("Robot Angle", () -> robotPosition.getRotation().getRadians(), null);
+            }
+        });
         // sets the robot orientation for each of the limelights, which is required for
         // the
         if (Preferences.getBoolean("Use Limelight", false)) {

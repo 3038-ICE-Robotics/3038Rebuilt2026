@@ -58,6 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
         return shooterPrime.getOutputCurrent() >= Constants.NeoVortex.StallCurrent;
 
     }
+    
 
     @Override
     // This runs every 20ms

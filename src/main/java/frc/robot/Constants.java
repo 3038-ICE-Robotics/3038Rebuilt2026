@@ -37,6 +37,25 @@ public final class Constants {
     public static final int HopperEmpty =1;
   }
 
+  public static class AimBotData {
+    public static double[] distancesToHub = new double[]{
+      40.125, //closest possible distance
+      80,
+      120,
+      160,
+      200,
+      225 //farthest possible distance
+    };
+    public static double[] shooterSpeeds = new double[]{ //TODO measure
+      20,
+      25,
+      30,
+      35,
+      40,
+      45
+    };
+  }
+
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.75;
   }

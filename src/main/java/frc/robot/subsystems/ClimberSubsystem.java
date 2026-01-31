@@ -60,5 +60,8 @@ public class ClimberSubsystem extends SubsystemBase {
     public boolean isExtended() {
         return climberPrime.getForwardLimitSwitch().isPressed();
     }
+    public void periodic() {
+        
+    }
 
 }
