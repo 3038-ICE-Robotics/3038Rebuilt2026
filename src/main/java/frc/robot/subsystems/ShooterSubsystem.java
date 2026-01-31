@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.net.ContentHandler;
 import java.util.ResourceBundle.Control;
 import java.util.function.Supplier;
 
@@ -13,6 +14,8 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,6 +24,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotState;
 
 public class ShooterSubsystem extends SubsystemBase {
     private SparkBaseConfig config;
@@ -32,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private Supplier<Pose2d> robotPoint;
 
     private enum ShooterModes {
-        IDLE, GOAL, TEAM_ZONE
+        IDLE, FIRING
     }
 
     private ShooterModes shooterSelect;
@@ -74,7 +78,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // This runs every 20ms
     // Add any periodic updates here
     public void periodic() {
-     double speedTarget = 0.0;
         // This runs constantly!
 
         // 1. Update Dashboard
@@ -88,16 +91,33 @@ public class ShooterSubsystem extends SubsystemBase {
             shooterPrime.set(0);
         }
         switch (shooterSelect) {
-            case GOAL:
-            // speed should be based off of distance to hub.
-                break;
-            case TEAM_ZONE:
-            // speed should be based off of distance to team zone.
+            case FIRING:
+                setMotorSpeed(getSpeedFromDistance(RobotState.distanceBetweenTargetAnd(robotPoint.get())));
                 break;
             case IDLE:
-            default:
-                speedTarget = 0.5;
+            default:setMotorSpeed(0.5);
+
         }
-        setMotorSpeed(speedTarget);
     }
+
+    private double getSpeedFromDistance(double distance) {
+        int rightIndex = -1;
+        for (int i = 0; i < Constants.AimBotData.distancesToHub.length; i++) {
+            if (distance < Constants.AimBotData.distancesToHub[i]) {
+                rightIndex = i;
+                break;
+            }
+        }
+        if (rightIndex == 0) {
+            return Constants.AimBotData.shooterSpeeds[0];
+        }
+        if (rightIndex == -1) {
+            return Constants.AimBotData.shooterSpeeds[Constants.AimBotData.distancesToHub.length - 1];
+        }
+        double percent = MathUtil.inverseInterpolate(Constants.AimBotData.distancesToHub[rightIndex - 1],
+                Constants.AimBotData.distancesToHub[rightIndex], distance);
+        return MathUtil.interpolate(Constants.AimBotData.shooterSpeeds[rightIndex - 1],
+                Constants.AimBotData.shooterSpeeds[rightIndex], percent);
+    }
+    
 }

@@ -36,7 +36,6 @@ public final class Constants {
     public static final int HopperFull = 0;
     public static final int HopperEmpty = 1;
   }
-
   public static class AimBotData {
     public static double[] distancesToHub = new double[]{
       40.125, //closest possible distance
@@ -129,6 +128,8 @@ public final class Constants {
   public static class Field {
     public static final Translation2d BlueHub = new Translation2d(4.6, 4);
     public static final Translation2d RedHub = new Translation2d(11.9, 4);
+    public static final Translation2d BlueZone = new Translation2d(2, 2); // TODO find coords
+    public static final Translation2d RedZone = new Translation2d(1, 1); // TODO find coords.
   }
 
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(null);
