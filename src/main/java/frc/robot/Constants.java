@@ -130,6 +130,7 @@ public final class Constants {
     public static final Translation2d RedHub = new Translation2d(11.9, 4);
     public static final Translation2d BlueZone = new Translation2d(2, 2); // TODO find coords
     public static final Translation2d RedZone = new Translation2d(1, 1); // TODO find coords.
+    
   }
 
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(null);

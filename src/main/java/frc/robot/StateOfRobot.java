@@ -9,7 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-public class RobotState {
+public class StateOfRobot {
     public static Translation2d target;
 
     public enum TargetType {

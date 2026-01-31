@@ -24,7 +24,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotState;
+import frc.robot.StateOfRobot;
 
 public class ShooterSubsystem extends SubsystemBase {
     private SparkBaseConfig config;
@@ -36,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private Supplier<Pose2d> robotPoint;
 
     private enum ShooterModes {
-        IDLE, FIRING
+        IDLE, FIRING, STOP
     }
 
     private ShooterModes shooterSelect;
@@ -67,6 +67,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void stopMotor() {
         setMotorSpeed(0);
+        shooterSelect = ShooterModes.STOP;
+    }
+    public void startFiring(){
+        shooterSelect = ShooterModes.FIRING;
+    }
+    public void startIdle(){
+        shooterSelect = ShooterModes.IDLE;
     }
 
     public boolean isStalled() {
@@ -92,10 +99,15 @@ public class ShooterSubsystem extends SubsystemBase {
         }
         switch (shooterSelect) {
             case FIRING:
-                setMotorSpeed(getSpeedFromDistance(RobotState.distanceBetweenTargetAnd(robotPoint.get())));
+                setMotorSpeed(getSpeedFromDistance(StateOfRobot.distanceBetweenTargetAnd(robotPoint.get())));
                 break;
             case IDLE:
-            default:setMotorSpeed(0.5);
+                setMotorSpeed(0.5);
+                break;
+            default:
+                setMotorSpeed(0);
+            case STOP:
+                break;
 
         }
     }
@@ -119,5 +131,5 @@ public class ShooterSubsystem extends SubsystemBase {
         return MathUtil.interpolate(Constants.AimBotData.shooterSpeeds[rightIndex - 1],
                 Constants.AimBotData.shooterSpeeds[rightIndex], percent);
     }
-    
+
 }

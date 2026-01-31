@@ -41,12 +41,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.StateOfRobot;
 import frc.robot.inputs.LimelightInputs;
 
 public class DriveSubsystem extends SubsystemBase {
     // These are our swerve drive kinematics and Pigeon (gyroscope)
     public SwerveDriveKinematics kinematics = Constants.kinematics;
-
+    public static Optional<Alliance> ally = DriverStation.getAlliance();
     public double gyroTimeStamp = 0;
 
     public static Pose2d robotPosition = new Pose2d();
@@ -644,8 +645,24 @@ public class DriveSubsystem extends SubsystemBase {
         }
         robotPosition = getPose();
         logDrivetrainData();
+        updateZonesAndTarget();
     }
-
+    private void updateZonesAndTarget(){
+        if (ally.isPresent()) {
+            if (ally.get() == Alliance.Red) {
+                if (robotPosition.getX() < Constants.Field.RedZone.getX()){ 
+                StateOfRobot.setTargetHUB(); 
+                } else {
+                    StateOfRobot.setTargetZONE();
+                }
+            } else {
+                if (robotPosition.getX() > Constants.Field.BlueZone.getX()){
+                     StateOfRobot.setTargetHUB();
+                } else {
+                    StateOfRobot.setTargetZONE();
+                }
+            }}
+    }
     private void updateInputs() {
         // for (int i = 0; i < 4; i++) {
         // inputs.swerveModuleStates[i] = modules[i].getState();

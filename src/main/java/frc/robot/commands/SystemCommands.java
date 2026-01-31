@@ -43,10 +43,11 @@ public class SystemCommands {
             intake.startIntake();
             transfer.toLauncher();
         }, () -> {
-            shooter.setMotorSpeed(.5); // TODO pick a speed with care.
+            shooter.startFiring();
         }, interrupted -> {
             intake.stop();
             transfer.stopMotors();
+            shooter.startIdle();
         }, () -> {
             return false;
         }, intake, transfer, shooter);
@@ -55,9 +56,10 @@ public class SystemCommands {
         shootBallFromHopper = new FunctionalCommand(() -> {
             transfer.toLauncher();
         }, () -> {
-            shooter.setMotorSpeed(.5); // TODO pick speed with care or rig to speed distance calculations.
+            shooter.startFiring(); 
         }, interrupted -> {
             transfer.stopMotors();
+            shooter.startIdle();
         }, () -> {
             return transfer.isHopperEmpty();
         }, transfer, shooter);
