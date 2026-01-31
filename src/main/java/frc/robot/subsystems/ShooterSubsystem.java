@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.ResourceBundle.Control;
+import java.util.function.Supplier;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -14,6 +15,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.jni.ArmFeedforwardJNI;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,8 +29,15 @@ public class ShooterSubsystem extends SubsystemBase {
     private final SparkFlex shooterFollow;
     private SparkClosedLoopController VelocityControl;
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0);
+    private Supplier<Pose2d> robotPoint;
 
-    public ShooterSubsystem() {
+    private enum ShooterModes {
+        IDLE, GOAL, TEAM_ZONE
+    }
+
+    private ShooterModes shooterSelect;
+
+    public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
         shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, null);
         shooterFollow = new SparkFlex(Constants.MotorIDs.ShooterFollow, null);
         config = new SparkFlexConfig();
@@ -39,6 +48,8 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterPrime.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         shooterFollow.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         VelocityControl = shooterPrime.getClosedLoopController();
+        robotPoint = robotPosition;
+        shooterSelect = ShooterModes.IDLE;
 
     }
 
@@ -63,6 +74,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // This runs every 20ms
     // Add any periodic updates here
     public void periodic() {
+     double speedTarget = 0.0;
         // This runs constantly!
 
         // 1. Update Dashboard
@@ -75,5 +87,17 @@ public class ShooterSubsystem extends SubsystemBase {
             System.out.println("🔥 INTAKE OVERHEATING! STOPPING!");
             shooterPrime.set(0);
         }
+        switch (shooterSelect) {
+            case GOAL:
+            // speed should be based off of distance to hub.
+                break;
+            case TEAM_ZONE:
+            // speed should be based off of distance to team zone.
+                break;
+            case IDLE:
+            default:
+                speedTarget = 0.5;
+        }
+        setMotorSpeed(speedTarget);
     }
 }

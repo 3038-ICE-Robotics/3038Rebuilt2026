@@ -85,12 +85,12 @@ public class RobotContainer {
     // set stuff
     commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
     intake = new IntakeSubsystem();
-    shooter = new ShooterSubsystem();
     transfer = new TransferSubsystem();
     fullCommands = new SystemCommands(intake, transfer, shooter);
     // Configure the trigger bindings
     configureBindings();
     driveTrainInit();
+    shooter = new ShooterSubsystem(drivetrain::getPose);
     // configureDriveTrain();
   }
 

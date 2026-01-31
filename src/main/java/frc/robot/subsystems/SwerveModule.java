@@ -201,4 +201,7 @@ public class SwerveModule {
                 steerFF.calculate(desiredDriveSpeed));
 
     }
+    public void periodic() {
+        
+    }
 }
