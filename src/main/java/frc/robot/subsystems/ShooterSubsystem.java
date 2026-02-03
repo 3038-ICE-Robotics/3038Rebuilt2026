@@ -58,7 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getCurrentSpeed() {
-        return VelocityControl.getSetpoint();
+        return shooterPrime.getEncoder().getVelocity();
     }
 
     public void setMotorSpeed(double speed) {
@@ -97,19 +97,23 @@ public class ShooterSubsystem extends SubsystemBase {
             System.out.println("🔥 INTAKE OVERHEATING! STOPPING!");
             shooterPrime.set(0);
         }
+        double distanceFromTarget = StateOfRobot.distanceBetweenTargetAnd(robotPoint.get());
+        double targetSpeed = 0;
+        SmartDashboard.putNumber("Distance To Target", distanceFromTarget);
+
         switch (shooterSelect) {
             case FIRING:
-                setMotorSpeed(getSpeedFromDistance(StateOfRobot.distanceBetweenTargetAnd(robotPoint.get())));
+                targetSpeed = getSpeedFromDistance(distanceFromTarget);
                 break;
             case IDLE:
-                setMotorSpeed(0.5);
+                targetSpeed = 0.5;
                 break;
-            default:
-                setMotorSpeed(0);
             case STOP:
                 break;
-
         }
+        setMotorSpeed(targetSpeed);
+        SmartDashboard.putNumber("Target Motor Speed", targetSpeed);
+        SmartDashboard.putNumber("Physical Motor Speed", getCurrentSpeed());
     }
 
     private double getSpeedFromDistance(double distance) {
