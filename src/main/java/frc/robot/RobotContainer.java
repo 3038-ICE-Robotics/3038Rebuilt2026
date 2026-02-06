@@ -60,7 +60,8 @@ public class RobotContainer {
         () -> false,
         ControllerForwardAxisSupplier,
         ControllerSidewaysAxisSupplier,
-        ControllerZAxisSupplier);
+        () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain.getPose())
+            : ControllerZAxisSupplier.getAsDouble());
     drivetrain.setDefaultCommand(defaultDriveCommand);
   }
 
@@ -170,6 +171,8 @@ public class RobotContainer {
     commandJoystickR.button(Constants.RightButtonIDs.ShootFromIntake)
         .onTrue(fullCommands.shootBallFromGround)
         .onFalse(new InstantCommand(fullCommands.shootBallFromGround::cancel));
+    commandJoystickL.button(Constants.LeftButtonIDs.ToggleAimBot)
+        .onTrue(new InstantCommand(StateOfRobot::toggleAimAssist));
     // .onTrue(new IntakeCommand(intake))
     // .onFalse(new StopIntakeCommand(intake));
   }

@@ -4,10 +4,12 @@ import java.util.Optional;
 
 import com.pathplanner.lib.path.GoalEndState;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.AimBotData;
 
 public class StateOfRobot {
     public static Translation2d target;
@@ -18,6 +20,22 @@ public class StateOfRobot {
 
     public static TargetType targetType = TargetType.GOAL;
     public static Optional<Alliance> ally = DriverStation.getAlliance();
+    public static boolean isAimAssistOn = false;
+    public static PIDController aimAssistPID = new PIDController(AimBotData.RotationPID[0], AimBotData.RotationPID[1],
+            AimBotData.RotationPID[2]);
+
+    public static void toggleAimAssist() {
+        if (isAimAssistOn) {
+            isAimAssistOn = false;
+            aimAssistPID.reset();
+        } else {
+            isAimAssistOn = true;
+        }
+
+    }
+    public static double getAimBotRotation(Pose2d botPose2d) {
+        return aimAssistPID.calculate(angelBetweenTargetAnd(botPose2d) - botPose2d.getRotation().getRadians());
+    }
 
     public static double distanceBetweenTargetAnd(Pose2d start) {
         double dx = target.getX() - start.getX();
