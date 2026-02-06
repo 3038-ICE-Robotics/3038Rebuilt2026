@@ -37,6 +37,11 @@ public final class Constants {
     public static final int HopperEmpty = 1;
   }
   public static class AimBotData {
+    public static double[] RotationPID = new double[]{ //measure
+      0, //kP
+      0, //kI
+      0 //kD
+    }; 
     public static double[] distancesToHub = new double[]{
       40.125, //closest possible distance
       80,
@@ -64,6 +69,7 @@ public final class Constants {
     public static final int Outtake = 9;
     public static final int IntakeToHopper = 1;
     public static final int OutTakeFull = 2;
+    public static final int ToggleAimBot = 3; //fix
   }
 
   public static class RightButtonIDs {
