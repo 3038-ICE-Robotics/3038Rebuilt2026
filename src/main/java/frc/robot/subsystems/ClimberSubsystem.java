@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
-    private SparkMax climberPrime;
-    private SparkMax climberFollow;
+    private SparkMax climbLeft;
+    private SparkMax climbRight;
     private RelativeEncoder climbHeight;
     private double retractPosition;
     private double extendPosition;
@@ -23,9 +23,9 @@ public class ClimberSubsystem extends SubsystemBase {
     public Command retract;
 
     public ClimberSubsystem() {
-        climberPrime = new SparkMax(Constants.MotorIDs.ClimbPrime, MotorType.kBrushless);
-        climberFollow = new SparkMax(Constants.MotorIDs.ClimbFollow, MotorType.kBrushless);
-        climbHeight = climberPrime.getAlternateEncoder();
+        climbLeft = new SparkMax(Constants.MotorIDs.ClimbLeft, MotorType.kBrushless);
+        climbRight = new SparkMax(Constants.MotorIDs.ClimbRight, MotorType.kBrushless);
+        climbHeight = climbLeft.getAlternateEncoder();
         //moves arm down.
         retract = new FunctionalCommand(() -> {
             setSpeed(-.5);
@@ -52,15 +52,15 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        climberPrime.set(speed);
+        climbLeft.set(speed);
     }
 
     public boolean isHome() {
-        return climberPrime.getReverseLimitSwitch().isPressed();
+        return climbLeft.getReverseLimitSwitch().isPressed();
     }
 
     public boolean isExtended() {
-        return climberPrime.getForwardLimitSwitch().isPressed();
+        return climbLeft.getForwardLimitSwitch().isPressed();
     }
     public void periodic() {
         

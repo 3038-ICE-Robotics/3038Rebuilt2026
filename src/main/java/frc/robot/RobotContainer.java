@@ -87,11 +87,12 @@ public class RobotContainer {
     commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
     intake = new IntakeSubsystem();
     transfer = new TransferSubsystem();
+    driveTrainInit();
+    shooter = new ShooterSubsystem(drivetrain::getPose);
     fullCommands = new SystemCommands(intake, transfer, shooter);
     // Configure the trigger bindings
     configureBindings();
-    driveTrainInit();
-    shooter = new ShooterSubsystem(drivetrain::getPose);
+    
     // configureDriveTrain();
   }
 
@@ -173,6 +174,8 @@ public class RobotContainer {
         .onFalse(new InstantCommand(fullCommands.shootBallFromGround::cancel));
     commandJoystickL.button(Constants.LeftButtonIDs.ToggleAimBot)
         .onTrue(new InstantCommand(StateOfRobot::toggleAimAssist));
+    commandJoystickL.button(11)
+        .onTrue(new InstantCommand(drivetrain::setEncoderOffsets));
     // .onTrue(new IntakeCommand(intake))
     // .onFalse(new StopIntakeCommand(intake));
   }

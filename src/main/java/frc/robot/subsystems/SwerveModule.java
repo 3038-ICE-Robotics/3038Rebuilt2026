@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -62,8 +63,8 @@ public class SwerveModule {
             int steerMotorChannel,
             Rotation2d steerEncoderOffset
             ) {
-        driveMotor = new SparkFlex(driveMotorChannel, null);
-        steerMotor = new SparkMax(steerMotorChannel, null);
+        driveMotor = new SparkFlex(driveMotorChannel, MotorType.kBrushless);
+        steerMotor = new SparkMax(steerMotorChannel, MotorType.kBrushless);
         swerveEncoder = steerMotor.getAbsoluteEncoder();
         driveControl = driveMotor.getClosedLoopController();
         steerControl = steerMotor.getClosedLoopController();

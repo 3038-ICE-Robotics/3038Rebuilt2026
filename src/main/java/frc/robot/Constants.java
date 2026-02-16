@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import frc.robot.commands.Drive;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -79,15 +80,15 @@ public final class Constants {
   }
 
   public static class MotorIDs {
-    public static final int[] DriveIDs = new int[] { 0, 1, 2, 3 };
+    public static final int[] DriveIDs = new int[] { 8, 1, 2, 3 };
     public static final int[] SteerIDs = new int[] { 4, 5, 6, 7 };
-    public static final int ShooterPrime = 8;
+    public static final int ShooterPrime = 15;
     public static final int ShooterFollow = 9;
-    public static final int Transfer = 10;
-    public static final int IntakePrime = 11;
-    public static final int IntakeFollow = 12;
-    public static final int ClimbPrime = 13;
-    public static final int ClimbFollow = 14;
+    public static final int Intake = 10;
+    public static final int TransferLow = 11;
+    public static final int TransferHigh = 12;
+    public static final int ClimbRight = 13;
+    public static final int ClimbLeft = 14;
   }
 
   public static class NeoVortex {
@@ -139,5 +140,10 @@ public final class Constants {
     
   }
 
-  public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(null);
+  public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+    new Translation2d(DriveTrain.DrivetrainTrackWidth/2,DriveTrain.DrivetrainWheelbase/2),
+    new Translation2d(DriveTrain.DrivetrainTrackWidth/2,DriveTrain.DrivetrainWheelbase/-2),
+    new Translation2d(DriveTrain.DrivetrainTrackWidth/-2,DriveTrain.DrivetrainWheelbase/2),
+    new Translation2d(DriveTrain.DrivetrainTrackWidth/-2,DriveTrain.DrivetrainWheelbase/-2)
+    );
 }

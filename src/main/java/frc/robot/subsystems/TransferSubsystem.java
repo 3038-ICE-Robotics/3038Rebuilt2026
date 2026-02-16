@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class TransferSubsystem extends SubsystemBase {
-    private SparkFlex frontMotor;
-    private SparkFlex backMotor;
+    private SparkFlex TransferLow;
+    private SparkFlex TransferHigh;
     private DigitalInput emptySensor;
     private double intakeSpeed = .5;
     private double outTakeSpeed = -.5;
@@ -22,29 +22,29 @@ public class TransferSubsystem extends SubsystemBase {
     private double ampThreshold = 10;
 
     public TransferSubsystem() {
-        frontMotor = new SparkFlex(Constants.MotorIDs.IntakeFollow, MotorType.kBrushless);
-        backMotor = new SparkFlex(Constants.MotorIDs.Transfer, MotorType.kBrushless);
+        TransferLow = new SparkFlex(Constants.MotorIDs.TransferLow, MotorType.kBrushless);
+        TransferHigh = new SparkFlex(Constants.MotorIDs.TransferHigh, MotorType.kBrushless);
         emptySensor = new DigitalInput(Constants.DigitalChannels.HopperEmpty);
     }
 
     public void startIntake() {
-        frontMotor.set(intakeSpeed);
-        backMotor.set(intakeSpeed);
+        TransferLow.set(intakeSpeed);
+        TransferHigh.set(intakeSpeed);
     }
 
     public void stopMotors() {
-        frontMotor.set(0);
-        backMotor.set(0);
+        TransferLow.set(0);
+        TransferHigh.set(0);
     }
 
     public void toLauncher() {
-        frontMotor.set(intakeSpeed);
-        backMotor.set(outTakeSpeed);
+        TransferLow.set(intakeSpeed);
+        TransferHigh.set(outTakeSpeed);
     }
 
     public void outTake() {
-        frontMotor.set(outTakeSpeed);
-        backMotor.set(outTakeSpeed);
+        TransferLow.set(outTakeSpeed);
+        TransferHigh.set(outTakeSpeed);
     }
 
     public boolean isHopperEmpty() {
@@ -61,7 +61,7 @@ public class TransferSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        ampHistory[nextIndex] = standardAmp - backMotor.getOutputCurrent();
+        ampHistory[nextIndex] = standardAmp - TransferHigh.getOutputCurrent();
         nextIndex = (nextIndex + 1) % ampHistory.length;
     }
     

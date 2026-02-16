@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -20,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private SparkBaseConfig config;
 
     public IntakeSubsystem() {
-        intakePrime = new SparkFlex(Constants.MotorIDs.IntakePrime, null);
+        intakePrime = new SparkFlex(Constants.MotorIDs.Intake,MotorType.kBrushless);
         hopperFullSensor = new DigitalInput(Constants.DigitalChannels.HopperFull);
         config = new SparkFlexConfig();
         config

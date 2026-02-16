@@ -10,6 +10,7 @@ import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -42,8 +43,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private ShooterModes shooterSelect;
 
     public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
-        shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, null);
-        shooterFollow = new SparkFlex(Constants.MotorIDs.ShooterFollow, null);
+        shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, MotorType.kBrushless);
+        shooterFollow = new SparkFlex(Constants.MotorIDs.ShooterFollow, MotorType.kBrushless);
         config = new SparkFlexConfig();
         config
                 .smartCurrentLimit(Constants.NeoVortex.StallCurrent)
