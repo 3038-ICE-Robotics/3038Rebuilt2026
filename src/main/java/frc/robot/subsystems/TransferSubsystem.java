@@ -48,7 +48,7 @@ public class TransferSubsystem extends SubsystemBase {
     }
 
     public boolean isHopperEmpty() {
-        return emptySensor.get();
+        return false;//emptySensor.get();
     }
 
     public boolean isBallStuck() {

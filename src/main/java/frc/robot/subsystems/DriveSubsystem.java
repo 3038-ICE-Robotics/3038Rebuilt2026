@@ -25,9 +25,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -38,6 +40,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog.State;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
@@ -54,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // private final Pigeon2 pigeon = new Pigeon2(DRIVETRAIN_PIGEON_ID,
     // CANIVORE_DRIVETRAIN);
-    ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS2);
+    ADIS16470_IMU gyro;
     /**
      * These are our modules. We initialize them in the constructor. 0 = Front Left
      * 1 = Front Right 2 = Back Left 3 = Back Right
@@ -83,6 +87,8 @@ public class DriveSubsystem extends SubsystemBase {
     PIDController rotationSpeedController;
 
     public DriveSubsystem() {
+
+        gyro = new ADIS16470_IMU();
         // inputs = new DrivetrainInputsAutoLogged();
         rotationSpeedController = new PIDController(
                 Constants.DriveTrain.RotationkP, Constants.DriveTrain.RotationkI, Constants.DriveTrain.RotationkD);
@@ -111,7 +117,7 @@ public class DriveSubsystem extends SubsystemBase {
                     Constants.MotorIDs.DriveIDs[index],
                     Constants.MotorIDs.SteerIDs[index],
                     Rotation2d.fromRotations(
-                            Preferences.getDouble(Constants.DriveTrain.MotorKeys[index] + " Offset", 0)));
+                            Constants.DriveTrain.ModuleOffsets[index]));
         }
 
         // DataLog log = DataLogManager.getLog();
@@ -127,6 +133,35 @@ public class DriveSubsystem extends SubsystemBase {
         odometer = new SwerveDrivePoseEstimator(
                 kinematics, getGyroscopeRotation(), getModulePositions(), Constants.DriveTrain.DriveOdometryOrigin);
         odometer.setVisionMeasurementStdDevs(VecBuilder.fill(0.5, 0.5, 99999999));
+
+        SmartDashboard.putData("Swerve Drive", new Sendable() {
+            @Override
+            public void initSendable(SendableBuilder builder) {
+                builder.setSmartDashboardType("SwerveDrive");
+
+                builder.addDoubleProperty("Front Left Angle", () -> modules[0].getRotation().getRadians(), in -> {
+                });
+                builder.addDoubleProperty("Front Left Velocity", () -> modules[0].getSpeedMetersPerSecond(), in -> {
+                });
+
+                builder.addDoubleProperty("Front Right Angle", () -> modules[1].getRotation().getRadians(), in -> {
+                });
+                builder.addDoubleProperty("Front Right Velocity", () -> modules[1].getSpeedMetersPerSecond(), in -> {
+                });
+
+                builder.addDoubleProperty("Back Left Angle", () -> modules[2].getRotation().getRadians(), in -> {
+                });
+                builder.addDoubleProperty("Back Left Velocity", () -> modules[2].getSpeedMetersPerSecond(), in -> {
+                });
+
+                builder.addDoubleProperty("Back Right Angle", () -> modules[3].getRotation().getRadians(), in -> {
+                });
+                builder.addDoubleProperty("Back Right Velocity", () -> modules[3].getSpeedMetersPerSecond(), in -> {
+                });
+
+                builder.addDoubleProperty("Robot Angle", () -> robotPosition.getRotation().getRadians(), null);
+            }
+        });
     }
 
     private Object driveRobotRelative(ChassisSpeeds speeds) {
@@ -158,7 +193,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return
      */
     public Rotation2d getGyroscopeRotation() {
-        return gyro.getRotation2d();
+        return new Rotation2d((gyro.getAngle() * Math.PI) / 180);
     }
 
     /**
@@ -356,6 +391,7 @@ public class DriveSubsystem extends SubsystemBase {
         SwerveModuleState[] desiredStates = kinematics
                 .toSwerveModuleStates(ChassisSpeeds.discretize(chassisSpeeds, 0.02));
         double maxSpeed = Collections.max(Arrays.asList(desiredStates)).speedMetersPerSecond;
+        SmartDashboard.putNumber("Inputs/maxspeed", maxSpeed);
         if (maxSpeed <= Constants.DriveTrain.DriveDeadbandMPS) {
             for (int i = 0; i < 4; i++) {
                 stop();
@@ -580,7 +616,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(
                 "DRIVETRAIN/rotational speed", Math.toDegrees(getChassisSpeeds().omegaRadiansPerSecond));
         SmartDashboard.putNumber(
-                "DRIVETRAIN/gyroscope rotation degrees", getPose().getRotation().getDegrees());
+                "DRIVETRAIN/gyroscope rotation degrees", gyro.getAngle());
         SmartDashboard.putNumber(
                 "DRIVETRAIN/degrees per second", Math.toDegrees(getChassisSpeeds().omegaRadiansPerSecond));
 
@@ -597,34 +633,6 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("pose2d X", getPose().getX());
         SmartDashboard.putNumber("pose2d Y", getPose().getY());
         updateOdometry();
-        SmartDashboard.putData("Swerve Drive", new Sendable() {
-            @Override
-            public void initSendable(SendableBuilder builder) {
-                builder.setSmartDashboardType("SwerveDrive");
-
-                builder.addDoubleProperty("Front Left Angle", () -> modules[0].getRotation().getRadians(), in -> {
-                });
-                builder.addDoubleProperty("Front Left Velocity", () -> modules[0].getSpeedMetersPerSecond(), in -> {
-                });
-
-                builder.addDoubleProperty("Front Right Angle", () -> modules[1].getRotation().getRadians(), in -> {
-                });
-                builder.addDoubleProperty("Front Right Velocity", () -> modules[1].getSpeedMetersPerSecond(), in -> {
-                });
-
-                builder.addDoubleProperty("Back Left Angle", () -> modules[2].getRotation().getRadians(), in -> {
-                });
-                builder.addDoubleProperty("Back Left Velocity", () -> modules[2].getSpeedMetersPerSecond(), in -> {
-                });
-
-                builder.addDoubleProperty("Back Right Angle", () -> modules[3].getRotation().getRadians(), in -> {
-                });
-                builder.addDoubleProperty("Back Right Velocity", () -> modules[3].getSpeedMetersPerSecond(), in -> {
-                });
-
-                builder.addDoubleProperty("Robot Angle", () -> robotPosition.getRotation().getRadians(), null);
-            }
-        });
         // sets the robot orientation for each of the limelights, which is required for
         // the
         if (Preferences.getBoolean("Use Limelight", false)) {
@@ -647,22 +655,25 @@ public class DriveSubsystem extends SubsystemBase {
         logDrivetrainData();
         updateZonesAndTarget();
     }
-    private void updateZonesAndTarget(){
+
+    private void updateZonesAndTarget() {
         if (ally.isPresent()) {
             if (ally.get() == Alliance.Red) {
-                if (robotPosition.getX() < Constants.Field.RedZone.getX()){ 
-                StateOfRobot.setTargetHUB(); 
+                if (robotPosition.getX() < Constants.Field.RedZone.getX()) {
+                    StateOfRobot.setTargetHUB();
                 } else {
                     StateOfRobot.setTargetZONE();
                 }
             } else {
-                if (robotPosition.getX() > Constants.Field.BlueZone.getX()){
-                     StateOfRobot.setTargetHUB();
+                if (robotPosition.getX() > Constants.Field.BlueZone.getX()) {
+                    StateOfRobot.setTargetHUB();
                 } else {
                     StateOfRobot.setTargetZONE();
                 }
-            }}
+            }
+        }
     }
+
     private void updateInputs() {
         // for (int i = 0; i < 4; i++) {
         // inputs.swerveModuleStates[i] = modules[i].getState();
@@ -741,4 +752,10 @@ public class DriveSubsystem extends SubsystemBase {
         return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
+    public void voltageDrive(Voltage input) {
+    }
+
+    public void sysLog(SysIdRoutineLog log) {
+        log.recordState(State.kQuasistaticForward);
+    }
 }

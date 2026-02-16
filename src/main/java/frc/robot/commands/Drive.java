@@ -6,12 +6,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class Drive extends Command{
-    
+public class Drive extends Command {
+
   private final DriveSubsystem drivetrain;
   private final BooleanSupplier robotCentricMode;
   private final DoubleSupplier translationXSupplier;
@@ -88,6 +89,9 @@ public class Drive extends Command{
                   * Constants.DriveTrain.MaxAngularVelocityRadiansPS,
               drivetrain.getPose().getRotation()));
     }
+    SmartDashboard.putNumber("Inputs/x", translationXSupplier.getAsDouble());
+    SmartDashboard.putNumber("Inputs/y", translationYSupplier.getAsDouble());
+    SmartDashboard.putNumber("Inputs/z", rotationSupplier.getAsDouble());
   }
 
   @Override

@@ -73,7 +73,8 @@ public class SwerveModule {
         steerConfig = new SparkMaxConfig();
         encoderConfig = new AbsoluteEncoderConfig();
         encoderConfig.zeroOffset(-m_steerEncoderOffset.getRotations());
-        driveConfig.closedLoop.pid(0, 0, 0, ClosedLoopSlot.kSlot0);
+        driveConfig.closedLoop.pid(1, 0, 0, ClosedLoopSlot.kSlot0);
+        steerConfig.closedLoop.pid(1,0,0, ClosedLoopSlot.kSlot0);
         // Apply the configurations.
         driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -198,8 +199,8 @@ public class SwerveModule {
                             driveFF.calculate(desiredDriveSpeed));
 
         }
-        steerControl.setSetpoint(desiredSteerAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0,
-                steerFF.calculate(desiredDriveSpeed));
+        steerControl.setSetpoint(desiredSteerAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+                // steerFF.calculate(desiredDriveSpeed));
 
     }
     public void periodic() {

@@ -27,11 +27,14 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -63,6 +66,7 @@ public class RobotContainer {
         () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain.getPose())
             : ControllerZAxisSupplier.getAsDouble());
     drivetrain.setDefaultCommand(defaultDriveCommand);
+
   }
 
   // The robot's subsystems and commands are defined here...
@@ -72,6 +76,8 @@ public class RobotContainer {
   private IntakeSubsystem intake;
   private ShooterSubsystem shooter;
   private TransferSubsystem transfer;
+  private SysIdRoutine sysRoutine1;
+  private Config configForSysRoutine1;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -85,15 +91,20 @@ public class RobotContainer {
     ControllerZAxisSupplier = () -> modifyAxis(-rJoystick.getX(), 0);
     // set stuff
     commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
+    commandJoystickR = new CommandJoystick(Constants.OperatorConstants.RDriverControllerPort);
     intake = new IntakeSubsystem();
     transfer = new TransferSubsystem();
     driveTrainInit();
-    shooter = new ShooterSubsystem(drivetrain::getPose);
+    // shooter = new ShooterSubsystem(drivetrain::getPose);
     fullCommands = new SystemCommands(intake, transfer, shooter);
     // Configure the trigger bindings
     configureBindings();
-    
+
     // configureDriveTrain();
+    configForSysRoutine1 = new Config(null, null, null);
+    sysRoutine1 = new SysIdRoutine(configForSysRoutine1,
+        new SysIdRoutine.Mechanism(drivetrain::voltageDrive, drivetrain::sysLog, m_exampleSubsystem));
+
   }
 
   private double modifyAxis(double value, double deadband) {

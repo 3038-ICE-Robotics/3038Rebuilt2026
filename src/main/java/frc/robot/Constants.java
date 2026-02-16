@@ -37,27 +37,28 @@ public final class Constants {
     public static final int HopperFull = 0;
     public static final int HopperEmpty = 1;
   }
+
   public static class AimBotData {
-    public static double[] RotationPID = new double[]{ //measure
-      0, //kP
-      0, //kI
-      0 //kD
-    }; 
-    public static double[] distancesToHub = new double[]{
-      40.125, //closest possible distance
-      80,
-      120,
-      160,
-      200,
-      225 //farthest possible distance
+    public static double[] RotationPID = new double[] { // measure
+        0, // kP
+        0, // kI
+        0 // kD
     };
-    public static double[] shooterSpeeds = new double[]{ //TODO measure
-      20,
-      25,
-      30,
-      35,
-      40,
-      45
+    public static double[] distancesToHub = new double[] {
+        40.125, // closest possible distance
+        80,
+        120,
+        160,
+        200,
+        225 // farthest possible distance
+    };
+    public static double[] shooterSpeeds = new double[] { // TODO measure (RPM)
+        700,
+        250,
+        300,
+        350,
+        400,
+        450
     };
   }
 
@@ -70,7 +71,7 @@ public final class Constants {
     public static final int Outtake = 9;
     public static final int IntakeToHopper = 1;
     public static final int OutTakeFull = 2;
-    public static final int ToggleAimBot = 3; //fix
+    public static final int ToggleAimBot = 3; // fix
   }
 
   public static class RightButtonIDs {
@@ -97,6 +98,12 @@ public final class Constants {
   }
 
   public static class DriveTrain {
+    public static final double[] ModuleOffsets = new double[] {
+        0.26720383763313293,
+        0.4419109523296356,
+        0.250643789768219,
+        -0.03793513774871826
+    };
     public static final double WheelDiameter = (4 / 12) / MetersToFeet;
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;
     public static final double DrivetrainWheelbase = (20.5 / 12.0) / MetersToFeet;
@@ -137,13 +144,12 @@ public final class Constants {
     public static final Translation2d RedHub = new Translation2d(11.9, 4);
     public static final Translation2d BlueZone = new Translation2d(2, 2); // TODO find coords
     public static final Translation2d RedZone = new Translation2d(1, 1); // TODO find coords.
-    
+
   }
 
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-    new Translation2d(DriveTrain.DrivetrainTrackWidth/2,DriveTrain.DrivetrainWheelbase/2),
-    new Translation2d(DriveTrain.DrivetrainTrackWidth/2,DriveTrain.DrivetrainWheelbase/-2),
-    new Translation2d(DriveTrain.DrivetrainTrackWidth/-2,DriveTrain.DrivetrainWheelbase/2),
-    new Translation2d(DriveTrain.DrivetrainTrackWidth/-2,DriveTrain.DrivetrainWheelbase/-2)
-    );
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / 2, DriveTrain.DrivetrainWheelbase / 2),
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / 2, DriveTrain.DrivetrainWheelbase / -2),
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / 2),
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / -2));
 }

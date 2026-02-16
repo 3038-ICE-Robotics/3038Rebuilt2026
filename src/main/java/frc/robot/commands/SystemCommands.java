@@ -16,11 +16,11 @@ public class SystemCommands {
     public SystemCommands(IntakeSubsystem intake, TransferSubsystem transfer, ShooterSubsystem shooter) {
         // Takes in balls to use later.
         intakeBall = new FunctionalCommand(() -> {
-            intake.startIntake();
+             intake.startIntake();
             transfer.startIntake();
         }, () -> {
         }, interrupted -> {
-            intake.stop();
+             intake.stop();
             transfer.stopMotors();
         }, () -> {
             return intake.isHopperFull();
@@ -28,11 +28,11 @@ public class SystemCommands {
 
         // spits out balls from inside the robot.
         outtakeBall = new FunctionalCommand(() -> {
-            intake.startOuttake();
+             intake.startOuttake();
             transfer.outTake();
         }, () -> {
         }, interrupted -> {
-            intake.stop();
+             intake.stop();
             transfer.stopMotors();
         }, () -> {
             return transfer.isHopperEmpty();
@@ -40,29 +40,29 @@ public class SystemCommands {
 
         // picks balls from intake and skips hopper to fire.
         shootBallFromGround = new FunctionalCommand(() -> {
-            intake.startIntake();
+             intake.startIntake();
             transfer.toLauncher();
         }, () -> {
-            shooter.startFiring();
+            // shooter.startFiring();
         }, interrupted -> {
-            intake.stop();
+             intake.stop();
             transfer.stopMotors();
-            shooter.startIdle();
+            // shooter.startIdle();
         }, () -> {
             return false;
-        }, intake, transfer, shooter);
+        }, intake, transfer);
 
         // Takes balls from hopper and shoots them.
         shootBallFromHopper = new FunctionalCommand(() -> {
             transfer.toLauncher();
         }, () -> {
-            shooter.startFiring(); 
+            // shooter.startFiring(); 
         }, interrupted -> {
             transfer.stopMotors();
-            shooter.startIdle();
+            // shooter.startIdle();
         }, () -> {
             return transfer.isHopperEmpty();
-        }, transfer, shooter);
+        }, transfer);
 
     }
 
