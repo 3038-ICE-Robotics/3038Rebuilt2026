@@ -10,6 +10,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SystemCommands;
+import frc.robot.interfaces.ITunable;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -27,6 +28,8 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -55,20 +58,6 @@ public class RobotContainer {
   Joystick rJoystick;
   SystemCommands fullCommands;
 
-  private void driveTrainInit() {
-    drivetrain = new DriveSubsystem();
-
-    defaultDriveCommand = new Drive(
-        drivetrain,
-        () -> false,
-        ControllerForwardAxisSupplier,
-        ControllerSidewaysAxisSupplier,
-        () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain.getPose())
-            : ControllerZAxisSupplier.getAsDouble());
-    drivetrain.setDefaultCommand(defaultDriveCommand);
-
-  }
-
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private CommandJoystick commandJoystickL;
@@ -78,6 +67,7 @@ public class RobotContainer {
   private TransferSubsystem transfer;
   private SysIdRoutine sysRoutine1;
   private Config configForSysRoutine1;
+  private SendableChooser<ITunable> subSystemChooser = new SendableChooser<ITunable>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -105,6 +95,24 @@ public class RobotContainer {
     sysRoutine1 = new SysIdRoutine(configForSysRoutine1,
         new SysIdRoutine.Mechanism(drivetrain::voltageDrive, drivetrain::sysLog, m_exampleSubsystem));
 
+    // TODO: move the smartdashboard putnumber calls to this spot.
+    // also update the string so that it shows as "Tuning/..." for each of the
+    // values.
+    // it also might be a good idea to update the default values to 0 instead of a
+    // reference to Constants since these will be used for other system tuning.
+
+
+    // we can add other subsystems to this chooser with addOption(...) and by making
+    // each subsystem implement ITunable and adding an override for updatePID
+    // function in each subsystem.
+    // If you are up for it, try adding this implementation to the shooter subsystem
+    // and then adding it to the chooser.
+    subSystemChooser.setDefaultOption("Swerve", drivetrain);
+
+
+    SmartDashboard.putData("Tuning/set",new InstantCommand(this::updatePID));
+    SmartDashboard.putData("Tuning/Selection", subSystemChooser);
+
   }
 
   private double modifyAxis(double value, double deadband) {
@@ -114,6 +122,21 @@ public class RobotContainer {
     value = Math.copySign(value * value, value);
     return value;
   }
+
+  private void driveTrainInit() {
+    drivetrain = new DriveSubsystem();
+
+    defaultDriveCommand = new Drive(
+        drivetrain,
+        () -> false,
+        ControllerForwardAxisSupplier,
+        ControllerSidewaysAxisSupplier,
+        () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain.getPose())
+            : ControllerZAxisSupplier.getAsDouble());
+    drivetrain.setDefaultCommand(defaultDriveCommand);
+
+  }
+
   // Pathplanner TODO
   // private void configureDriveTrain() {
   // try {
@@ -160,9 +183,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
     commandJoystickL.button(Constants.LeftButtonIDs.Intake)
         .onTrue(new InstantCommand(intake::startIntake))
         .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Outtake))
@@ -199,5 +219,22 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+
+
+  //This function only gets called when the "Tuning/set" button is pressed on Elastic.
+  private void updatePID() {
+    if (DriverStation.isTest()) {
+      // TODO: move the getnumber pid calls to this spot from SwerveModule
+      // and update the strings so that they show as "Tuning/..." for each of the
+      // values.
+      // we need to store the results of the getnumber calls in function level
+      // variables so they can be passed into the updatePID call.
+
+
+      // this line is getting the selected subsystem from Elastic and sending the PID
+      // values to that subsystem.
+      ((ITunable) SmartDashboard.getData("Tuning/Selection")).updatePID(kp, ki, kd);
+    }
   }
 }

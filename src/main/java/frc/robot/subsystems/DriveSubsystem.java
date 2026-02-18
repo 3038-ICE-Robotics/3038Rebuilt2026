@@ -47,8 +47,9 @@ import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.StateOfRobot;
 import frc.robot.inputs.LimelightInputs;
+import frc.robot.interfaces.ITunable;
 
-public class DriveSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase implements ITunable{
     // These are our swerve drive kinematics and Pigeon (gyroscope)
     public SwerveDriveKinematics kinematics = Constants.kinematics;
     public static Optional<Alliance> ally = DriverStation.getAlliance();
@@ -761,5 +762,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void sysLog(SysIdRoutineLog log) {
         log.recordState(State.kQuasistaticForward);
+    }
+
+    @Override
+    public void updatePID(double kP, double kI, double kD){
+        // TODO: use a for loop similar to setModuleStates and call the updatePID function for each module and pass in the same kP, kI, and kD values for each.
     }
 }
