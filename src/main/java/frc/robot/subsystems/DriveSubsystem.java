@@ -340,6 +340,10 @@ public class DriveSubsystem extends SubsystemBase {
                 desiredStates, Constants.DriveTrain.MaxVelocityMPS);
         for (int i = 0; i < 4; i++) {
             setModule(i, desiredStates[i]);
+            SmartDashboard.putNumber("Inputs/Desaturated" + Constants.DriveTrain.MotorKeys[i],
+                    desiredStates[i].speedMetersPerSecond);
+            SmartDashboard.putNumber("Inputs/Angle" + Constants.DriveTrain.MotorKeys[i],
+                    desiredStates[i].angle.getDegrees());
         }
     }
 

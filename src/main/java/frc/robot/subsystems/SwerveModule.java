@@ -21,9 +21,12 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class SwerveModule {
+    private String moduleName;
+    private double FoundOffset;
     // The mechanical bits
     private final SparkFlex driveMotor;
     private final SparkMax steerMotor;
@@ -63,6 +66,7 @@ public class SwerveModule {
             int steerMotorChannel,
             Rotation2d steerEncoderOffset
             ) {
+        this.moduleName = moduleName;
         driveMotor = new SparkFlex(driveMotorChannel, MotorType.kBrushless);
         steerMotor = new SparkMax(steerMotorChannel, MotorType.kBrushless);
         swerveEncoder = steerMotor.getAbsoluteEncoder();
@@ -74,11 +78,14 @@ public class SwerveModule {
         encoderConfig = new AbsoluteEncoderConfig();
         encoderConfig.zeroOffset(-m_steerEncoderOffset.getRotations());
         driveConfig.closedLoop.pid(1, 0, 0, ClosedLoopSlot.kSlot0);
-        steerConfig.closedLoop.pid(1,0,0, ClosedLoopSlot.kSlot0);
+        steerConfig.closedLoop.pid(0.3,0,0.01, ClosedLoopSlot.kSlot0);
         // Apply the configurations.
         driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-
+FoundOffset = (findOffset() * Constants.DriveTrain.SteerGearRatio);
+        SmartDashboard.putNumber("PID/pvalue", Constants.DriveTrain.RotationkP);
+        SmartDashboard.putNumber("PID/ivalue", Constants.DriveTrain.RotationkI);
+        SmartDashboard.putNumber("PID/dvalue", Constants.DriveTrain.RotationkD);
     }
 
     // This section is the 'direct get' section. Everything that gets something
@@ -188,22 +195,29 @@ public class SwerveModule {
         // Optimize the reference state to avoid spinning further than 90 degrees.
         desiredState.optimize(getRotation());
 
+
         desiredSteerAngle = MathUtil.inputModulus(desiredState.angle.getRotations(), -0.5, 0.5);
+        SmartDashboard.putNumber("Optimized/Angle" + moduleName, desiredSteerAngle);
         desiredDriveSpeed = desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters;
 
         if (Math.abs(desiredDriveSpeed) <= 0.001) {
             // driveMotor.setControl(neutralControl);
         } else {
-            driveControl
-                    .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
-                            driveFF.calculate(desiredDriveSpeed));
+            // driveControl
+            //         .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
+            //                 driveFF.calculate(desiredDriveSpeed));
 
         }
-        steerControl.setSetpoint(desiredSteerAngle, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        steerControl.setSetpoint(desiredSteerAngle * Constants.DriveTrain.SteerGearRatio, ControlType.kPosition, ClosedLoopSlot.kSlot0);
                 // steerFF.calculate(desiredDriveSpeed));
 
     }
     public void periodic() {
-        
+        double p = SmartDashboard.getNumber("PID/pvalue", Constants.DriveTrain.RotationkP);
+        double i = SmartDashboard.getNumber("PID/ivalue", Constants.DriveTrain.RotationkI);
+        double d = SmartDashboard.getNumber("PID/dvalue", Constants.DriveTrain.RotationkD);
+        steerConfig.closedLoop.pid(p, i, d);
+        steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+
     }
 }
