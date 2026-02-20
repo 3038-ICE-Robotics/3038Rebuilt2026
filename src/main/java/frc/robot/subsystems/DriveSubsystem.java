@@ -319,10 +319,10 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
      * Calls the findOffset fucntion for each module.
      */
     public void setEncoderOffsets() {
-        Preferences.setDouble("FL offset", modules[0].findOffset());
-        Preferences.setDouble("FR offset", modules[1].findOffset());
-        Preferences.setDouble("BL offset", modules[2].findOffset());
-        Preferences.setDouble("BR offset", modules[3].findOffset());
+        // Preferences.setDouble("FL offset", modules[0].findOffset());
+        // Preferences.setDouble("FR offset", modules[1].findOffset());
+        // Preferences.setDouble("BL offset", modules[2].findOffset());
+        // Preferences.setDouble("BR offset", modules[3].findOffset());
     }
 
     /**
@@ -640,6 +640,11 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
         updateOdometry();
         // sets the robot orientation for each of the limelights, which is required for
         // the
+
+        for (SwerveModule m : modules) {
+            m.periodic();
+        }
+
         if (Preferences.getBoolean("Use Limelight", false)) {
             updateOdometryWithVision();
         } else {
@@ -766,6 +771,9 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
 
     @Override
     public void updatePID(double kP, double kI, double kD){
+        for (SwerveModule m : modules) {
+          m.updatePID(kP, kI, kD);  
+        }
         // TODO: use a for loop similar to setModuleStates and call the updatePID function for each module and pass in the same kP, kI, and kD values for each.
     }
 }

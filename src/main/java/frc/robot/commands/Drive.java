@@ -89,6 +89,7 @@ public class Drive extends Command {
                   * Constants.DriveTrain.MaxAngularVelocityRadiansPS,
               drivetrain.getPose().getRotation()));
     }
+    SmartDashboard.putBoolean("Inputs/Robot Centric", robotCentricMode.getAsBoolean());
     SmartDashboard.putNumber("Inputs/x", translationXSupplier.getAsDouble());
     SmartDashboard.putNumber("Inputs/y", translationYSupplier.getAsDouble());
     SmartDashboard.putNumber("Inputs/z", rotationSupplier.getAsDouble());

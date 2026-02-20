@@ -23,8 +23,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.interfaces.ITunable;
 
-public class SwerveModule {
+public class SwerveModule implements ITunable {
     private String moduleName;
     private double FoundOffset;
     // The mechanical bits
@@ -69,7 +70,7 @@ public class SwerveModule {
         driveMotor = new SparkFlex(driveMotorChannel, MotorType.kBrushless);
         steerMotor = new SparkMax(steerMotorChannel, MotorType.kBrushless);
         swerveEncoder = steerMotor.getAbsoluteEncoder();
-        driveControl = driveMotor.getClosedLoopController();
+        driveControl = driveMotor.getClosedLoopController(); 
         steerControl = steerMotor.getClosedLoopController();
         m_steerEncoderOffset = steerEncoderOffset;
         driveConfig = new SparkFlexConfig();
@@ -77,14 +78,11 @@ public class SwerveModule {
         encoderConfig = new AbsoluteEncoderConfig();
         encoderConfig.zeroOffset(-m_steerEncoderOffset.getRotations());
         driveConfig.closedLoop.pid(1, 0, 0, ClosedLoopSlot.kSlot0);
-        steerConfig.closedLoop.pid(0.3, 0, 0.01, ClosedLoopSlot.kSlot0);
+        steerConfig.closedLoop.pid(0.1, 0, 0, ClosedLoopSlot.kSlot0);
         // Apply the configurations.
         driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        FoundOffset = (findOffset() * Constants.DriveTrain.SteerGearRatio);
-        SmartDashboard.putNumber("PID/pvalue", Constants.DriveTrain.RotationkP);
-        SmartDashboard.putNumber("PID/ivalue", Constants.DriveTrain.RotationkI);
-        SmartDashboard.putNumber("PID/dvalue", Constants.DriveTrain.RotationkD);
+        FoundOffset = (getRotation().getRotations() * Constants.DriveTrain.SteerGearRatio);
     }
 
     // This section is the 'direct get' section. Everything that gets something
@@ -113,7 +111,7 @@ public class SwerveModule {
      */
     public Rotation2d getRotation() {
         return Rotation2d.fromRotations(
-                MathUtil.inputModulus(steerMotor.getEncoder().getPosition(), -0.5, 0.5));
+                MathUtil.inputModulus(-swerveEncoder.getPosition() - m_steerEncoderOffset.getRotations(), -0.5, 0.5));
     }
 
     /**
@@ -133,12 +131,13 @@ public class SwerveModule {
      *
      * @return
      */
-    public double findOffset() {
-        return MathUtil.inputModulus(
-                (swerveEncoder.getPosition() + m_steerEncoderOffset.getRotations()),
-                -0.5,
-                0.5);
-    }
+    // public double findOffset() {
+    //     return MathUtil.inputModulus(
+    //             (-swerveEncoder.getPosition() + m_steerEncoderOffset.getRotations()),
+    //             -0.5,
+    //             0.5);
+    // }
+
 
     /**
      * Returns the current state of the module.
@@ -191,8 +190,10 @@ public class SwerveModule {
             DriverStation.reportWarning("Cannot set module angle to null.", true);
         }
 
+        SmartDashboard.putNumber("PreOptimized/Angle" + moduleName, desiredState.angle.getRotations());
+
         // Optimize the reference state to avoid spinning further than 90 degrees.
-        desiredState.optimize(getRotation());
+        //desiredState.optimize(getRotation());
 
         desiredSteerAngle = MathUtil.inputModulus(desiredState.angle.getRotations(), -0.5, 0.5);
         SmartDashboard.putNumber("Optimized/Angle" + moduleName, desiredSteerAngle);
@@ -206,22 +207,20 @@ public class SwerveModule {
             // driveFF.calculate(desiredDriveSpeed));
 
         }
-        steerControl.setSetpoint(desiredSteerAngle * Constants.DriveTrain.SteerGearRatio, ControlType.kPosition,
+        steerControl.setSetpoint(desiredSteerAngle * Constants.DriveTrain.SteerGearRatio - FoundOffset, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
         // steerFF.calculate(desiredDriveSpeed));
 
     }
 
     public void periodic() {
-        // TODO: Move this into the RobotContainer.updatePID function.
-        double kp = SmartDashboard.getNumber("PID/pvalue", Constants.DriveTrain.RotationkP);
-        double ki = SmartDashboard.getNumber("PID/ivalue", Constants.DriveTrain.RotationkI);
-        double kd = SmartDashboard.getNumber("PID/dvalue", Constants.DriveTrain.RotationkD);
-        // TODO: Move this into a new function called updatePID which takes in 3
-        // parameters, kp, ki, and kd.
-        steerConfig.closedLoop.pid(kp, ki, kd);
-        steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        SmartDashboard.putNumber("Offset/Angle" + moduleName, -swerveEncoder.getPosition());
     }
 
-    // TODO: Use DriveSubsystem.updatePID as an example for the function name and parameters, but the implementation is just the 2 steerConfig and steerMotor lines.
+    @Override
+    public void updatePID(double kP, double kI, double kD) {
+        steerConfig.closedLoop.pid(kP, kI, kD);
+        steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+            
+    }
 }

@@ -98,12 +98,12 @@ public final class Constants {
   }
 
   public static class DriveTrain {
-    public static final double SteerGearRatio = (94.0/16.0)* 2.89 * 3.61;
+    public static final double SteerGearRatio = (94.0 / 16.0) * 2.89 * 3.61;
     public static final double[] ModuleOffsets = new double[] {
-        0.26720383763313293,
-        0.4419109523296356,
-        0.250643789768219,
-        -0.03793513774871826
+        -0.270,
+        -0.438,
+        -0.254,
+        -0.964
     };
     public static final double WheelDiameter = (4.0 / 12.0) / MetersToFeet;
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;

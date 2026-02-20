@@ -101,6 +101,9 @@ public class RobotContainer {
     // it also might be a good idea to update the default values to 0 instead of a
     // reference to Constants since these will be used for other system tuning.
 
+    SmartDashboard.putNumber("Tuning/pvalue", Constants.DriveTrain.RotationkP);
+    SmartDashboard.putNumber("Tuning/ivalue", Constants.DriveTrain.RotationkI);
+    SmartDashboard.putNumber("Tuning/dvalue", Constants.DriveTrain.RotationkD);
 
     // we can add other subsystems to this chooser with addOption(...) and by making
     // each subsystem implement ITunable and adding an override for updatePID
@@ -109,8 +112,7 @@ public class RobotContainer {
     // and then adding it to the chooser.
     subSystemChooser.setDefaultOption("Swerve", drivetrain);
 
-
-    SmartDashboard.putData("Tuning/set",new InstantCommand(this::updatePID));
+    SmartDashboard.putData("Tuning/set", new InstantCommand(this::updatePID));
     SmartDashboard.putData("Tuning/Selection", subSystemChooser);
 
   }
@@ -128,7 +130,7 @@ public class RobotContainer {
 
     defaultDriveCommand = new Drive(
         drivetrain,
-        () -> false,
+        () -> true,
         ControllerForwardAxisSupplier,
         ControllerSidewaysAxisSupplier,
         () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain.getPose())
@@ -221,20 +223,25 @@ public class RobotContainer {
     return Autos.exampleAuto(m_exampleSubsystem);
   }
 
-
-  //This function only gets called when the "Tuning/set" button is pressed on Elastic.
+  // This function only gets called when the "Tuning/set" button is pressed on
+  // Elastic.
   private void updatePID() {
-    if (DriverStation.isTest()) {
-      // TODO: move the getnumber pid calls to this spot from SwerveModule
-      // and update the strings so that they show as "Tuning/..." for each of the
-      // values.
-      // we need to store the results of the getnumber calls in function level
-      // variables so they can be passed into the updatePID call.
 
+    // TODO: move the getnumber pid calls to this spot from SwerveModule
+    // and update the strings so that they show as "Tuning/..." for each of the
+    // values.
+    // we need to store the results of the getnumber calls in function level
+    // variables so they can be passed into the updatePID call.
+    double kp = SmartDashboard.getNumber("PID/pvalue", Constants.DriveTrain.RotationkP);
+    double ki = SmartDashboard.getNumber("PID/ivalue", Constants.DriveTrain.RotationkI);
+    double kd = SmartDashboard.getNumber("PID/dvalue", Constants.DriveTrain.RotationkD);
 
-      // this line is getting the selected subsystem from Elastic and sending the PID
-      // values to that subsystem.
-      ((ITunable) SmartDashboard.getData("Tuning/Selection")).updatePID(kp, ki, kd);
-    }
+    // this line is getting the selected subsystem from Elastic and sending the PID
+    // values to that subsystem.
+    // ((ITunable) SmartDashboard.getData("Tuning/Selection")).updatePID(kp, ki,
+    // kd);
+    subSystemChooser.getSelected().updatePID(kp, ki, kd);
+    SmartDashboard.putString("Tuning/applied", "true");
+
   }
 }
