@@ -31,7 +31,7 @@ public class ClimberSubsystem extends SubsystemBase {
         rightHome = new DigitalInput(Constants.DigitalChannels.RightClimbHome);
         //moves arm down.
         retract = new FunctionalCommand(() -> {
-            setSpeed(-.01);
+            setSpeed(-.15);
         }, () -> {
         }, interrupted -> {
             setSpeed(0);
@@ -59,7 +59,7 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public boolean isHome() {
-        return rightHome.get();
+        return !rightHome.get();
     }
 
     public boolean isExtended() {
