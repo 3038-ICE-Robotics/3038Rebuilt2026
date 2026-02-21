@@ -140,22 +140,22 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
             public void initSendable(SendableBuilder builder) {
                 builder.setSmartDashboardType("SwerveDrive");
 
-                builder.addDoubleProperty("Front Left Angle", () -> modules[0].getRotation().getRadians(), in -> {
+                builder.addDoubleProperty("Front Left Angle", () -> modules[0].getRotation().getRadians() - Math.PI/2, in -> {
                 });
                 builder.addDoubleProperty("Front Left Velocity", () -> modules[0].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Front Right Angle", () -> modules[1].getRotation().getRadians(), in -> {
+                builder.addDoubleProperty("Front Right Angle", () -> modules[1].getRotation().getRadians() - Math.PI/2, in -> {
                 });
                 builder.addDoubleProperty("Front Right Velocity", () -> modules[1].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Back Left Angle", () -> modules[2].getRotation().getRadians(), in -> {
+                builder.addDoubleProperty("Back Left Angle", () -> modules[2].getRotation().getRadians() - Math.PI/2, in -> {
                 });
                 builder.addDoubleProperty("Back Left Velocity", () -> modules[2].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Back Right Angle", () -> modules[3].getRotation().getRadians(), in -> {
+                builder.addDoubleProperty("Back Right Angle", () -> modules[3].getRotation().getRadians() - Math.PI/2, in -> {
                 });
                 builder.addDoubleProperty("Back Right Velocity", () -> modules[3].getSpeedMetersPerSecond(), in -> {
                 });
@@ -389,9 +389,9 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
             }
         }
         if (DriverStation.isTest()) {
-            chassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond / 4;
-            chassisSpeeds.vyMetersPerSecond = chassisSpeeds.vyMetersPerSecond / 4;
-            chassisSpeeds.omegaRadiansPerSecond = chassisSpeeds.omegaRadiansPerSecond / 4;
+            chassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond / 6.0;
+            chassisSpeeds.vyMetersPerSecond = chassisSpeeds.vyMetersPerSecond / 6.0;
+            chassisSpeeds.omegaRadiansPerSecond = chassisSpeeds.omegaRadiansPerSecond / 6.0;
         }
         SwerveModuleState[] desiredStates = kinematics
                 .toSwerveModuleStates(ChassisSpeeds.discretize(chassisSpeeds, 0.02));

@@ -11,6 +11,7 @@ import frc.robot.commands.Drive;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SystemCommands;
 import frc.robot.interfaces.ITunable;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -65,6 +66,7 @@ public class RobotContainer {
   private IntakeSubsystem intake;
   private ShooterSubsystem shooter;
   private TransferSubsystem transfer;
+  private ClimberSubsystem climb;
   private SysIdRoutine sysRoutine1;
   private Config configForSysRoutine1;
   private SendableChooser<ITunable> subSystemChooser = new SendableChooser<ITunable>();
@@ -76,8 +78,8 @@ public class RobotContainer {
     lJoystick = new Joystick(Constants.OperatorConstants.LDriverControllerPort);
     rJoystick = new Joystick(Constants.OperatorConstants.RDriverControllerPort);
     // Drive controls
-    ControllerSidewaysAxisSupplier = () -> modifyAxis(-lJoystick.getX(), 0);
-    ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0);
+    ControllerSidewaysAxisSupplier = () -> modifyAxis(lJoystick.getX(), 0.05);
+    ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0.05);
     ControllerZAxisSupplier = () -> modifyAxis(-rJoystick.getX(), 0);
     // set stuff
     commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
@@ -131,8 +133,9 @@ public class RobotContainer {
     defaultDriveCommand = new Drive(
         drivetrain,
         () -> true,
-        ControllerForwardAxisSupplier,
         ControllerSidewaysAxisSupplier,
+        ControllerForwardAxisSupplier,
+
         () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain.getPose())
             : ControllerZAxisSupplier.getAsDouble());
     drivetrain.setDefaultCommand(defaultDriveCommand);
@@ -209,6 +212,9 @@ public class RobotContainer {
         .onTrue(new InstantCommand(StateOfRobot::toggleAimAssist));
     commandJoystickL.button(11)
         .onTrue(new InstantCommand(drivetrain::setEncoderOffsets));
+    commandJoystickR.button(Constants.RightButtonIDs.RightClimbRetract)
+        .onTrue(climb.retract)
+        .onFalse(new InstantCommand(climb.retract::cancel));
     // .onTrue(new IntakeCommand(intake))
     // .onFalse(new StopIntakeCommand(intake));
   }

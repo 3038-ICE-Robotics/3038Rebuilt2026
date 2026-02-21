@@ -21,14 +21,16 @@ public class ClimberSubsystem extends SubsystemBase {
     private double extendPosition;
     public Command extend;
     public Command retract;
+    public DigitalInput rightHome;
 
     public ClimberSubsystem() {
         climbLeft = new SparkMax(Constants.MotorIDs.ClimbLeft, MotorType.kBrushless);
         climbRight = new SparkMax(Constants.MotorIDs.ClimbRight, MotorType.kBrushless);
-        climbHeight = climbLeft.getAlternateEncoder();
+        climbHeight = climbRight.getEncoder();
+        rightHome = new DigitalInput(Constants.DigitalChannels.RightClimbHome);
         //moves arm down.
         retract = new FunctionalCommand(() -> {
-            setSpeed(-.5);
+            setSpeed(-.01);
         }, () -> {
         }, interrupted -> {
             setSpeed(0);
@@ -52,15 +54,15 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        climbLeft.set(speed);
+        climbRight.set(speed);
     }
 
     public boolean isHome() {
-        return climbLeft.getReverseLimitSwitch().isPressed();
+        return rightHome.get();
     }
 
     public boolean isExtended() {
-        return climbLeft.getForwardLimitSwitch().isPressed();
+        return true;
     }
     public void periodic() {
         

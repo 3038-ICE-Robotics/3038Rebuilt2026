@@ -34,8 +34,9 @@ public final class Constants {
   }
 
   public static class DigitalChannels {
-    public static final int HopperFull = 0;
+    public static final int HopperFull = 2;
     public static final int HopperEmpty = 1;
+    public static final int RightClimbHome = 0;
   }
 
   public static class AimBotData {
@@ -77,6 +78,7 @@ public final class Constants {
   public static class RightButtonIDs {
     public static final int ShootFromHopper = 1;
     public static final int ShootFromIntake = 2;
+    public static final int RightClimbRetract = 4;
 
   }
 
@@ -100,8 +102,8 @@ public final class Constants {
   public static class DriveTrain {
     public static final double SteerGearRatio = (94.0 / 16.0) * 2.89 * 3.61;
     public static final double[] ModuleOffsets = new double[] {
-        -0.270,
-        -0.438,
+        -0.266,
+        -0.434,
         -0.254,
         -0.964
     };
@@ -122,7 +124,7 @@ public final class Constants {
     public static final double MaxVelocityMPS = 5; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
         / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure
-    public static final double DriveDeadbandMPS = 1; // measure
+    public static final double DriveDeadbandMPS = 0.1; // measure
     public static final PIDController DRIVE_TO_POSE_X_CONTROLLER = getTranslationPIDController();
     public static final PIDController DRIVE_TO_POSE_Y_CONTROLLER = getTranslationPIDController();
 

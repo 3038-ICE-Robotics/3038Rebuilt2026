@@ -33,7 +33,7 @@ public class SwerveModule implements ITunable {
     private final SparkMax steerMotor;
     private final AbsoluteEncoder swerveEncoder;
     private final Rotation2d m_steerEncoderOffset;
-    private SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0, 0);
+    private SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0, 1);
     private SimpleMotorFeedforward steerFF = new SimpleMotorFeedforward(0, 0);
     private SparkBaseConfig driveConfig;
     private SparkBaseConfig steerConfig;
@@ -70,19 +70,20 @@ public class SwerveModule implements ITunable {
         driveMotor = new SparkFlex(driveMotorChannel, MotorType.kBrushless);
         steerMotor = new SparkMax(steerMotorChannel, MotorType.kBrushless);
         swerveEncoder = steerMotor.getAbsoluteEncoder();
-        driveControl = driveMotor.getClosedLoopController(); 
+        driveControl = driveMotor.getClosedLoopController();
         steerControl = steerMotor.getClosedLoopController();
         m_steerEncoderOffset = steerEncoderOffset;
         driveConfig = new SparkFlexConfig();
         steerConfig = new SparkMaxConfig();
         encoderConfig = new AbsoluteEncoderConfig();
         encoderConfig.zeroOffset(-m_steerEncoderOffset.getRotations());
-        driveConfig.closedLoop.pid(1, 0, 0, ClosedLoopSlot.kSlot0);
-        steerConfig.closedLoop.pid(0.1, 0, 0, ClosedLoopSlot.kSlot0);
+        driveConfig.closedLoop.pid(0, 0, 0, ClosedLoopSlot.kSlot0);
+        steerConfig.closedLoop.pid(0.5, 0, 0.001, ClosedLoopSlot.kSlot0);
         // Apply the configurations.
         driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         FoundOffset = (getRotation().getRotations() * Constants.DriveTrain.SteerGearRatio);
+        steerMotor.getEncoder().setPosition(getRotation().getRotations() * Constants.DriveTrain.SteerGearRatio);
     }
 
     // This section is the 'direct get' section. Everything that gets something
@@ -111,7 +112,8 @@ public class SwerveModule implements ITunable {
      */
     public Rotation2d getRotation() {
         return Rotation2d.fromRotations(
-                MathUtil.inputModulus(-swerveEncoder.getPosition() - m_steerEncoderOffset.getRotations(), -0.5, 0.5));
+                MathUtil.inputModulus(-swerveEncoder.getPosition() - m_steerEncoderOffset.getRotations() + 0.25, -0.5,
+                        0.5));
     }
 
     /**
@@ -132,12 +134,11 @@ public class SwerveModule implements ITunable {
      * @return
      */
     // public double findOffset() {
-    //     return MathUtil.inputModulus(
-    //             (-swerveEncoder.getPosition() + m_steerEncoderOffset.getRotations()),
-    //             -0.5,
-    //             0.5);
+    // return MathUtil.inputModulus(
+    // (-swerveEncoder.getPosition() + m_steerEncoderOffset.getRotations()),
+    // -0.5,
+    // 0.5);
     // }
-
 
     /**
      * Returns the current state of the module.
@@ -190,24 +191,20 @@ public class SwerveModule implements ITunable {
             DriverStation.reportWarning("Cannot set module angle to null.", true);
         }
 
-        SmartDashboard.putNumber("PreOptimized/Angle" + moduleName, desiredState.angle.getRotations());
+        SmartDashboard.putNumber("PreOptimized/Angle" + moduleName, desiredState.angle.getDegrees());
 
         // Optimize the reference state to avoid spinning further than 90 degrees.
-        //desiredState.optimize(getRotation());
+        // desiredState.optimize(getRotation());
 
-        desiredSteerAngle = MathUtil.inputModulus(desiredState.angle.getRotations(), -0.5, 0.5);
+        desiredSteerAngle = (desiredState.angle.getRotations());
         SmartDashboard.putNumber("Optimized/Angle" + moduleName, desiredSteerAngle);
         desiredDriveSpeed = desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters;
 
-        if (Math.abs(desiredDriveSpeed) <= 0.001) {
-            // driveMotor.setControl(neutralControl);
-        } else {
-            // driveControl
-            // .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
-            // driveFF.calculate(desiredDriveSpeed));
+        driveControl
+                .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
+                        driveFF.calculate(desiredDriveSpeed));
 
-        }
-        steerControl.setSetpoint(desiredSteerAngle * Constants.DriveTrain.SteerGearRatio - FoundOffset, ControlType.kPosition,
+        steerControl.setSetpoint(desiredSteerAngle * Constants.DriveTrain.SteerGearRatio, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
         // steerFF.calculate(desiredDriveSpeed));
 
@@ -221,6 +218,6 @@ public class SwerveModule implements ITunable {
     public void updatePID(double kP, double kI, double kD) {
         steerConfig.closedLoop.pid(kP, kI, kD);
         steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-            
+
     }
 }
