@@ -86,6 +86,7 @@ public class RobotContainer {
     commandJoystickR = new CommandJoystick(Constants.OperatorConstants.RDriverControllerPort);
     intake = new IntakeSubsystem();
     transfer = new TransferSubsystem();
+    climb = new ClimberSubsystem();
     driveTrainInit();
     // shooter = new ShooterSubsystem(drivetrain::getPose);
     fullCommands = new SystemCommands(intake, transfer, shooter);
