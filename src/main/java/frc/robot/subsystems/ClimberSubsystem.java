@@ -11,63 +11,92 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
     private SparkMax climbLeft;
     private SparkMax climbRight;
-    private RelativeEncoder climbHeight;
+    private RelativeEncoder climbHeightR;
+    private RelativeEncoder climbHeightL;
     private double retractPosition;
     private double extendPosition;
+    private Command extL;
+    private Command extR;
+    private Command rtcL;
+    private Command rtcR;
     public Command extend;
     public Command retract;
     public DigitalInput rightHome;
+    public DigitalInput leftHome;
 
     public ClimberSubsystem() {
         climbLeft = new SparkMax(Constants.MotorIDs.ClimbLeft, MotorType.kBrushless);
         climbRight = new SparkMax(Constants.MotorIDs.ClimbRight, MotorType.kBrushless);
-        climbHeight = climbRight.getEncoder();
+        climbHeightR = climbRight.getEncoder();
+        climbHeightL = climbLeft.getEncoder();
         rightHome = new DigitalInput(Constants.DigitalChannels.RightClimbHome);
-        //moves arm down.
-        retract = new FunctionalCommand(() -> {
-            setSpeed(-.15);
+        leftHome = new DigitalInput(Constants.DigitalChannels.LeftClimbHome);
+        // moves arm down.
+        rtcL = new FunctionalCommand(() -> {
+            climbLeft.set(-Constants.Climb.ClimbSpeed);
         }, () -> {
         }, interrupted -> {
-            setSpeed(0);
-        }, this::isHome);
-        //moves arm up.
-        extend = new FunctionalCommand(() -> {
-            setSpeed(.5);
+            climbLeft.set(0);
+            climbHeightL.setPosition(0);
+        }, () -> !leftHome.get());
+//---------------------------------------------------------------
+        rtcR = new FunctionalCommand(() -> {
+            climbRight.set(-Constants.Climb.ClimbSpeed);
         }, () -> {
         }, interrupted -> {
-            setSpeed(0);
-        }, this::isExtended);
-        // TODO: Make use of constant for the channel
+            climbRight.set(0);
+            climbHeightR.setPosition(0);
+        }, () -> !rightHome.get());
+//---------------------------------------------------------------
+        retract = new ParallelCommandGroup(rtcL, rtcR);
+//---------------------------------------------------------------
+        extL = new FunctionalCommand(() -> {
+            climbLeft.set(Constants.Climb.ClimbSpeed);
+        }, () -> {
+        }, interrupted -> {
+            climbLeft.set(0);
+        }, () -> climbHeightL.getPosition() > Constants.Climb.ExtendHeight);
+//---------------------------------------------------------------
+        extR = new FunctionalCommand(() -> {
+            climbRight.set(Constants.Climb.ClimbSpeed);
+        }, () -> {
+        }, interrupted -> {
+            climbRight.set(0);
+        }, () -> climbHeightR.getPosition() > Constants.Climb.ExtendHeight);
+//---------------------------------------------------------------
+        extend = new ParallelCommandGroup(extL, extR);
     }
 
-    public double getCurrentHeight() {
-        return climbHeight.getPosition();
-    }
+    // public double getCurrentHeight() {
+    //     return climbHeight.getPosition();
+    // }
 
-    public void setHome() {
-        retractPosition = getCurrentHeight();
-    }
+    // public void setHome() {
+    //     retractPosition = getCurrentHeight();
+    // }
 
     public void setSpeed(double speed) {
         climbRight.set(speed);
+        climbLeft.set(speed);
     }
 
-    public boolean isHome() {
-        return !rightHome.get();
-    }
+    // public boolean isHome() {
+    //     return !rightHome.get();
+    // }
 
-    public boolean isExtended() {
-        return true;
-    }
+    // public boolean isExtended() {
+    //     return climbHeight.getPosition() > 96;
+    // }
+
     public void periodic() {
-        SmartDashboard.putBoolean("Climb/Right Climb Home", isHome());
-        SmartDashboard.putNumber("Climb/Right Climb Height", climbHeight.getPosition());
+SmartDashboard.putBoolean("Climber/Climber Home L", !leftHome.get());
     }
 
 }

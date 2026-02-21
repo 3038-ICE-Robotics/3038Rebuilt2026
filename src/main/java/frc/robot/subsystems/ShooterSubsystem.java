@@ -38,7 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private Supplier<Pose2d> robotPoint;
 
     private enum ShooterModes {
-        IDLE, FIRING, STOP
+        IDLE, FIRING, STOP, INTAKE
     }
 
     private ShooterModes shooterSelect;
@@ -46,14 +46,14 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
         shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, MotorType.kBrushless);
         shooterFollow = new SparkFlex(Constants.MotorIDs.ShooterFollow, MotorType.kBrushless);
-        // configP = new SparkFlexConfig();
-        // configP.closedLoop.pid(0.1, 0, 0.001, ClosedLoopSlot.kSlot0);
-        // configF = new SparkFlexConfig();
-        // configF.inverted(true)
-        //         .follow(shooterPrime);
-        // shooterPrime.configure(configP, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        // shooterFollow.configure(configF, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        // VelocityControl = shooterPrime.getClosedLoopController();
+        configP = new SparkFlexConfig();
+        configP.closedLoop.pid(0.1, 0, 0.001, ClosedLoopSlot.kSlot0);
+        configF = new SparkFlexConfig();
+        //configF.inverted(true);
+        configF.follow(shooterPrime, true);
+        shooterPrime.configure(configP, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        shooterFollow.configure(configF, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        VelocityControl = shooterPrime.getClosedLoopController();
         robotPoint = robotPosition;
         shooterSelect = ShooterModes.IDLE;
 
@@ -64,8 +64,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setMotorSpeed(double speed) {
-        // VelocityControl.setSetpoint(speed, ControlType.kVelocity, ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
-        shooterPrime.setVoltage(12*speed/1000);
+        // VelocityControl.setSetpoint(speed, ControlType.kVelocity,
+        // ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
+        shooterPrime.setVoltage(12 * speed / 1000);
+
     }
 
     public void stopMotor() {
@@ -114,12 +116,17 @@ public class ShooterSubsystem extends SubsystemBase {
                 targetSpeed = 0.5;
                 break;
             case STOP:
+                targetSpeed = 0;
+                break;
+            case INTAKE:
+                targetSpeed = 100;
                 break;
         }
         setMotorSpeed(targetSpeed);
         // SmartDashboard.putNumber("Shooter/Accum Error", VelocityControl.getIAccum());
         SmartDashboard.putNumber("Shooter/Target Motor Speed", targetSpeed);
         SmartDashboard.putNumber("Shooter/Physical Motor Speed", getCurrentSpeed());
+        SmartDashboard.putString("Shooter/Select", shooterSelect.toString());
     }
 
     private double getSpeedFromDistance(double distance) {
@@ -140,6 +147,10 @@ public class ShooterSubsystem extends SubsystemBase {
                 Constants.AimBotData.distancesToHub[rightIndex], distance);
         return MathUtil.interpolate(Constants.AimBotData.shooterSpeeds[rightIndex - 1],
                 Constants.AimBotData.shooterSpeeds[rightIndex], percent);
+    }
+
+    public void intake() {
+        shooterSelect = ShooterModes.INTAKE;
     }
 
 }

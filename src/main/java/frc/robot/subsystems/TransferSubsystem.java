@@ -28,7 +28,7 @@ public class TransferSubsystem extends SubsystemBase {
     }
 
     public void startIntake() {
-        TransferLow.set(intakeSpeed);
+        TransferLow.set(intakeSpeed - 0.1);
         TransferHigh.set(intakeSpeed);
     }
 
@@ -39,7 +39,7 @@ public class TransferSubsystem extends SubsystemBase {
 
     public void toLauncher() {
         TransferLow.set(intakeSpeed);
-        TransferHigh.set(outTakeSpeed);
+        TransferHigh.set(outTakeSpeed + 0.2);
     }
 
     public void outTake() {

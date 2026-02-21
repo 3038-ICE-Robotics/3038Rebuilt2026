@@ -80,7 +80,7 @@ public class RobotContainer {
     // Drive controls
     ControllerSidewaysAxisSupplier = () -> modifyAxis(lJoystick.getX(), 0.05);
     ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0.05);
-    ControllerZAxisSupplier = () -> modifyAxis(-rJoystick.getX(), 0);
+    ControllerZAxisSupplier = () -> 0.0;//modifyAxis(-rJoystick.getX(), 0);
     // set stuff
     commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
     commandJoystickR = new CommandJoystick(Constants.OperatorConstants.RDriverControllerPort);
@@ -88,7 +88,7 @@ public class RobotContainer {
     transfer = new TransferSubsystem();
     climb = new ClimberSubsystem();
     driveTrainInit();
-    // shooter = new ShooterSubsystem(drivetrain::getPose);
+     shooter = new ShooterSubsystem(drivetrain::getPose);
     fullCommands = new SystemCommands(intake, transfer, shooter);
     // Configure the trigger bindings
     configureBindings();
@@ -211,11 +211,12 @@ public class RobotContainer {
         .onFalse(new InstantCommand(fullCommands.shootBallFromGround::cancel));
     commandJoystickL.button(Constants.LeftButtonIDs.ToggleAimBot)
         .onTrue(new InstantCommand(StateOfRobot::toggleAimAssist));
-    commandJoystickL.button(11)
-        .onTrue(new InstantCommand(drivetrain::setEncoderOffsets));
     commandJoystickR.button(Constants.RightButtonIDs.RightClimbRetract)
         .onTrue(climb.retract)
         .onFalse(new InstantCommand(climb.retract::cancel));
+    commandJoystickR.button(Constants.RightButtonIDs.RightClimbExtend)
+        .onTrue(climb.extend)
+        .onFalse(new InstantCommand(climb.extend::cancel));
     // .onTrue(new IntakeCommand(intake))
     // .onFalse(new StopIntakeCommand(intake));
   }

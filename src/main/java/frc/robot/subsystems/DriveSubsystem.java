@@ -389,9 +389,9 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
             }
         }
         if (DriverStation.isTest()) {
-            chassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond / 6.0;
-            chassisSpeeds.vyMetersPerSecond = chassisSpeeds.vyMetersPerSecond / 6.0;
-            chassisSpeeds.omegaRadiansPerSecond = chassisSpeeds.omegaRadiansPerSecond / 6.0;
+            chassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond / 4.0;
+            chassisSpeeds.vyMetersPerSecond = chassisSpeeds.vyMetersPerSecond / 4.0;
+            chassisSpeeds.omegaRadiansPerSecond = chassisSpeeds.omegaRadiansPerSecond / 4.0;
         }
         SwerveModuleState[] desiredStates = kinematics
                 .toSwerveModuleStates(ChassisSpeeds.discretize(chassisSpeeds, 0.02));
@@ -615,7 +615,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
      */
     private void logDrivetrainData() {
         SmartDashboard.putNumber("TESTINGPOSE/total error", getPositionTargetingError());
-        SmartDashboard.putNumber("DRIVETRAIN/Robot Angle", getOdometryRotation().getDegrees());
+        SmartDashboard.putNumber("DRIVETRAIN/Robot Angle", gyro.getAngle());
         SmartDashboard.putString("DRIVETRAIN/Robot Location", getPose().getTranslation().toString());
         SmartDashboard.putNumber("DRIVETRAIN/forward speed", getChassisSpeeds().vxMetersPerSecond);
         SmartDashboard.putNumber(

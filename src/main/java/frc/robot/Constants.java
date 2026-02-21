@@ -35,8 +35,13 @@ public final class Constants {
 
   public static class DigitalChannels {
     public static final int HopperFull = 2;
-    public static final int HopperEmpty = 1;
+    public static final int HopperEmpty = 4;
     public static final int RightClimbHome = 0;
+    public static final int LeftClimbHome = 1;
+  }
+  public static class Climb {
+    public static final double ClimbSpeed = 0.15;
+    public static final double ExtendHeight = 96;
   }
 
   public static class AimBotData {
@@ -79,6 +84,7 @@ public final class Constants {
     public static final int ShootFromHopper = 1;
     public static final int ShootFromIntake = 2;
     public static final int RightClimbRetract = 4;
+    public static final int RightClimbExtend = 5;
 
   }
 
@@ -100,10 +106,10 @@ public final class Constants {
   }
 
   public static class DriveTrain {
-    public static final double SteerGearRatio = (94.0 / 16.0) * 2.89 * 3.61;
+    public static final double SteerGearRatio = (94.0 / 18.0) * 2.89 * 3.61;
     public static final double[] ModuleOffsets = new double[] {
-        -0.266,
-        -0.434,
+        -0.766,
+        -0.934,
         -0.254,
         -0.964
     };
@@ -151,8 +157,8 @@ public final class Constants {
   }
 
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-      new Translation2d(DriveTrain.DrivetrainTrackWidth / 2, DriveTrain.DrivetrainWheelbase / 2),
       new Translation2d(DriveTrain.DrivetrainTrackWidth / 2, DriveTrain.DrivetrainWheelbase / -2),
-      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / 2),
-      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / -2));
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / 2, DriveTrain.DrivetrainWheelbase / 2),
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / -2),
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / 2));
 }
