@@ -218,11 +218,11 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
      * @return the pitch, returned as a double
      */
     public double getPigeonPitch() {
-        return 0; // TODO upgrade sensor
+        return 0; // TODO: can our current gyro return this value?
     }
 
     public double getPigeonRoll() {
-        return 0; // TODO upgrade sensor
+        return 0; // TODO: can our current gyro return this value?
     }
 
     /**
@@ -396,6 +396,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
         SwerveModuleState[] desiredStates = kinematics
                 .toSwerveModuleStates(ChassisSpeeds.discretize(chassisSpeeds, 0.02));
         double maxSpeed = Collections.max(Arrays.asList(desiredStates)).speedMetersPerSecond;
+        //TODO: this maxspeed printout can be removed.
         SmartDashboard.putNumber("Inputs/maxspeed", maxSpeed);
         if (maxSpeed <= Constants.DriveTrain.DriveDeadbandMPS) {
             for (int i = 0; i < 4; i++) {
@@ -468,14 +469,6 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
             }
         }
     }
-
-    /**
-     * Set the odometry using the current apriltag estimate, disregarding the pose
-     * trustworthyness.
-     *
-     * <p>
-     * You only need to run this once for it to take effect.
-     */
 
     /**
      * Prepares to rotate the robot to a specific angle. Angle 0 is ALWAYS facing
@@ -774,6 +767,5 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
         for (SwerveModule m : modules) {
           m.updatePID(kP, kI, kD);  
         }
-        // TODO: use a for loop similar to setModuleStates and call the updatePID function for each module and pass in the same kP, kI, and kD values for each.
     }
 }

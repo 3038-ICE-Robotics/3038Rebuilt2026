@@ -1,27 +1,20 @@
 package frc.robot.subsystems;
 
-import java.net.ContentHandler;
-import java.util.ResourceBundle.Control;
 import java.util.function.Supplier;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.jni.ArmFeedforwardJNI;
-import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -49,7 +42,6 @@ public class ShooterSubsystem extends SubsystemBase {
         configP = new SparkFlexConfig();
         configP.closedLoop.pid(0.1, 0, 0.001, ClosedLoopSlot.kSlot0);
         configF = new SparkFlexConfig();
-        //configF.inverted(true);
         configF.follow(shooterPrime, true);
         shooterPrime.configure(configP, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         shooterFollow.configure(configF, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -65,7 +57,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setMotorSpeed(double speed) {
         // VelocityControl.setSetpoint(speed, ControlType.kVelocity,
-        // ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
+        //         ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
         shooterPrime.setVoltage(12 * speed / 1000);
 
     }
@@ -101,7 +93,7 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Shooter/Follow Shooter Current", shooterFollow.getOutputCurrent());
         // 2. Continuous Safety Checks
         if (shooterPrime.getMotorTemperature() > 80) {
-            System.out.println("🔥 INTAKE OVERHEATING! STOPPING!");
+            System.out.println("🔥 Shooter OVERHEATING! STOPPING!");
             shooterPrime.set(0);
         }
         double distanceFromTarget = StateOfRobot.distanceBetweenTargetAnd(robotPoint.get());

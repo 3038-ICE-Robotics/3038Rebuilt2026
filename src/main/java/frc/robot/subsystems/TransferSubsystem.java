@@ -1,11 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -19,6 +17,7 @@ public class TransferSubsystem extends SubsystemBase {
     private double standardAmp = 0;
     private int nextIndex = 0;
     private double ampSum = 0;
+    //TODO: We need to actually test this to determine what a good threshold is.
     private double ampThreshold = 10;
 
     public TransferSubsystem() {
@@ -47,6 +46,7 @@ public class TransferSubsystem extends SubsystemBase {
         TransferHigh.set(outTakeSpeed);
     }
 
+    //TODO: Make sure mechanical actually gives us a breakbeam sensor to read for this.
     public boolean isHopperEmpty() {
         return false;//emptySensor.get();
     }

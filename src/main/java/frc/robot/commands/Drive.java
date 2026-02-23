@@ -67,6 +67,7 @@ public class Drive extends Command {
     // the robot.
     if (robotCentricMode.getAsBoolean()) {
       drivetrain.drive(
+        //TODO: why are we inverting for robot centric?
           new ChassisSpeeds(
               translationXSupplier.getAsDouble()
                   * (Constants.DriveTrain.MaxVelocityMPS)

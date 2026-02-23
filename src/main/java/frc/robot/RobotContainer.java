@@ -93,26 +93,14 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    // configureDriveTrain();
     configForSysRoutine1 = new Config(null, null, null);
     sysRoutine1 = new SysIdRoutine(configForSysRoutine1,
         new SysIdRoutine.Mechanism(drivetrain::voltageDrive, drivetrain::sysLog, m_exampleSubsystem));
-
-    // TODO: move the smartdashboard putnumber calls to this spot.
-    // also update the string so that it shows as "Tuning/..." for each of the
-    // values.
-    // it also might be a good idea to update the default values to 0 instead of a
-    // reference to Constants since these will be used for other system tuning.
 
     SmartDashboard.putNumber("Tuning/pvalue", Constants.DriveTrain.RotationkP);
     SmartDashboard.putNumber("Tuning/ivalue", Constants.DriveTrain.RotationkI);
     SmartDashboard.putNumber("Tuning/dvalue", Constants.DriveTrain.RotationkD);
 
-    // we can add other subsystems to this chooser with addOption(...) and by making
-    // each subsystem implement ITunable and adding an override for updatePID
-    // function in each subsystem.
-    // If you are up for it, try adding this implementation to the shooter subsystem
-    // and then adding it to the chooser.
     subSystemChooser.setDefaultOption("Swerve", drivetrain);
 
     SmartDashboard.putData("Tuning/set", new InstantCommand(this::updatePID));
@@ -134,6 +122,8 @@ public class RobotContainer {
     defaultDriveCommand = new Drive(
         drivetrain,
         () -> true,
+        //TODO: we reversed the order of these because we saw that it was driving 90 degrees out of phase, but this should be swapped back to Forward then Sideways
+        // to match the expected order.
         ControllerSidewaysAxisSupplier,
         ControllerForwardAxisSupplier,
 
@@ -235,19 +225,10 @@ public class RobotContainer {
   // Elastic.
   private void updatePID() {
 
-    // TODO: move the getnumber pid calls to this spot from SwerveModule
-    // and update the strings so that they show as "Tuning/..." for each of the
-    // values.
-    // we need to store the results of the getnumber calls in function level
-    // variables so they can be passed into the updatePID call.
     double kp = SmartDashboard.getNumber("PID/pvalue", Constants.DriveTrain.RotationkP);
     double ki = SmartDashboard.getNumber("PID/ivalue", Constants.DriveTrain.RotationkI);
     double kd = SmartDashboard.getNumber("PID/dvalue", Constants.DriveTrain.RotationkD);
 
-    // this line is getting the selected subsystem from Elastic and sending the PID
-    // values to that subsystem.
-    // ((ITunable) SmartDashboard.getData("Tuning/Selection")).updatePID(kp, ki,
-    // kd);
     subSystemChooser.getSelected().updatePID(kp, ki, kd);
     SmartDashboard.putString("Tuning/applied", "true");
 

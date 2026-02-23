@@ -82,6 +82,7 @@ public class SwerveModule implements ITunable {
         // Apply the configurations.
         driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         steerMotor.configure(steerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        //TODO: this FoundOffset is never used and can be removed.
         FoundOffset = (getRotation().getRotations() * Constants.DriveTrain.SteerGearRatio);
         steerMotor.getEncoder().setPosition(getRotation().getRotations() * Constants.DriveTrain.SteerGearRatio);
     }
@@ -111,6 +112,7 @@ public class SwerveModule implements ITunable {
      * @return The current encoder angle of the steer motor.
      */
     public Rotation2d getRotation() {
+        //TODO: we need to remove the +.25 from this so we see the unadjusted value.
         return Rotation2d.fromRotations(
                 MathUtil.inputModulus(-swerveEncoder.getPosition() - m_steerEncoderOffset.getRotations() + 0.25, -0.5,
                         0.5));
@@ -133,12 +135,12 @@ public class SwerveModule implements ITunable {
      *
      * @return
      */
-    // public double findOffset() {
-    // return MathUtil.inputModulus(
-    // (-swerveEncoder.getPosition() + m_steerEncoderOffset.getRotations()),
-    // -0.5,
-    // 0.5);
-    // }
+    public double findOffset() {
+    return MathUtil.inputModulus(
+    (-swerveEncoder.getPosition() + m_steerEncoderOffset.getRotations()),
+    -0.5,
+    0.5);
+    }
 
     /**
      * Returns the current state of the module.
@@ -193,20 +195,21 @@ public class SwerveModule implements ITunable {
 
         SmartDashboard.putNumber("PreOptimized/Angle" + moduleName, desiredState.angle.getDegrees());
 
-        // Optimize the reference state to avoid spinning further than 90 degrees.
-        // desiredState.optimize(getRotation());
-
         desiredSteerAngle = (desiredState.angle.getRotations());
+        //TODO: determine if our current absolute encoder angle is closer to the desired angle or the desired angle + 180.
+        // updated the desired angle based on that condition.
+
         SmartDashboard.putNumber("Optimized/Angle" + moduleName, desiredSteerAngle);
         desiredDriveSpeed = desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters;
-
         driveControl
                 .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
                         driveFF.calculate(desiredDriveSpeed));
 
+
+        //TODO: instead of directly setting the position as the desired angle, we should find the delta between our current angle and desired angle and then add that delta to our current relative encoder position.
+        // we can also add a SmartDashboard entry here to plot the delta.
         steerControl.setSetpoint(desiredSteerAngle * Constants.DriveTrain.SteerGearRatio, ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
-        // steerFF.calculate(desiredDriveSpeed));
 
     }
 

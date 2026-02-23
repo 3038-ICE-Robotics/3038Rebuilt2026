@@ -38,7 +38,7 @@ public class ClimberSubsystem extends SubsystemBase {
         climbHeightL = climbLeft.getEncoder();
         rightHome = new DigitalInput(Constants.DigitalChannels.RightClimbHome);
         leftHome = new DigitalInput(Constants.DigitalChannels.LeftClimbHome);
-        // moves arm down.
+        // ---------------------------------------------------------------
         rtcL = new FunctionalCommand(() -> {
             climbLeft.set(-Constants.Climb.ClimbSpeed);
         }, () -> {
@@ -46,7 +46,7 @@ public class ClimberSubsystem extends SubsystemBase {
             climbLeft.set(0);
             climbHeightL.setPosition(0);
         }, () -> !leftHome.get());
-//---------------------------------------------------------------
+        // ---------------------------------------------------------------
         rtcR = new FunctionalCommand(() -> {
             climbRight.set(-Constants.Climb.ClimbSpeed);
         }, () -> {
@@ -54,49 +54,33 @@ public class ClimberSubsystem extends SubsystemBase {
             climbRight.set(0);
             climbHeightR.setPosition(0);
         }, () -> !rightHome.get());
-//---------------------------------------------------------------
+        // ---------------------------------------------------------------
         retract = new ParallelCommandGroup(rtcL, rtcR);
-//---------------------------------------------------------------
+        // ---------------------------------------------------------------
         extL = new FunctionalCommand(() -> {
             climbLeft.set(Constants.Climb.ClimbSpeed);
         }, () -> {
         }, interrupted -> {
             climbLeft.set(0);
         }, () -> climbHeightL.getPosition() > Constants.Climb.ExtendHeight);
-//---------------------------------------------------------------
+        // ---------------------------------------------------------------
         extR = new FunctionalCommand(() -> {
             climbRight.set(Constants.Climb.ClimbSpeed);
         }, () -> {
         }, interrupted -> {
             climbRight.set(0);
         }, () -> climbHeightR.getPosition() > Constants.Climb.ExtendHeight);
-//---------------------------------------------------------------
+        // ---------------------------------------------------------------
         extend = new ParallelCommandGroup(extL, extR);
     }
-
-    // public double getCurrentHeight() {
-    //     return climbHeight.getPosition();
-    // }
-
-    // public void setHome() {
-    //     retractPosition = getCurrentHeight();
-    // }
 
     public void setSpeed(double speed) {
         climbRight.set(speed);
         climbLeft.set(speed);
     }
 
-    // public boolean isHome() {
-    //     return !rightHome.get();
-    // }
-
-    // public boolean isExtended() {
-    //     return climbHeight.getPosition() > 96;
-    // }
-
     public void periodic() {
-SmartDashboard.putBoolean("Climber/Climber Home L", !leftHome.get());
+        SmartDashboard.putBoolean("Climber/Climber Home L", !leftHome.get());
     }
 
 }
