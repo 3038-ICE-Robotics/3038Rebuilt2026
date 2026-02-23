@@ -75,6 +75,7 @@ public class SwerveModule implements ITunable {
         m_steerEncoderOffset = steerEncoderOffset;
         driveConfig = new SparkFlexConfig();
         steerConfig = new SparkMaxConfig();
+        // TODO: this encoderConfig is never applied to anything and has no impact on the code, we should remove it.
         encoderConfig = new AbsoluteEncoderConfig();
         encoderConfig.zeroOffset(-m_steerEncoderOffset.getRotations());
         driveConfig.closedLoop.pid(0, 0, 0, ClosedLoopSlot.kSlot0);
@@ -113,6 +114,7 @@ public class SwerveModule implements ITunable {
      */
     public Rotation2d getRotation() {
         //TODO: we need to remove the +.25 from this so we see the unadjusted value.
+        // this might be the cause of our 90 degree issue. When we remove it, I expect that we will actually be off by 180, which can be resolved by inverting the drive motors.
         return Rotation2d.fromRotations(
                 MathUtil.inputModulus(-swerveEncoder.getPosition() - m_steerEncoderOffset.getRotations() + 0.25, -0.5,
                         0.5));
