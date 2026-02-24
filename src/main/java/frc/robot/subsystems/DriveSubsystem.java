@@ -218,11 +218,11 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
      * @return the pitch, returned as a double
      */
     public double getPigeonPitch() {
-        return 0; // TODO: can our current gyro return this value?
+        return gyro.getAngle(gyro.getPitchAxis());
     }
 
     public double getPigeonRoll() {
-        return 0; // TODO: can our current gyro return this value?
+        return gyro.getAngle(gyro.getRollAxis());
     }
 
     /**
@@ -396,8 +396,6 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
         SwerveModuleState[] desiredStates = kinematics
                 .toSwerveModuleStates(ChassisSpeeds.discretize(chassisSpeeds, 0.02));
         double maxSpeed = Collections.max(Arrays.asList(desiredStates)).speedMetersPerSecond;
-        //TODO: this maxspeed printout can be removed.
-        SmartDashboard.putNumber("Inputs/maxspeed", maxSpeed);
         if (maxSpeed <= Constants.DriveTrain.DriveDeadbandMPS) {
             for (int i = 0; i < 4; i++) {
                 stop();

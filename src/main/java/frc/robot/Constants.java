@@ -108,10 +108,10 @@ public final class Constants {
   public static class DriveTrain {
     public static final double SteerGearRatio = (94.0 / 18.0) * 2.89 * 3.61;
     public static final double[] ModuleOffsets = new double[] {
+        -0.269,
+        -0.438,
         -0.766,
-        -0.934,
-        -0.254,
-        -0.964
+        -0.959
     };
     public static final double WheelDiameter = (4.0 / 12.0) / MetersToFeet;
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;
@@ -157,8 +157,8 @@ public final class Constants {
   }
 
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-      new Translation2d(DriveTrain.DrivetrainTrackWidth / 2, DriveTrain.DrivetrainWheelbase / -2),
       new Translation2d(DriveTrain.DrivetrainTrackWidth / 2, DriveTrain.DrivetrainWheelbase / 2),
-      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / -2),
-      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / 2));
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / 2, DriveTrain.DrivetrainWheelbase / -2),
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / 2),
+      new Translation2d(DriveTrain.DrivetrainTrackWidth / -2, DriveTrain.DrivetrainWheelbase / -2));
 }

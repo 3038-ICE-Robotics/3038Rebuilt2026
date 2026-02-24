@@ -122,10 +122,8 @@ public class RobotContainer {
     defaultDriveCommand = new Drive(
         drivetrain,
         () -> true,
-        //TODO: we reversed the order of these because we saw that it was driving 90 degrees out of phase, but this should be swapped back to Forward then Sideways
-        // to match the expected order.
-        ControllerSidewaysAxisSupplier,
         ControllerForwardAxisSupplier,
+        ControllerSidewaysAxisSupplier,
 
         () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain.getPose())
             : ControllerZAxisSupplier.getAsDouble());
