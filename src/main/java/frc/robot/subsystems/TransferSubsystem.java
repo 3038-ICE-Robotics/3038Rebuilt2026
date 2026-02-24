@@ -36,6 +36,10 @@ public class TransferSubsystem extends SubsystemBase {
         TransferHigh.set(0);
     }
 
+    public void agitate(){
+        TransferHigh.set(intakeSpeed);
+    }
+
     public void toLauncher() {
         TransferLow.set(intakeSpeed);
         TransferHigh.set(outTakeSpeed + 0.2);

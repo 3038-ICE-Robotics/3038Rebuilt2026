@@ -76,6 +76,9 @@ public class SwerveModule implements ITunable {
         driveConfig = new SparkFlexConfig();
         steerConfig = new SparkMaxConfig();
         driveConfig.closedLoop.pid(0, 0, 0, ClosedLoopSlot.kSlot0);
+        if (moduleName != "BR") {
+            driveConfig.inverted(true);
+        }
         steerConfig.closedLoop.pid(0.5, 0, 0.001, ClosedLoopSlot.kSlot0);
         // Apply the configurations.
         driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -189,32 +192,36 @@ public class SwerveModule implements ITunable {
             DriverStation.reportWarning("Cannot set module angle to null.", true);
         }
 
-        SmartDashboard.putNumber("PreOptimized/Angle" + moduleName, desiredState.angle.getDegrees());
+        SmartDashboard.putNumber("Desired/Angle" + moduleName, desiredState.angle.getDegrees());
 
         desiredSteerAngle = (desiredState.angle.getRotations());
         desiredSteerAngle += desiredSteerAngle < 0 ? 1 : 0;
 
-        double posSwerve = currentAngle;
+        double posSwerve = MathUtil
+                .inputModulus(steerMotor.getEncoder().getPosition() / Constants.DriveTrain.SteerGearRatio, -.5, .5);
         posSwerve += posSwerve < 0 ? 1 : 0;
 
         double deltaAngle = desiredSteerAngle - posSwerve;
-        deltaAngle *= Math.abs(deltaAngle) >= 0.002 ? 1 : 0;
+        deltaAngle *= Math.abs(deltaAngle) >= 0.013 ? 1 : 0;
+        SmartDashboard.putNumber("Delta/Angle " + moduleName, deltaAngle * 360);
         double inverted = 1;
 
         if (Math.abs(deltaAngle) >= 0.25) {
-            deltaAngle = .25-deltaAngle;
+            deltaAngle = .25 - deltaAngle;
             inverted = -1;
         }
 
-        currentAngle += deltaAngle;
+        // = MathUtil.inputModulus(currentAngle+deltaAngle, -.5, .5);
 
         SmartDashboard.putNumber("Optimized/DeltaAngle" + moduleName, deltaAngle);
-        desiredDriveSpeed = inverted*desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters;
+        desiredDriveSpeed = inverted * desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters;
         driveControl
                 .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
                         driveFF.calculate(desiredDriveSpeed));
 
-        steerControl.setSetpoint(steerMotor.getEncoder().getPosition()+deltaAngle * Constants.DriveTrain.SteerGearRatio, ControlType.kPosition,
+        steerControl.setSetpoint(
+                steerMotor.getEncoder().getPosition() + deltaAngle * Constants.DriveTrain.SteerGearRatio,
+                ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
 
     }

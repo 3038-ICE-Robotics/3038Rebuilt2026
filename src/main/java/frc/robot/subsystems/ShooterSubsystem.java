@@ -15,6 +15,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -105,7 +106,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 targetSpeed = getSpeedFromDistance(distanceFromTarget);
                 break;
             case IDLE:
-                targetSpeed = 0.5;
+                targetSpeed = 100;
                 break;
             case STOP:
                 targetSpeed = 0;
@@ -113,6 +114,9 @@ public class ShooterSubsystem extends SubsystemBase {
             case INTAKE:
                 targetSpeed = 100;
                 break;
+        }
+        if(DriverStation.isTest()){
+            targetSpeed/=2;
         }
         setMotorSpeed(targetSpeed);
         // SmartDashboard.putNumber("Shooter/Accum Error", VelocityControl.getIAccum());

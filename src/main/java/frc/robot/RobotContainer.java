@@ -78,9 +78,9 @@ public class RobotContainer {
     lJoystick = new Joystick(Constants.OperatorConstants.LDriverControllerPort);
     rJoystick = new Joystick(Constants.OperatorConstants.RDriverControllerPort);
     // Drive controls
-    ControllerSidewaysAxisSupplier = () -> modifyAxis(lJoystick.getX(), 0.05);
+    ControllerSidewaysAxisSupplier = () -> modifyAxis(-lJoystick.getX(), 0.05);
     ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0.05);
-    ControllerZAxisSupplier = () -> 0.0;//modifyAxis(-rJoystick.getX(), 0);
+    ControllerZAxisSupplier = () -> modifyAxis(-rJoystick.getX(), 0.05);
     // set stuff
     commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
     commandJoystickR = new CommandJoystick(Constants.OperatorConstants.RDriverControllerPort);
