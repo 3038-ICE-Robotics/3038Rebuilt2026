@@ -38,6 +38,7 @@ public class SwerveModule implements ITunable {
     private SparkBaseConfig driveConfig;
     private SparkBaseConfig steerConfig;
     private double currentAngle;
+    public double posSwerve;
     // Shuffleboard stuff
     ShuffleboardTab debugInfo;
     // Variables
@@ -49,6 +50,7 @@ public class SwerveModule implements ITunable {
     private SparkClosedLoopController driveControl;
     private SparkClosedLoopController steerControl;
     // private PositionDutyCycle steerControl = new PositionDutyCycle(0);
+    private double previousDeltaAngle = 0;
 
     /**
      * Constructs a SwerveModule with a drive motor, steering motor, and steering
@@ -196,20 +198,21 @@ public class SwerveModule implements ITunable {
 
         desiredSteerAngle = (desiredState.angle.getRotations());
         desiredSteerAngle += desiredSteerAngle < 0 ? 1 : 0;
-
-        double posSwerve = MathUtil
+        posSwerve = MathUtil
                 .inputModulus(steerMotor.getEncoder().getPosition() / Constants.DriveTrain.SteerGearRatio, -.5, .5);
-        posSwerve += posSwerve < 0 ? 1 : 0;
+        desiredState.optimize(Rotation2d.fromRotations(posSwerve));
 
-        double deltaAngle = desiredSteerAngle - posSwerve;
-        deltaAngle *= Math.abs(deltaAngle) >= 0.013 ? 1 : 0;
+        double deltaAngle = desiredState.angle.getRotations() - posSwerve;
         SmartDashboard.putNumber("Delta/Angle " + moduleName, deltaAngle * 360);
         double inverted = 1;
 
-        if (Math.abs(deltaAngle) >= 0.25) {
-            deltaAngle = .25 - deltaAngle;
-            inverted = -1;
-        }
+        // if (Math.abs(deltaAngle) > 0.25) {
+        // deltaAngle = 0.5 - deltaAngle;
+        // inverted = -1;
+        // }
+        //  if (Math.abs(deltaAngle) > 0.25) {
+        // deltaAngle = 0;
+        // }
 
         // = MathUtil.inputModulus(currentAngle+deltaAngle, -.5, .5);
 
@@ -223,6 +226,7 @@ public class SwerveModule implements ITunable {
                 steerMotor.getEncoder().getPosition() + deltaAngle * Constants.DriveTrain.SteerGearRatio,
                 ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
+        previousDeltaAngle = deltaAngle;
 
     }
 

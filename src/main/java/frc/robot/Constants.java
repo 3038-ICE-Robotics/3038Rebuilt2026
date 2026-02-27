@@ -59,7 +59,7 @@ public final class Constants {
         225 // farthest possible distance
     };
     public static double[] shooterSpeeds = new double[] { // TODO measure (RPM)
-        700,
+        1000,
         250,
         300,
         350,

@@ -22,6 +22,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -140,22 +141,22 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
             public void initSendable(SendableBuilder builder) {
                 builder.setSmartDashboardType("SwerveDrive");
 
-                builder.addDoubleProperty("Front Left Angle", () -> modules[0].getRotation().getRadians() - Math.PI/2, in -> {
+                builder.addDoubleProperty("Front Left Angle", () -> modules[0].posSwerve*2*Math.PI, in -> {
                 });
                 builder.addDoubleProperty("Front Left Velocity", () -> modules[0].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Front Right Angle", () -> modules[1].getRotation().getRadians() - Math.PI/2, in -> {
+                builder.addDoubleProperty("Front Right Angle", () -> modules[1].posSwerve*2*Math.PI, in -> {
                 });
                 builder.addDoubleProperty("Front Right Velocity", () -> modules[1].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Back Left Angle", () -> modules[2].getRotation().getRadians() - Math.PI/2, in -> {
+                builder.addDoubleProperty("Back Left Angle", () -> modules[2].posSwerve*2*Math.PI, in -> {
                 });
                 builder.addDoubleProperty("Back Left Velocity", () -> modules[2].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Back Right Angle", () -> modules[3].getRotation().getRadians() - Math.PI/2, in -> {
+                builder.addDoubleProperty("Back Right Angle", () -> modules[3].posSwerve*2*Math.PI, in -> {
                 });
                 builder.addDoubleProperty("Back Right Velocity", () -> modules[3].getSpeedMetersPerSecond(), in -> {
                 });
@@ -403,6 +404,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
         } else {
             setModuleStates(desiredStates);
         }
+        
     }
 
     /**
