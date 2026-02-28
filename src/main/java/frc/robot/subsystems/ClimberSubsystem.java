@@ -40,32 +40,36 @@ public class ClimberSubsystem extends SubsystemBase {
         leftHome = new DigitalInput(Constants.DigitalChannels.LeftClimbHome);
         // ---------------------------------------------------------------
         rtcL = new FunctionalCommand(() -> {
-            climbLeft.set(-Constants.Climb.ClimbSpeed);
+            climbLeft.set(-Constants.Climb.RetractSpeed);
         }, () -> {
         }, interrupted -> {
             climbLeft.set(0);
-            climbHeightL.setPosition(0);
+            if (!leftHome.get()){
+                climbHeightL.setPosition(0);
+            }
         }, () -> !leftHome.get());
         // ---------------------------------------------------------------
         rtcR = new FunctionalCommand(() -> {
-            climbRight.set(-Constants.Climb.ClimbSpeed);
+            climbRight.set(-Constants.Climb.RetractSpeed);
         }, () -> {
         }, interrupted -> {
             climbRight.set(0);
-            climbHeightR.setPosition(0);
+            if (!rightHome.get()){
+                climbHeightR.setPosition(0);
+            }
         }, () -> !rightHome.get());
         // ---------------------------------------------------------------
         retract = new ParallelCommandGroup(rtcL, rtcR);
         // ---------------------------------------------------------------
         extL = new FunctionalCommand(() -> {
-            climbLeft.set(Constants.Climb.ClimbSpeed);
+            climbLeft.set(Constants.Climb.ExtendSpeed);
         }, () -> {
         }, interrupted -> {
             climbLeft.set(0);
         }, () -> climbHeightL.getPosition() > Constants.Climb.ExtendHeight);
         // ---------------------------------------------------------------
         extR = new FunctionalCommand(() -> {
-            climbRight.set(Constants.Climb.ClimbSpeed);
+            climbRight.set(Constants.Climb.ExtendSpeed);
         }, () -> {
         }, interrupted -> {
             climbRight.set(0);
@@ -81,6 +85,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public void periodic() {
         SmartDashboard.putBoolean("Climber/Climber Home L", !leftHome.get());
+        SmartDashboard.putNumber("Climber/Left Height", climbHeightL.getPosition());
+        SmartDashboard.putNumber("Climber/Right Height", climbHeightR.getPosition());
     }
 
 }

@@ -40,8 +40,9 @@ public final class Constants {
     public static final int LeftClimbHome = 1;
   }
   public static class Climb {
-    public static final double ClimbSpeed = 0.15;
-    public static final double ExtendHeight = 96;
+    public static final double ExtendSpeed = 0.4;
+    public static final double RetractSpeed = 0.15;
+    public static final double ExtendHeight = 90;
   }
 
   public static class AimBotData {
@@ -98,7 +99,9 @@ public final class Constants {
     public static final int TransferHigh = 12;
     public static final int ClimbRight = 13;
     public static final int ClimbLeft = 14;
-  }
+    public static final int HippoLeft = 24;
+    public static final int HippoRight = 25;
+    public static final int HippoIntake = 26;
 
   public static class NeoVortex {
     public static final int StallCurrent = 211;
