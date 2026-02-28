@@ -200,17 +200,22 @@ public class SwerveModule implements ITunable {
         desiredSteerAngle += desiredSteerAngle < 0 ? 1 : 0;
         posSwerve = MathUtil
                 .inputModulus(steerMotor.getEncoder().getPosition() / Constants.DriveTrain.SteerGearRatio, -.5, .5);
-        desiredState.optimize(Rotation2d.fromRotations(posSwerve));
-
-        double deltaAngle = desiredState.angle.getRotations() - posSwerve;
-        SmartDashboard.putNumber("Delta/Angle " + moduleName, deltaAngle * 360);
+        // desiredState.optimize(Rotation2d.fromRotations(posSwerve));
         double inverted = 1;
+        double deltaAngle = desiredState.angle.getRotations() - posSwerve;
+        double deltaAngle2 = (deltaAngle - Math.abs(deltaAngle)) * (deltaAngle < 0?-1:1); 
+        deltaAngle = Math.abs(deltaAngle) < Math.abs(deltaAngle2) ? deltaAngle : deltaAngle2;
+        if (Math.abs(deltaAngle) > 0.25) {
+            deltaAngle = (0.5 - Math.abs(deltaAngle)) * (deltaAngle < 0?-1:1);
+            inverted = -1;
+        }
+        SmartDashboard.putNumber("Delta/Angle " + moduleName, deltaAngle * 360);
 
         // if (Math.abs(deltaAngle) > 0.25) {
         // deltaAngle = 0.5 - deltaAngle;
         // inverted = -1;
         // }
-        //  if (Math.abs(deltaAngle) > 0.25) {
+        // if (Math.abs(deltaAngle) > 0.25) {
         // deltaAngle = 0;
         // }
 
