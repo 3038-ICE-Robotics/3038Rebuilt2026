@@ -19,11 +19,12 @@ public class SystemCommands {
     public Command shootBallFromHopper;
     private Command shooting;
     private Command transferToShooter;
-    private Command rollOver;
+    private Command rollOverIntake;
+    private Command rollOverOuttake;
 
     public SystemCommands(IntakeSubsystem intake, TransferSubsystem transfer, ShooterSubsystem shooter) {
         // Takes in balls to use later.
-        rollOver = new FunctionalCommand(
+        rollOverIntake = new FunctionalCommand(
                 shooter::intake,
                 () -> {
                 },
@@ -32,6 +33,16 @@ public class SystemCommands {
                 },
                 () -> false,
                 shooter);
+
+        rollOverOuttake = new FunctionalCommand(
+                shooter::intake,
+                () -> {
+                },
+                (interrupted) -> {
+                    shooter.stopMotor();
+                },
+                () -> false,
+                shooter);        
         // -------------------------------------------------------------------------------------------
         intakeBall = new ParallelCommandGroup(new FunctionalCommand(() -> {
             intake.startIntake();
@@ -44,10 +55,10 @@ public class SystemCommands {
             return intake.isHopperFull();
         }, intake, transfer),
                 // ---------------------------------------------
-                rollOver);
+                rollOverIntake);
 
         // spits out balls from inside the robot.
-        outtakeBall = new FunctionalCommand(() -> {
+        outtakeBall = new ParallelCommandGroup(new FunctionalCommand(() -> {
             intake.startOuttake();
             transfer.outTake();
         }, () -> {
@@ -56,8 +67,9 @@ public class SystemCommands {
             transfer.stopMotors();
         }, () -> {
             return transfer.isHopperEmpty();
-        }, intake, transfer);
-                //----------------------------------
+        }, intake, transfer), 
+                //-----------------------------------------------
+                rollOverOuttake);
                 
 
         shooting = new FunctionalCommand(
