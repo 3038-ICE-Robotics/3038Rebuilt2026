@@ -121,7 +121,7 @@ public class RobotContainer {
 
     defaultDriveCommand = new Drive(
         drivetrain,
-        () -> true,
+        () -> false,
         ControllerForwardAxisSupplier,
         ControllerSidewaysAxisSupplier,
 
@@ -177,18 +177,18 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    commandJoystickL.button(Constants.LeftButtonIDs.Intake)
-        .onTrue(new InstantCommand(intake::startIntake))
-        .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Outtake))
-        .onFalse(new InstantCommand(intake::stop));
-    commandJoystickL.button(Constants.LeftButtonIDs.Outtake)
-        .onTrue(new InstantCommand(intake::startOuttake))
-        .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Intake))
-        .onFalse(new InstantCommand(intake::stop));
+    // commandJoystickL.button(Constants.LeftButtonIDs.Intake)
+    //     .onTrue(new InstantCommand(intake::startIntake))
+    //     .and(() -> !commandJoystickL.getHID().getRawButton(Constants.RightButtonIDs.OuttakeFirstMotor))
+    //     .onFalse(new InstantCommand(intake::stop));
+    // commandJoystickL.button(Constants.RightButtonIDs.OuttakeFirstMotor)
+    //     .onTrue(new InstantCommand(intake::startOuttake))
+    //     .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Intake))
+    //     .onFalse(new InstantCommand(intake::stop));
     commandJoystickL.button(Constants.LeftButtonIDs.IntakeToHopper)
         .onTrue(fullCommands.intakeBall)
         .onFalse(new InstantCommand(fullCommands.intakeBall::cancel));
-    commandJoystickL.button(Constants.LeftButtonIDs.OutTakeFull)
+    commandJoystickR.button(Constants.RightButtonIDs.OutTakeToGround)
         .onTrue(fullCommands.outtakeBall)
         .onFalse(new InstantCommand(fullCommands.outtakeBall::cancel));
     commandJoystickR.button(Constants.RightButtonIDs.ShootFromHopper)

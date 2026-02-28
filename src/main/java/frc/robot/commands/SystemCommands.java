@@ -57,6 +57,8 @@ public class SystemCommands {
         }, () -> {
             return transfer.isHopperEmpty();
         }, intake, transfer);
+                //----------------------------------
+                
 
         shooting = new FunctionalCommand(
                 () -> {

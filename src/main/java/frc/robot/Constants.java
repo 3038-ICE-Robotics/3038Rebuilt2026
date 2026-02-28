@@ -74,15 +74,15 @@ public final class Constants {
 
   public static class LeftButtonIDs {
     public static final int Intake = 10;
-    public static final int Outtake = 9;
     public static final int IntakeToHopper = 1;
-    public static final int OutTakeFull = 2;
     public static final int ToggleAimBot = 3; // fix
   }
 
   public static class RightButtonIDs {
     public static final int ShootFromHopper = 1;
     public static final int ShootFromIntake = 2;
+    // public static final int OuttakeFirstMotor = 3;
+    public static final int OutTakeToGround = 3;
     public static final int RightClimbRetract = 4;
     public static final int RightClimbExtend = 5;
 

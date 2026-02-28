@@ -211,11 +211,11 @@ public class SwerveModule implements ITunable {
         if (Math.abs(maxDelta) > 0.5) {
             shortestDelta = Math.copySign(1-Math.abs(maxDelta), maxDelta)*-1;
         }
-        // if (Math.abs(shortestDelta) > .25) {
-        //     shortestDelta = Math.copySign(.5-Math.abs(maxDelta), maxDelta)*-1;
-        //     inverted = -1;
-        // }
-        
+        if (Math.abs(shortestDelta) > .25) {
+            shortestDelta = Math.copySign(.5-Math.abs(shortestDelta), shortestDelta)*-1;
+            inverted = -1;
+        }
+
         SmartDashboard.putNumber("180/Angle" + moduleName, shortestDelta);
         // if (Math.abs(shortestDelta) > 0.25) {
         //     shortestDelta = (0.5 - Math.abs(shortestDelta)) * (shortestDelta < 0 ? -1 : 1);
