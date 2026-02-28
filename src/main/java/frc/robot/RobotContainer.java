@@ -121,7 +121,7 @@ public class RobotContainer {
 
     defaultDriveCommand = new Drive(
         drivetrain,
-        () -> false,
+        () -> true,
         ControllerForwardAxisSupplier,
         ControllerSidewaysAxisSupplier,
 

@@ -194,22 +194,37 @@ public class SwerveModule implements ITunable {
             DriverStation.reportWarning("Cannot set module angle to null.", true);
         }
 
-        SmartDashboard.putNumber("Desired/Angle" + moduleName, desiredState.angle.getDegrees());
-
-        desiredSteerAngle = (desiredState.angle.getRotations());
-        desiredSteerAngle += desiredSteerAngle < 0 ? 1 : 0;
+        // desiredSteerAngle = (desiredState.angle.getRotations());
+        // desiredSteerAngle += desiredSteerAngle < 0 ? 1 : 0;
+        double steerPose = steerMotor.getEncoder().getPosition();
         posSwerve = MathUtil
-                .inputModulus(steerMotor.getEncoder().getPosition() / Constants.DriveTrain.SteerGearRatio, -.5, .5);
+                .inputModulus(steerPose / Constants.DriveTrain.SteerGearRatio, -.5, .5);
         // desiredState.optimize(Rotation2d.fromRotations(posSwerve));
+        SmartDashboard.putNumber("Current/Angle" + moduleName, posSwerve);
+        SmartDashboard.putNumber("Desired/Angle" + moduleName, desiredState.angle.getRotations());
         double inverted = 1;
-        double deltaAngle = desiredState.angle.getRotations() - posSwerve;
-        double deltaAngle2 = (deltaAngle - Math.abs(deltaAngle)) * (deltaAngle < 0?-1:1); 
-        deltaAngle = Math.abs(deltaAngle) < Math.abs(deltaAngle2) ? deltaAngle : deltaAngle2;
-        if (Math.abs(deltaAngle) > 0.25) {
-            deltaAngle = (0.5 - Math.abs(deltaAngle)) * (deltaAngle < 0?-1:1);
-            inverted = -1;
+        double maxDelta = desiredState.angle.getRotations() - posSwerve;
+        // double altMaxDelta = (1 - Math.abs(maxDelta)) * (maxDelta < 0 ? -1 : 1);
+        SmartDashboard.putNumber("Delta/Angle" + moduleName, maxDelta);
+        // double shortestDelta = (Math.abs(maxDelta) < Math.abs(altMaxDelta)) ? maxDelta : altMaxDelta;
+        double shortestDelta = maxDelta;
+        if (Math.abs(maxDelta) > 0.5) {
+            shortestDelta = Math.copySign(1-Math.abs(maxDelta), maxDelta)*-1;
         }
-        SmartDashboard.putNumber("Delta/Angle " + moduleName, deltaAngle * 360);
+        // if (Math.abs(shortestDelta) > .25) {
+        //     shortestDelta = Math.copySign(.5-Math.abs(maxDelta), maxDelta)*-1;
+        //     inverted = -1;
+        // }
+        
+        SmartDashboard.putNumber("180/Angle" + moduleName, shortestDelta);
+        // if (Math.abs(shortestDelta) > 0.25) {
+        //     shortestDelta = (0.5 - Math.abs(shortestDelta)) * (shortestDelta < 0 ? -1 : 1);
+        //     inverted = -1;
+        // }
+        // if (Math.abs(posSwerve) == 0.5 && Math.abs(desiredState.angle.getRotations()) == 0.5) {
+        //     shortestDelta = 0;
+        // }
+        SmartDashboard.putNumber("Invert/Angle " + moduleName, maxDelta);
 
         // if (Math.abs(deltaAngle) > 0.25) {
         // deltaAngle = 0.5 - deltaAngle;
@@ -221,17 +236,17 @@ public class SwerveModule implements ITunable {
 
         // = MathUtil.inputModulus(currentAngle+deltaAngle, -.5, .5);
 
-        SmartDashboard.putNumber("Optimized/DeltaAngle" + moduleName, deltaAngle);
+        SmartDashboard.putNumber("Optimized/DeltaAngle" + moduleName, shortestDelta);
         desiredDriveSpeed = inverted * desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters;
         driveControl
                 .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
                         driveFF.calculate(desiredDriveSpeed));
 
         steerControl.setSetpoint(
-                steerMotor.getEncoder().getPosition() + deltaAngle * Constants.DriveTrain.SteerGearRatio,
+                steerPose + shortestDelta * Constants.DriveTrain.SteerGearRatio,
                 ControlType.kPosition,
                 ClosedLoopSlot.kSlot0);
-        previousDeltaAngle = deltaAngle;
+        previousDeltaAngle = shortestDelta;
 
     }
 

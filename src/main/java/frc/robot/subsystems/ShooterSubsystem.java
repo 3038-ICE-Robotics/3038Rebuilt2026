@@ -115,9 +115,6 @@ public class ShooterSubsystem extends SubsystemBase {
                 targetSpeed = 100;
                 break;
         }
-        if(DriverStation.isTest()){
-            targetSpeed/=2;
-        }
         setMotorSpeed(targetSpeed);
         // SmartDashboard.putNumber("Shooter/Accum Error", VelocityControl.getIAccum());
         SmartDashboard.putNumber("Shooter/Target Motor Speed", targetSpeed);
