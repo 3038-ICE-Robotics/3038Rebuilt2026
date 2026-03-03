@@ -22,6 +22,9 @@ public class SystemCommands {
     private Command transferToShooter;
     private Command rollOverIntake;
     private Command rollOverOuttake;
+    private Command hippoExtend; //TODO implement all 3 hippo subsystems
+    private Command hippoRetract; 
+    private Command hippoIntake;
 
     public SystemCommands(IntakeSubsystem intake, TransferSubsystem transfer, ShooterSubsystem shooter) {
         // Takes in balls to use later.
@@ -119,6 +122,12 @@ public class SystemCommands {
                                 () -> false)),
 
                         transferToShooter));
+        hippoExtend = new FunctionalCommand(
+            null, 
+            null, 
+            null, 
+            null, 
+            null );
         
     }
 

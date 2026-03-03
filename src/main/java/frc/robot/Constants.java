@@ -71,6 +71,8 @@ public final class Constants {
 
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.75;
+    public static final double HippoIntakeSpeed = 0.75;
+    public static final double HippoSpeed = 0.5;
   }
 
   public static class LeftButtonIDs {
@@ -102,7 +104,7 @@ public final class Constants {
     public static final int HippoLeft = 24;
     public static final int HippoRight = 25;
     public static final int HippoIntake = 26;
-
+  }
   public static class NeoVortex {
     public static final int StallCurrent = 211;
     public static final double CurrentThreshhold = 40;
