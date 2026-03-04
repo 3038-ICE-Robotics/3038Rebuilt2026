@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.RearSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -18,15 +19,16 @@ public class SystemCommands {
     public Command outtakeBall;
     public Command shootBallFromGround;
     public Command shootBallFromHopper;
+    public Command rearExtend;
+    public Command rearRetract;
+    public Command rearIntake;
     private Command shooting;
     private Command transferToShooter;
     private Command rollOverIntake;
     private Command rollOverOuttake;
-    private Command hippoExtend; //TODO implement all 3 hippo subsystems
-    private Command hippoRetract; 
-    private Command hippoIntake;
 
-    public SystemCommands(IntakeSubsystem intake, TransferSubsystem transfer, ShooterSubsystem shooter) {
+    public SystemCommands(IntakeSubsystem intake, TransferSubsystem transfer, ShooterSubsystem shooter,
+            RearSubsystem rear) {
         // Takes in balls to use later.
         rollOverIntake = new FunctionalCommand(
                 shooter::intake,
@@ -46,7 +48,7 @@ public class SystemCommands {
                     shooter.stopMotor();
                 },
                 () -> false,
-                shooter);        
+                shooter);
         // -------------------------------------------------------------------------------------------
         intakeBall = new ParallelCommandGroup(new FunctionalCommand(() -> {
             intake.startIntake();
@@ -71,10 +73,9 @@ public class SystemCommands {
             transfer.stopMotors();
         }, () -> {
             return transfer.isHopperEmpty();
-        }, intake, transfer), 
-                //-----------------------------------------------
+        }, intake, transfer),
+                // -----------------------------------------------
                 rollOverOuttake);
-                
 
         shooting = new FunctionalCommand(
                 () -> {
@@ -114,21 +115,44 @@ public class SystemCommands {
 
         shootBallFromHopper = new ParallelCommandGroup(shooting,
                 new SequentialCommandGroup(
-                        new ParallelRaceGroup( new WaitCommand(2), 
-                            new FunctionalCommand(
-                                transfer::agitate, 
-                                () -> {}, 
-                                (interrupted) -> {transfer.stopMotors();}, 
-                                () -> false)),
+                        new ParallelRaceGroup(new WaitCommand(2),
+                                new FunctionalCommand(
+                                        transfer::agitate,
+                                        () -> {
+                                        },
+                                        (interrupted) -> {
+                                            transfer.stopMotors();
+                                        },
+                                        () -> false)),
 
                         transferToShooter));
-        hippoExtend = new FunctionalCommand(
-            null, 
-            null, 
-            null, 
-            null, 
-            null );
-        
+        rearExtend = new FunctionalCommand(
+                rear::extend,
+                () -> {
+                },
+                (interrupted) -> {
+                    rear.stop();
+                },
+                rear::isExtended,
+                rear);
+        rearRetract = new FunctionalCommand(
+                rear::retract,
+                () -> {
+                },
+                (interrupted) -> {
+                    rear.stop();
+                },
+                rear::isRetracted,
+                rear);
+        rearIntake = new FunctionalCommand(
+                rear::startIntake,
+                () -> {
+                },
+                (interrupted) -> {
+                    rear.stopIntake();
+                },
+                () -> false,
+                rear);
     }
 
 }

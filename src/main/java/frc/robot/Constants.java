@@ -71,14 +71,17 @@ public final class Constants {
 
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.75;
-    public static final double HippoIntakeSpeed = 0.75;
-    public static final double HippoSpeed = 0.5;
+    public static final double RearIntakeSpeed = 0.75;
+    public static final double RearSpeed = 0.5;
   }
 
   public static class LeftButtonIDs {
     public static final int Intake = 10;
     public static final int IntakeToHopper = 1;
     public static final int ToggleAimBot = 3; // fix
+    public static final int RearIntake = 6;
+    public static final int RearExtend = 7;
+    public static final int RearRetract = 8;
   }
 
   public static class RightButtonIDs {
@@ -101,9 +104,9 @@ public final class Constants {
     public static final int TransferHigh = 12;
     public static final int ClimbRight = 13;
     public static final int ClimbLeft = 14;
-    public static final int HippoLeft = 24;
-    public static final int HippoRight = 25;
-    public static final int HippoIntake = 26;
+    public static final int RearLeft = 24;
+    public static final int RearRight = 25;
+    public static final int RearIntake = 26;
   }
   public static class NeoVortex {
     public static final int StallCurrent = 211;

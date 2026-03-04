@@ -14,6 +14,7 @@ import frc.robot.interfaces.ITunable;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.RearSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
@@ -67,6 +68,7 @@ public class RobotContainer {
   private ShooterSubsystem shooter;
   private TransferSubsystem transfer;
   private ClimberSubsystem climb;
+  private RearSubsystem rear;
   private SysIdRoutine sysRoutine1;
   private Config configForSysRoutine1;
   private SendableChooser<ITunable> subSystemChooser = new SendableChooser<ITunable>();
@@ -87,9 +89,10 @@ public class RobotContainer {
     intake = new IntakeSubsystem();
     transfer = new TransferSubsystem();
     climb = new ClimberSubsystem();
+    rear = new RearSubsystem();
     driveTrainInit();
-     shooter = new ShooterSubsystem(drivetrain::getPose);
-    fullCommands = new SystemCommands(intake, transfer, shooter);
+    shooter = new ShooterSubsystem(drivetrain::getPose);
+    fullCommands = new SystemCommands(intake, transfer, shooter, rear);
     // Configure the trigger bindings
     configureBindings();
 
@@ -178,13 +181,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // commandJoystickL.button(Constants.LeftButtonIDs.Intake)
-    //     .onTrue(new InstantCommand(intake::startIntake))
-    //     .and(() -> !commandJoystickL.getHID().getRawButton(Constants.RightButtonIDs.OuttakeFirstMotor))
-    //     .onFalse(new InstantCommand(intake::stop));
+    // .onTrue(new InstantCommand(intake::startIntake))
+    // .and(() ->
+    // !commandJoystickL.getHID().getRawButton(Constants.RightButtonIDs.OuttakeFirstMotor))
+    // .onFalse(new InstantCommand(intake::stop));
     // commandJoystickL.button(Constants.RightButtonIDs.OuttakeFirstMotor)
-    //     .onTrue(new InstantCommand(intake::startOuttake))
-    //     .and(() -> !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Intake))
-    //     .onFalse(new InstantCommand(intake::stop));
+    // .onTrue(new InstantCommand(intake::startOuttake))
+    // .and(() ->
+    // !commandJoystickL.getHID().getRawButton(Constants.LeftButtonIDs.Intake))
+    // .onFalse(new InstantCommand(intake::stop));
     commandJoystickL.button(Constants.LeftButtonIDs.IntakeToHopper)
         .onTrue(fullCommands.intakeBall)
         .onFalse(new InstantCommand(fullCommands.intakeBall::cancel));
@@ -205,6 +210,15 @@ public class RobotContainer {
     commandJoystickR.button(Constants.RightButtonIDs.RightClimbExtend)
         .onTrue(climb.extend)
         .onFalse(new InstantCommand(climb.extend::cancel));
+    commandJoystickL.button(Constants.LeftButtonIDs.RearExtend)
+        .onTrue(fullCommands.rearExtend)
+        .onFalse(new InstantCommand(fullCommands.rearExtend::cancel));
+    commandJoystickL.button(Constants.LeftButtonIDs.RearRetract)
+        .onTrue(fullCommands.rearRetract)
+        .onFalse(new InstantCommand(fullCommands.rearRetract::cancel));
+    commandJoystickL.button(Constants.LeftButtonIDs.RearIntake)
+        .onTrue(fullCommands.rearIntake)
+        .onFalse(new InstantCommand(fullCommands.rearIntake::cancel));
     // .onTrue(new IntakeCommand(intake))
     // .onFalse(new StopIntakeCommand(intake));
   }
