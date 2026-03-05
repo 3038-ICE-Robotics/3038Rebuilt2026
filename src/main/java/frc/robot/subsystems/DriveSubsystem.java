@@ -50,7 +50,7 @@ import frc.robot.StateOfRobot;
 import frc.robot.inputs.LimelightInputs;
 import frc.robot.interfaces.ITunable;
 
-public class DriveSubsystem extends SubsystemBase implements ITunable{
+public class DriveSubsystem extends SubsystemBase implements ITunable {
     // These are our swerve drive kinematics and Pigeon (gyroscope)
     public SwerveDriveKinematics kinematics = Constants.kinematics;
     public static Optional<Alliance> ally = DriverStation.getAlliance();
@@ -104,7 +104,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
         PathPlannerLogging.setLogActivePathCallback(
                 (poses) -> m_field.getObject("path").setPoses(poses));
         SmartDashboard.putData("Field", m_field);
-        SmartDashboard.putBoolean("Vision/force use limelight", false);
+        SmartDashboard.putBoolean("Vision/force use limelight", true);
 
         gyro.calibrate();
         // Creates and configures each of the four swerve modules used in the
@@ -141,22 +141,22 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
             public void initSendable(SendableBuilder builder) {
                 builder.setSmartDashboardType("SwerveDrive");
 
-                builder.addDoubleProperty("Front Left Angle", () -> modules[0].posSwerve*2*Math.PI, in -> {
+                builder.addDoubleProperty("Front Left Angle", () -> modules[0].posSwerve * 2 * Math.PI, in -> {
                 });
                 builder.addDoubleProperty("Front Left Velocity", () -> modules[0].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Front Right Angle", () -> modules[1].posSwerve*2*Math.PI, in -> {
+                builder.addDoubleProperty("Front Right Angle", () -> modules[1].posSwerve * 2 * Math.PI, in -> {
                 });
                 builder.addDoubleProperty("Front Right Velocity", () -> modules[1].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Back Left Angle", () -> modules[2].posSwerve*2*Math.PI, in -> {
+                builder.addDoubleProperty("Back Left Angle", () -> modules[2].posSwerve * 2 * Math.PI, in -> {
                 });
                 builder.addDoubleProperty("Back Left Velocity", () -> modules[2].getSpeedMetersPerSecond(), in -> {
                 });
 
-                builder.addDoubleProperty("Back Right Angle", () -> modules[3].posSwerve*2*Math.PI, in -> {
+                builder.addDoubleProperty("Back Right Angle", () -> modules[3].posSwerve * 2 * Math.PI, in -> {
                 });
                 builder.addDoubleProperty("Back Right Velocity", () -> modules[3].getSpeedMetersPerSecond(), in -> {
                 });
@@ -404,7 +404,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
         } else {
             setModuleStates(desiredStates);
         }
-        
+
     }
 
     /**
@@ -638,7 +638,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
             m.periodic();
         }
 
-        if (Preferences.getBoolean("Use Limelight", false)) {
+        if (Preferences.getBoolean("Use Limelight", true)) {
             updateOdometryWithVision();
         } else {
             // RobotState.getInstance().LimelightsUpdated = false;
@@ -675,6 +675,8 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
                 }
             }
         }
+        StateOfRobot.setTargetHUB();
+
     }
 
     private void updateInputs() {
@@ -763,9 +765,9 @@ public class DriveSubsystem extends SubsystemBase implements ITunable{
     }
 
     @Override
-    public void updatePID(double kP, double kI, double kD){
+    public void updatePID(double kP, double kI, double kD) {
         for (SwerveModule m : modules) {
-          m.updatePID(kP, kI, kD);  
+            m.updatePID(kP, kI, kD);
         }
     }
 }

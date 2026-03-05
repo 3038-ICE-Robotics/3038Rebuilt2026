@@ -97,7 +97,7 @@ public class ShooterSubsystem extends SubsystemBase {
             System.out.println("🔥 Shooter OVERHEATING! STOPPING!");
             shooterPrime.set(0);
         }
-        double distanceFromTarget = StateOfRobot.distanceBetweenTargetAnd(robotPoint.get());
+        double distanceFromTarget = StateOfRobot.distanceBetweenTargetAnd(robotPoint.get())*Constants.MetersToFeet*12;
         double targetSpeed = 0;
         SmartDashboard.putNumber("Shooter/Distance To Target", distanceFromTarget);
 

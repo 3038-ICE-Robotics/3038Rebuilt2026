@@ -60,18 +60,18 @@ public final class Constants {
         225 // farthest possible distance
     };
     public static double[] shooterSpeeds = new double[] { // TODO measure (RPM)
+        300,
+        350,
         400,
-        435,
-        500,
-        610,
-        800,
-        1000
+        430,
+        470,
+        520
     };
   }
 
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.75;
-    public static final double RearIntakeSpeed = 0.75;
+    public static final double RearIntakeSpeed = -0.40;
     public static final double RearSpeed = 0.5;
   }
 
@@ -79,7 +79,7 @@ public final class Constants {
     public static final int Intake = 10;
     public static final int IntakeToHopper = 1;
     public static final int ToggleAimBot = 3; // fix
-    public static final int RearIntake = 6;
+    public static final int RearIntake = 1;
     public static final int RearExtend = 7;
     public static final int RearRetract = 8;
   }
@@ -151,7 +151,7 @@ public final class Constants {
   }
 
   public static class Limelight {
-    public static final String LimelightName = "LimelightA";
+    public static final String LimelightName = "limelight-two";
     public static final Translation2d FieldCorner = new Translation2d(17.54, 8.02);
     public static final double MaxTagDistance = 3;
   }
