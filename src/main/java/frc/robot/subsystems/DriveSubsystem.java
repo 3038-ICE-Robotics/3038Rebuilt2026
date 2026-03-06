@@ -21,6 +21,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -76,6 +77,12 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
      * rotated.
      */
     private int accumulativeLoops;
+
+    public double vX = 0;
+    public double vY = 0;
+    public double vTheta = 0;
+
+    private Pose2d previousPose;
     /**
      * This is the odometer.
      */
@@ -627,10 +634,12 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
     @Override
     public void periodic() {
         limelight.periodic();
+        previousPose = getPose();
         updateInputs();
         SmartDashboard.putNumber("pose2d X", getPose().getX());
         SmartDashboard.putNumber("pose2d Y", getPose().getY());
         updateOdometry();
+
         // sets the robot orientation for each of the limelights, which is required for
         // the
 
@@ -697,48 +706,21 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
      * @return the desired angle of the robot to be aimed at the hub, assuming 0
      *         degrees = away from blue alliance
      */
-    public double getDesiredRobotAngle() {
-        Pose2d dtvalues = getPose();
-        double deltaX;
-        double deltaY;
-        // triangle for robot angle
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-            deltaY = Math.abs(dtvalues.getY() - Constants.Field.RedHub.getY());
-            deltaX = Math.abs(dtvalues.getX() - Constants.Field.RedHub.getX());
-        } else {
-            deltaY = Math.abs(dtvalues.getY() - Constants.Field.BlueHub.getY());
-            deltaX = Math.abs(dtvalues.getX() - Constants.Field.BlueHub.getX());
-        }
-        double distanceToHub2D = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    public Rotation2d getDesiredRobotAngle() {
+
+        double distanceToHub2D = StateOfRobot.distanceBetweenTargetAnd(robotPosition);
         // we need to add here a way to calculate the length of the ball's flight path
-        /*
-         * double flightPathDistance;
-         * double shootingTime = flightPathDistance/SHOOTING_SPEED_MPS; //calculates how
-         * long the fuel will take to reach the target
-         * double currentXSpeed = this.getChassisSpeeds().vxMetersPerSecond;
-         * double currentYSpeed = this.getChassisSpeeds().vyMetersPerSecond;
-         * double targetOffset = new
-         * Translation2d(currentXSpeed*shootingTime*OFFSET_MULTIPLIER*unadjustedAngle.
-         * getRadians(), currentYSpeed*shootingTime*OFFSET_MULTIPLIER);
-         * //line above calculates how much our current speed will affect the ending
-         * location of the note if it's in the air for ShootingTime
-         */
-        double desiredAngle;
-        if (alliance.isPresent() && alliance.get() == Alliance.Blue) {
-            if (dtvalues.getY() >= Constants.Field.BlueHub.getY()) {
-                desiredAngle = 0 - Math.atan(deltaY / deltaX);
-            } else {
-                desiredAngle = 0 + Math.atan(deltaY / deltaX);
-            }
-        } else {
-            if (dtvalues.getY() >= Constants.Field.RedHub.getY()) {
-                desiredAngle = Math.PI + Math.atan(deltaY / deltaX);
-            } else {
-                desiredAngle = Math.PI - Math.atan(deltaY / deltaX);
-            }
+        double tof = distanceToHub2D/((Math.cos(65 * Math.PI/180))/(StateOfRobot.getSpeedFromDistance(distanceToHub2D)/6.111));
+        double currentXSpeed = this.getChassisSpeeds().vxMetersPerSecond;
+        double currentYSpeed = this.getChassisSpeeds().vyMetersPerSecond;
+        Translation2d targetOffset = new Translation2d(currentXSpeed*tof, currentYSpeed*tof);
+        Translation2d target = Constants.Field.BlueHub;
+        
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() != Alliance.Blue) {
+            target = Constants.Field.RedHub;
         }
-        return Math.toDegrees(desiredAngle);
+        target.minus(targetOffset);
+        return Rotation2d.fromRadians(Math.atan2(target.getY() - robotPosition.getY(), target.getX() - robotPosition.getX()));
     }
 
     public static double getDistanceToHub() {

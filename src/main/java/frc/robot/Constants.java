@@ -47,7 +47,7 @@ public final class Constants {
 
   public static class AimBotData {
     public static double[] RotationPID = new double[] { // measure
-        0, // kP
+        0.01, // kP
         0, // kI
         0 // kD
     };
@@ -72,7 +72,13 @@ public final class Constants {
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.75;
     public static final double RearIntakeSpeed = -0.40;
-    public static final double RearSpeed = 0.5;
+    public static final double RearSpeed = 0.1;
+  }
+
+  public static class HippoData {
+    public static final double RetractLimit = 0.141;
+    public static final double ExtendLimit = 0.502;
+    public static final double AgitateLimit = 0.417;
   }
 
   public static class LeftButtonIDs {

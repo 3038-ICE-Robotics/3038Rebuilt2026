@@ -128,7 +128,7 @@ public class RobotContainer {
         ControllerForwardAxisSupplier,
         ControllerSidewaysAxisSupplier,
 
-        () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain.getPose())
+        () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain::getDesiredRobotAngle, ()-> drivetrain.getPose().getRotation())
             : ControllerZAxisSupplier.getAsDouble());
     drivetrain.setDefaultCommand(defaultDriveCommand);
 

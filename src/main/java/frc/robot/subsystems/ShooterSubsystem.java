@@ -13,7 +13,9 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,9 +39,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private ShooterModes shooterSelect;
 
+    private PIDController shooterPID;
+    private LinearFilter filter = LinearFilter.singlePoleIIR(0.05, 0.02);
+
     public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
         shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, MotorType.kBrushless);
         shooterFollow = new SparkFlex(Constants.MotorIDs.ShooterFollow, MotorType.kBrushless);
+        shooterPID = new PIDController(0.005, 0, 0.001);
         configP = new SparkFlexConfig();
         configP.closedLoop.pid(0.1, 0, 0.001, ClosedLoopSlot.kSlot0);
         configF = new SparkFlexConfig();
@@ -57,10 +63,11 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setMotorSpeed(double speed) {
+        double shooterPIDcalculated = shooterPID.calculate(speed - filter.calculate(getCurrentSpeed()));
         // VelocityControl.setSetpoint(speed, ControlType.kVelocity,
         //         ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
-        shooterPrime.setVoltage(12 * speed / 1000);
-
+        shooterPrime.setVoltage(MathUtil.clamp(12 * speed / 1000 - shooterPIDcalculated, 0, 12));
+SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
     }
 
     public void stopMotor() {
@@ -103,7 +110,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
         switch (shooterSelect) {
             case FIRING:
-                targetSpeed = getSpeedFromDistance(distanceFromTarget);
+                targetSpeed = StateOfRobot.getSpeedFromDistance(distanceFromTarget);
                 break;
             case IDLE:
                 targetSpeed = 100;
@@ -122,25 +129,6 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putString("Shooter/Select", shooterSelect.toString());
     }
 
-    private double getSpeedFromDistance(double distance) {
-        int rightIndex = -1;
-        for (int i = 0; i < Constants.AimBotData.distancesToHub.length; i++) {
-            if (distance < Constants.AimBotData.distancesToHub[i]) {
-                rightIndex = i;
-                break;
-            }
-        }
-        if (rightIndex == 0) {
-            return Constants.AimBotData.shooterSpeeds[0];
-        }
-        if (rightIndex == -1) {
-            return Constants.AimBotData.shooterSpeeds[Constants.AimBotData.distancesToHub.length - 1];
-        }
-        double percent = MathUtil.inverseInterpolate(Constants.AimBotData.distancesToHub[rightIndex - 1],
-                Constants.AimBotData.distancesToHub[rightIndex], distance);
-        return MathUtil.interpolate(Constants.AimBotData.shooterSpeeds[rightIndex - 1],
-                Constants.AimBotData.shooterSpeeds[rightIndex], percent);
-    }
 
     public void intake() {
         shooterSelect = ShooterModes.INTAKE;

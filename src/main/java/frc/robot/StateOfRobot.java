@@ -1,11 +1,14 @@
 package frc.robot;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.pathplanner.lib.path.GoalEndState;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -33,10 +36,29 @@ public class StateOfRobot {
         }
 
     }
-    public static double getAimBotRotation(Pose2d botPose2d) {
-        return aimAssistPID.calculate(angelBetweenTargetAnd(botPose2d) - botPose2d.getRotation().getRadians());
-    }
+    public static double getAimBotRotation(Supplier <Rotation2d> desiredAngle,Supplier <Rotation2d> botPose2d) {
+        return MathUtil.clamp(aimAssistPID.calculate(desiredAngle.get().getRotations() - botPose2d.get().getRotations()), -1, 1);
 
+    }
+public static double getSpeedFromDistance(double distance) {
+        int rightIndex = -1;
+        for (int i = 0; i < Constants.AimBotData.distancesToHub.length; i++) {
+            if (distance < Constants.AimBotData.distancesToHub[i]) {
+                rightIndex = i;
+                break;
+            }
+        }
+        if (rightIndex == 0) {
+            return Constants.AimBotData.shooterSpeeds[0];
+        }
+        if (rightIndex == -1) {
+            return Constants.AimBotData.shooterSpeeds[Constants.AimBotData.distancesToHub.length - 1];
+        }
+        double percent = MathUtil.inverseInterpolate(Constants.AimBotData.distancesToHub[rightIndex - 1],
+                Constants.AimBotData.distancesToHub[rightIndex], distance);
+        return MathUtil.interpolate(Constants.AimBotData.shooterSpeeds[rightIndex - 1],
+                Constants.AimBotData.shooterSpeeds[rightIndex], percent);
+    }
     public static double distanceBetweenTargetAnd(Pose2d start) {
         double dx = target.getX() - start.getX();
         double dy = target.getY() - start.getY();
@@ -47,7 +69,7 @@ public class StateOfRobot {
         }
     }
 
-    public static double angelBetweenTargetAnd(Pose2d start) {
+    public static double angleBetweenTargetAnd(Pose2d start) {
         double dx = target.getX() - start.getX();
         double dy = target.getY() - start.getY();
         if (targetType == TargetType.ALLIANCE) {

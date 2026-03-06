@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,6 +23,8 @@ public class RearSubsystem extends SubsystemBase {
     private SparkBaseConfig configL;
     private SparkBaseConfig configR;
     private SparkBaseConfig configIntake;
+
+    private boolean agitateUp = true;
 
     private final AbsoluteEncoder rearEncoder; // located on right encoder
 
@@ -62,19 +65,37 @@ public class RearSubsystem extends SubsystemBase {
         rearRight.set(0);
     }
 
+    public void agitate() {
+        double position = getAdjustedEncoder();
+        if (agitateUp) {
+            if (position <= Constants.HippoData.AgitateLimit) {
+                agitateUp = false;
+            }
+        } else {
+            if (position >= Constants.HippoData.ExtendLimit) {
+                agitateUp = true;
+            }
+        }
+        rearRight.set((agitateUp? -1:1) * Constants.MotorSpeeds.RearSpeed);
+    }
+
     public boolean isRetracted() {
-        return rearEncoder.getPosition() >= 0.5;
+        return getAdjustedEncoder() <= Constants.HippoData.RetractLimit;
     }
 
     public boolean isExtended() {
-        return rearEncoder.getPosition() <= 0.5;
+        return getAdjustedEncoder() >= Constants.HippoData.ExtendLimit;
+    }
+
+    private double getAdjustedEncoder() {
+        return MathUtil.inputModulus(rearEncoder.getPosition() + 0.5, 0, 1);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Rear/Position", rearEncoder.getPosition());
+        SmartDashboard.putNumber("Rear/Position", getAdjustedEncoder());
         SmartDashboard.putBoolean("Rear/isExtended", isExtended());
         SmartDashboard.putBoolean("Rear/isRetracted", isRetracted());
-        SmartDashboard.putNumber("Rear/Intake", rearIntake.getEncoder().getVelocity());
+        SmartDashboard.putNumber("Rear/Intake Velocity", rearIntake.getEncoder().getVelocity());
     }
 }

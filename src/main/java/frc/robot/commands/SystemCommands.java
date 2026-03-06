@@ -22,6 +22,7 @@ public class SystemCommands {
     public Command rearExtend;
     public Command rearRetract;
     public Command rearIntake;
+    public Command agitate;
     private Command shooting;
     private Command transferToShooter;
     private Command rollOverIntake;
@@ -89,6 +90,17 @@ public class SystemCommands {
                 () -> false,
                 shooter);
 
+        agitate = new FunctionalCommand(
+                rear::startIntake
+                ,
+                rear::agitate,
+                (interrupted) -> {
+                    rear.stop();
+                    rear.stopIntake();
+                },
+                () -> false,
+                rear);
+
         // picks balls from intake and skips hopper to fire.
         shootBallFromGround = new FunctionalCommand(() -> {
             intake.startIntake();
@@ -113,7 +125,7 @@ public class SystemCommands {
             return transfer.isHopperEmpty();
         }, transfer);
 
-        shootBallFromHopper = new ParallelCommandGroup(shooting,
+        shootBallFromHopper = new ParallelCommandGroup(shooting, agitate,
                 new SequentialCommandGroup(
                         new ParallelRaceGroup(new WaitCommand(2),
                                 new FunctionalCommand(
