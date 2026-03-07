@@ -95,6 +95,9 @@ public class RobotContainer {
     shooter.speedControl = () -> {
       return ((rJoystick.getZ() + 1) / 2) * 3500 + 1500;
     };
+    shooter.distanceControl = () -> {
+      return ((lJoystick.getZ() + 1) / 2) * 185 + 40;
+    };
     fullCommands = new SystemCommands(intake, transfer, shooter, rear);
     // Configure the trigger bindings
     configureBindings();

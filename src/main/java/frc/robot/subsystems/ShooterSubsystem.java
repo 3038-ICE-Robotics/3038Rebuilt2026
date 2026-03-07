@@ -42,6 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private PIDController shooterPID;
     private LinearFilter filter = LinearFilter.singlePoleIIR(0.05, 0.02);
+    public Supplier <Double> distanceControl;
 
     public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
         shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, MotorType.kBrushless);
@@ -108,6 +109,9 @@ SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
             shooterPrime.set(0);
         }
         double distanceFromTarget = StateOfRobot.distanceBetweenTargetAnd(robotPoint.get())*Constants.MetersToFeet*12;
+        if (DriverStation.isTest()) {
+            distanceFromTarget = distanceControl.get();
+        }
         double targetSpeed = 0;
         SmartDashboard.putNumber("Shooter/Distance To Target", distanceFromTarget);
 

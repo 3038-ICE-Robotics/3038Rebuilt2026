@@ -89,9 +89,12 @@ public final class Constants {
   }
 
   public static class HippoData {
-    public static final double RetractLimit = 0.141;
-    public static final double ExtendLimit = 0.502;
-    public static final double AgitateLimit = 0.417;
+    public static final double RetractLimitL = 0.141;
+    public static final double RetractLimitR = 0.141;
+    public static final double ExtendLimitL = 0.502;
+    public static final double ExtendLimitR = 0.502;
+    public static final double AgitateLimitL = 0.417;
+    public static final double AgitateLimitR = 0.417;
   }
 
   public static class LeftButtonIDs {
@@ -177,11 +180,11 @@ public final class Constants {
   }
 
   public static class Field {
-    public static final Translation2d BlueHub = new Translation2d(4.6, 4); //meters \/
+    public static final Translation2d BlueHub = new Translation2d(4.6, 4); // meters \/
     public static final Translation2d RedHub = new Translation2d(11.9, 4);
     public static final Translation2d BlueZone = new Translation2d(2, 2); // TODO find coords
     public static final Translation2d RedZone = new Translation2d(1, 1); // TODO find coords.
-    public static final double FieldLength = 650.12; //inches \/
+    public static final double FieldLength = 650.12; // inches \/
     public static final double FieldWidth = 316.64;
     public static final double BlueBoundary = 180;
     public static final double RedBoundary = FieldLength - BlueBoundary;

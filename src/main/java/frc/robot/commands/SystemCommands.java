@@ -138,24 +138,8 @@ public class SystemCommands {
                                         () -> false)),
 
                         transferToShooter));
-        rearExtend = new FunctionalCommand(
-                rear::extend,
-                () -> {
-                },
-                (interrupted) -> {
-                    rear.stop();
-                },
-                rear::isExtended,
-                rear);
-        rearRetract = new FunctionalCommand(
-                rear::retract,
-                () -> {
-                },
-                (interrupted) -> {
-                    rear.stop();
-                },
-                rear::isRetracted,
-                rear);
+        rearExtend = new ParallelCommandGroup(rear.extendLeft, rear.extendRight);
+        rearRetract = new ParallelCommandGroup(rear.retractLeft, rear.retractRight);
         rearIntake = new FunctionalCommand(
                 rear::startIntake,
                 () -> {

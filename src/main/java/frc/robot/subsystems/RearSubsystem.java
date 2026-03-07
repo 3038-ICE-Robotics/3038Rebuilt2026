@@ -12,6 +12,8 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -26,23 +28,42 @@ public class RearSubsystem extends SubsystemBase {
 
     private boolean agitateUp = true;
 
-    private final AbsoluteEncoder rearEncoder; // located on right encoder
+    public Command extendLeft;
+    public Command extendRight;
+    public Command retractLeft;
+    public Command retractRight;
+
+    private AbsoluteEncoder rearRightEncoder; // located on right encoder
+    private AbsoluteEncoder rearLeftEncoder;
 
     public RearSubsystem() {
         rearLeft = new SparkFlex(Constants.MotorIDs.RearLeft, MotorType.kBrushless);
         rearRight = new SparkFlex(Constants.MotorIDs.RearRight, MotorType.kBrushless);
         rearIntake = new SparkFlex(Constants.MotorIDs.RearIntake, MotorType.kBrushless);
-        rearEncoder = rearRight.getAbsoluteEncoder();
+        rearRightEncoder = rearRight.getAbsoluteEncoder();
+        rearLeftEncoder = rearLeft.getAbsoluteEncoder();
         configL = new SparkFlexConfig();
+        configL.inverted(true);
         configR = new SparkFlexConfig();
         configIntake = new SparkFlexConfig();
         configIntake
                 .smartCurrentLimit(Constants.NeoVortex.StallCurrent)
                 .idleMode(IdleMode.kCoast);
-        configL.follow(rearRight, true);
         rearLeft.configure(configL, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         rearRight.configure(configR, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         rearIntake.configure(configIntake, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        extendLeft = new FunctionalCommand(() -> rearLeft.set(Constants.MotorSpeeds.RearSpeed),
+                () -> {
+                }, (interrupted) -> rearLeft.set(0), () -> getAdjustedLeft() >= Constants.HippoData.ExtendLimitL);
+        extendRight = new FunctionalCommand(() -> rearRight.set(Constants.MotorSpeeds.RearSpeed),
+                () -> {
+                }, (interrupted) -> rearRight.set(0), () -> getAdjustedRight() >= Constants.HippoData.ExtendLimitR);
+        retractLeft = new FunctionalCommand(() -> rearLeft.set(-Constants.MotorSpeeds.RearSpeed),
+                () -> {
+                }, (interrupted) -> rearLeft.set(0), () -> getAdjustedLeft() <= Constants.HippoData.RetractLimitL);
+        retractRight = new FunctionalCommand(() -> rearRight.set(-Constants.MotorSpeeds.RearSpeed),
+                () -> {
+                }, (interrupted) -> rearRight.set(0), () -> getAdjustedRight() <= Constants.HippoData.RetractLimitR);
     }
 
     public void startIntake() {
@@ -65,35 +86,66 @@ public class RearSubsystem extends SubsystemBase {
         rearRight.set(0);
     }
 
+    private boolean isLeftPastBoundary() {
+        return getAdjustedLeft() <= Constants.HippoData.AgitateLimitL;
+    }
+
+    private boolean isRightPastBoundary() {
+        return getAdjustedRight() <= Constants.HippoData.AgitateLimitR;
+    }
+
     public void agitate() {
-        double position = getAdjustedEncoder();
+        double leftSpeed = 0;
+        double rightSpeed = 0;
         if (agitateUp) {
-            if (position <= Constants.HippoData.AgitateLimit) {
-                agitateUp = false;
+            if (!isLeftPastBoundary()) {
+                leftSpeed = -Constants.MotorSpeeds.RearSpeed;
             }
+            if (!isRightPastBoundary()) {
+                rightSpeed = -Constants.MotorSpeeds.RearSpeed;
+            }
+            agitateUp = !(isLeftPastBoundary() && isRightPastBoundary());
         } else {
-            if (position >= Constants.HippoData.ExtendLimit) {
-                agitateUp = true;
+            if (!isExtendedL()) {
+                leftSpeed = Constants.MotorSpeeds.RearSpeed;
             }
+            if (!isExtendedR()) {
+                rightSpeed = Constants.MotorSpeeds.RearSpeed;
+            }
+            agitateUp = (isExtendedL() && isExtendedR());
         }
-        rearRight.set((agitateUp? -1:1) * Constants.MotorSpeeds.RearSpeed);
+        rearRight.set(rightSpeed);
+        rearLeft.set(leftSpeed);
     }
 
-    public boolean isRetracted() {
-        return getAdjustedEncoder() <= Constants.HippoData.RetractLimit;
+    public boolean isRetractedL() {
+        return getAdjustedRight() <= Constants.HippoData.RetractLimitL;
     }
 
-    public boolean isExtended() {
-        return getAdjustedEncoder() >= Constants.HippoData.ExtendLimit;
+    public boolean isRetractedR() {
+        return getAdjustedRight() <= Constants.HippoData.RetractLimitR;
     }
 
-    private double getAdjustedEncoder() {
-        return MathUtil.inputModulus(rearEncoder.getPosition() + 0.5, 0, 1);
+    public boolean isExtendedL() {
+        return getAdjustedRight() >= Constants.HippoData.ExtendLimitL;
+    }
+
+    public boolean isExtendedR() {
+        return getAdjustedRight() >= Constants.HippoData.ExtendLimitR;
+    }
+
+    private double getAdjustedRight() {
+        return MathUtil.inputModulus(rearRightEncoder.getPosition(), 0, 1);
+    }
+
+    private double getAdjustedLeft() {
+        return MathUtil.inputModulus(rearLeftEncoder.getPosition(), 0, 1);
     }
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("Rear/Position", getAdjustedEncoder());
+        SmartDashboard.putNumber("Rear/PositionL", getAdjustedLeft());
+        SmartDashboard.putNumber("Rear/PositionR", getAdjustedRight());
         // SmartDashboard.putBoolean("Rear/isExtended", isExtended());
         // SmartDashboard.putBoolean("Rear/isRetracted", isRetracted());
         SmartDashboard.putNumber("Rear/Intake Velocity", rearIntake.getEncoder().getVelocity());
