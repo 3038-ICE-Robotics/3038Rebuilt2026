@@ -30,7 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final SparkFlex shooterPrime;
     private final SparkFlex shooterFollow;
     private SparkClosedLoopController VelocityControl;
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0.0075);
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0015, 0.0015);
     private Supplier<Pose2d> robotPoint;
 
     private enum ShooterModes {
@@ -38,6 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     private ShooterModes shooterSelect;
+    public Supplier <Double> speedControl;
 
     private PIDController shooterPID;
     private LinearFilter filter = LinearFilter.singlePoleIIR(0.05, 0.02);
@@ -45,7 +46,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
         shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, MotorType.kBrushless);
         shooterFollow = new SparkFlex(Constants.MotorIDs.ShooterFollow, MotorType.kBrushless);
-        shooterPID = new PIDController(0.005, 0, 0.001);
+        shooterPID = new PIDController(0.0035, 0, 0.001);
         configP = new SparkFlexConfig();
         configP.closedLoop.pid(0.1, 0, 0.001, ClosedLoopSlot.kSlot0);
         configF = new SparkFlexConfig();
@@ -63,10 +64,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setMotorSpeed(double speed) {
-        double shooterPIDcalculated = shooterPID.calculate(speed - filter.calculate(getCurrentSpeed()));
+        double shooterPIDcalculated = shooterPID.calculate(filter.calculate(getCurrentSpeed()) - speed);
         // VelocityControl.setSetpoint(speed, ControlType.kVelocity,
         //         ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
-        shooterPrime.setVoltage(MathUtil.clamp(12 * speed / 1000 - shooterPIDcalculated, 0, 12));
+
+        //12 * speed / 400
+        shooterPrime.setVoltage(MathUtil.clamp(shooterPIDcalculated + feedforward.calculate(speed), 0, 12));
 SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
     }
 
@@ -94,11 +97,11 @@ SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
     public void periodic() {
         // This runs constantly!
 
-        // 1. Update Dashboard
-        SmartDashboard.putNumber("Shooter/Prime shooter Temp", shooterPrime.getMotorTemperature());
-        SmartDashboard.putNumber("Shooter/Prime Shooter Current", shooterPrime.getOutputCurrent());
-        SmartDashboard.putNumber("Shooter/Follow shooter Temp", shooterFollow.getMotorTemperature());
-        SmartDashboard.putNumber("Shooter/Follow Shooter Current", shooterFollow.getOutputCurrent());
+        // // 1. Update Dashboard
+        // SmartDashboard.putNumber("Shooter/Prime shooter Temp", shooterPrime.getMotorTemperature());
+        // SmartDashboard.putNumber("Shooter/Prime Shooter Current", shooterPrime.getOutputCurrent());
+        // SmartDashboard.putNumber("Shooter/Follow shooter Temp", shooterFollow.getMotorTemperature());
+        // SmartDashboard.putNumber("Shooter/Follow Shooter Current", shooterFollow.getOutputCurrent());
         // 2. Continuous Safety Checks
         if (shooterPrime.getMotorTemperature() > 80) {
             System.out.println("🔥 Shooter OVERHEATING! STOPPING!");
@@ -121,6 +124,9 @@ SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
             case INTAKE:
                 targetSpeed = 100;
                 break;
+        }
+        if (DriverStation.isTest()) {
+            targetSpeed = speedControl.get();
         }
         setMotorSpeed(targetSpeed);
         // SmartDashboard.putNumber("Shooter/Accum Error", VelocityControl.getIAccum());

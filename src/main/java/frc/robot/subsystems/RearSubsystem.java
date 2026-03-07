@@ -93,9 +93,9 @@ public class RearSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Rear/Position", getAdjustedEncoder());
-        SmartDashboard.putBoolean("Rear/isExtended", isExtended());
-        SmartDashboard.putBoolean("Rear/isRetracted", isRetracted());
+        // SmartDashboard.putNumber("Rear/Position", getAdjustedEncoder());
+        // SmartDashboard.putBoolean("Rear/isExtended", isExtended());
+        // SmartDashboard.putBoolean("Rear/isRetracted", isRetracted());
         SmartDashboard.putNumber("Rear/Intake Velocity", rearIntake.getEncoder().getVelocity());
     }
 }

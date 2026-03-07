@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue left to bump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue mess up balls sweep"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue right trench to human player"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue right human player to far fire"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 10.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue right far fire to trench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue inner wall counterclock"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue left trench to fire"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

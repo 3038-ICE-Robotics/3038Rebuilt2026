@@ -200,12 +200,12 @@ public class SwerveModule implements ITunable {
         posSwerve = MathUtil
                 .inputModulus(steerPose / Constants.DriveTrain.SteerGearRatio, -.5, .5);
         // desiredState.optimize(Rotation2d.fromRotations(posSwerve));
-        SmartDashboard.putNumber("Current/Angle" + moduleName, posSwerve);
-        SmartDashboard.putNumber("Desired/Angle" + moduleName, desiredState.angle.getRotations());
+        // SmartDashboard.putNumber("Current/Angle" + moduleName, posSwerve);
+        // SmartDashboard.putNumber("Desired/Angle" + moduleName, desiredState.angle.getRotations());
         double inverted = 1;
         double maxDelta = desiredState.angle.getRotations() - posSwerve;
         // double altMaxDelta = (1 - Math.abs(maxDelta)) * (maxDelta < 0 ? -1 : 1);
-        SmartDashboard.putNumber("Delta/Angle" + moduleName, maxDelta);
+        // SmartDashboard.putNumber("Delta/Angle" + moduleName, maxDelta);
         // double shortestDelta = (Math.abs(maxDelta) < Math.abs(altMaxDelta)) ? maxDelta : altMaxDelta;
         double shortestDelta = maxDelta;
         if (Math.abs(maxDelta) > 0.5) {
@@ -216,7 +216,7 @@ public class SwerveModule implements ITunable {
             inverted = -1;
         }
 
-        SmartDashboard.putNumber("180/Angle" + moduleName, shortestDelta);
+        // SmartDashboard.putNumber("180/Angle" + moduleName, shortestDelta);
         // if (Math.abs(shortestDelta) > 0.25) {
         //     shortestDelta = (0.5 - Math.abs(shortestDelta)) * (shortestDelta < 0 ? -1 : 1);
         //     inverted = -1;
@@ -224,7 +224,7 @@ public class SwerveModule implements ITunable {
         // if (Math.abs(posSwerve) == 0.5 && Math.abs(desiredState.angle.getRotations()) == 0.5) {
         //     shortestDelta = 0;
         // }
-        SmartDashboard.putNumber("Invert/Angle " + moduleName, maxDelta);
+        // SmartDashboard.putNumber("Invert/Angle " + moduleName, maxDelta);
 
         // if (Math.abs(deltaAngle) > 0.25) {
         // deltaAngle = 0.5 - deltaAngle;
@@ -236,7 +236,7 @@ public class SwerveModule implements ITunable {
 
         // = MathUtil.inputModulus(currentAngle+deltaAngle, -.5, .5);
 
-        SmartDashboard.putNumber("Optimized/DeltaAngle" + moduleName, shortestDelta);
+        // SmartDashboard.putNumber("Optimized/DeltaAngle" + moduleName, shortestDelta);
         desiredDriveSpeed = inverted * desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters;
         driveControl
                 .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
@@ -251,7 +251,7 @@ public class SwerveModule implements ITunable {
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Offset/Angle" + moduleName, -swerveEncoder.getPosition());
+        // SmartDashboard.putNumber("Offset/Angle" + moduleName, -swerveEncoder.getPosition());
     }
 
     @Override

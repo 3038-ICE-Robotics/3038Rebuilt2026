@@ -349,10 +349,10 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
                 desiredStates, Constants.DriveTrain.MaxVelocityMPS);
         for (int i = 0; i < 4; i++) {
             setModule(i, desiredStates[i]);
-            SmartDashboard.putNumber("Inputs/Desaturated" + Constants.DriveTrain.MotorKeys[i],
-                    desiredStates[i].speedMetersPerSecond);
-            SmartDashboard.putNumber("Inputs/Angle" + Constants.DriveTrain.MotorKeys[i],
-                    desiredStates[i].angle.getDegrees());
+            // SmartDashboard.putNumber("Inputs/Desaturated" + Constants.DriveTrain.MotorKeys[i],
+            //         desiredStates[i].speedMetersPerSecond);
+            // SmartDashboard.putNumber("Inputs/Angle" + Constants.DriveTrain.MotorKeys[i],
+            //         desiredStates[i].angle.getDegrees());
         }
     }
 
@@ -546,21 +546,21 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
                 .calculate(odometer.getEstimatedPosition().getX());
         double ySpeed = Constants.DriveTrain.DRIVE_TO_POSE_Y_CONTROLLER
                 .calculate(odometer.getEstimatedPosition().getY());
-        SmartDashboard.putNumber("TARGETINGPOSE/calculatedyspeed", ySpeed);
-        SmartDashboard.putNumber("TARGETINGPOSE/calculatedxspeed", xSpeed);
+        // SmartDashboard.putNumber("TARGETINGPOSE/calculatedyspeed", ySpeed);
+        // SmartDashboard.putNumber("TARGETINGPOSE/calculatedxspeed", xSpeed);
 
         // reverse speeds for the red alliance, because directions have flipped
         if (DriverStation.getAlliance().get() == Alliance.Red) {
             xSpeed = -xSpeed;
             ySpeed = -ySpeed;
         }
-        SmartDashboard.putNumber("TARGETINGPOSE/adjustedyspeedAlliance", ySpeed);
-        SmartDashboard.putNumber("TARGETINGPOSE/adjustedxspeedAlliance", xSpeed);
+        // SmartDashboard.putNumber("TARGETINGPOSE/adjustedyspeedAlliance", ySpeed);
+        // SmartDashboard.putNumber("TARGETINGPOSE/adjustedxspeedAlliance", xSpeed);
         // if the elevator is about to be up, limit the speed to 2 meters per second.
         // Otherwise, limit speed to 3.5 meters per second
 
-        SmartDashboard.putNumber("TARGETINGPOSE/yspeed", ySpeed);
-        SmartDashboard.putNumber("TARGETINGPOSE/xspeed", xSpeed);
+        // SmartDashboard.putNumber("TARGETINGPOSE/yspeed", ySpeed);
+        // SmartDashboard.putNumber("TARGETINGPOSE/xspeed", xSpeed);
         // drive!
         moveTowardsRotationTargetFieldRelative(xSpeed, ySpeed);
     }
@@ -636,8 +636,8 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
         limelight.periodic();
         previousPose = getPose();
         updateInputs();
-        SmartDashboard.putNumber("pose2d X", getPose().getX());
-        SmartDashboard.putNumber("pose2d Y", getPose().getY());
+        // SmartDashboard.putNumber("pose2d X", getPose().getX());
+        // SmartDashboard.putNumber("pose2d Y", getPose().getY());
         updateOdometry();
 
         // sets the robot orientation for each of the limelights, which is required for

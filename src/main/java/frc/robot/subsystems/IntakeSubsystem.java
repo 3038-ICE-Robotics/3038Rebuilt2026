@@ -50,6 +50,6 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         int numberBoolean = isHopperFull()?1:0;
-        SmartDashboard.putNumber("Hopper Full Status", numberBoolean);
+        // SmartDashboard.putNumber("Hopper Full Status", numberBoolean);
     }
 }

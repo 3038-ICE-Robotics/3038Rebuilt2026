@@ -13,6 +13,17 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import frc.robot.commands.Drive;
 
+/*
+ * To access the Rio logs
+ * open command prompt and use:
+ * ssh lvuser@roboRIO-3038-frc.local
+ * cd logs
+ * ls
+ * that will show how many log files there are
+ * then use the following to remove the files
+ * rm *.revlog
+ */
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -25,6 +36,7 @@ import frc.robot.commands.Drive;
  * wherever the
  * constants are needed, to reduce verbosity.
  */
+
 public final class Constants {
   public static final double MetersToFeet = 3.28084;
 
@@ -39,6 +51,7 @@ public final class Constants {
     public static final int RightClimbHome = 0;
     public static final int LeftClimbHome = 1;
   }
+
   public static class Climb {
     public static final double ExtendSpeed = 0.4;
     public static final double RetractSpeed = 0.15;
@@ -60,19 +73,19 @@ public final class Constants {
         225 // farthest possible distance
     };
     public static double[] shooterSpeeds = new double[] { // TODO measure (RPM)
-        300,
-        350,
-        400,
-        430,
-        470,
-        520
+        1350,
+        1575,
+        1800,
+        1935,
+        2115,
+        2340
     };
   }
 
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.75;
     public static final double RearIntakeSpeed = -0.40;
-    public static final double RearSpeed = 0.1;
+    public static final double RearSpeed = 0.28;
   }
 
   public static class HippoData {
@@ -114,6 +127,7 @@ public final class Constants {
     public static final int RearRight = 25;
     public static final int RearIntake = 26;
   }
+
   public static class NeoVortex {
     public static final int StallCurrent = 211;
     public static final double CurrentThreshhold = 40;
@@ -163,10 +177,14 @@ public final class Constants {
   }
 
   public static class Field {
-    public static final Translation2d BlueHub = new Translation2d(4.6, 4);
+    public static final Translation2d BlueHub = new Translation2d(4.6, 4); //meters \/
     public static final Translation2d RedHub = new Translation2d(11.9, 4);
     public static final Translation2d BlueZone = new Translation2d(2, 2); // TODO find coords
     public static final Translation2d RedZone = new Translation2d(1, 1); // TODO find coords.
+    public static final double FieldLength = 650.12; //inches \/
+    public static final double FieldWidth = 316.64;
+    public static final double BlueBoundary = 180;
+    public static final double RedBoundary = FieldLength - BlueBoundary;
 
   }
 

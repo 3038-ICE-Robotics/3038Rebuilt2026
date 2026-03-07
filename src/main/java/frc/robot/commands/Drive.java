@@ -65,29 +65,32 @@ public class Drive extends Command {
     // and multiplying them by maximum velocties and inversions
     // The only difference is that one is relative to the field, and the other to
     // the robot.
+    double distancefromBoundary = Math.abs(drivetrain.getPose().getX() - Constants.Field.BlueBoundary);
+    double boundarySpeedModifier = (distancefromBoundary <= 40) ? 0.5 : 1;
+    double modifiedSpeed = Constants.DriveTrain.MaxVelocityMPS * boundarySpeedModifier;
     if (robotCentricMode.getAsBoolean()) {
       drivetrain.drive(
           new ChassisSpeeds(
               translationXSupplier.getAsDouble()
-                  * (Constants.DriveTrain.MaxVelocityMPS),
+                  * (modifiedSpeed),
               translationYSupplier.getAsDouble()
-                  * (Constants.DriveTrain.MaxVelocityMPS),
+                  * (modifiedSpeed),
               rotationSupplier.getAsDouble()
                   * Constants.DriveTrain.MaxAngularVelocityRadiansPS));
     } else {
       drivetrain.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
               translationXSupplier.getAsDouble()
-                  * (Constants.DriveTrain.MaxVelocityMPS)
+                  * (modifiedSpeed)
                   * invert,
               translationYSupplier.getAsDouble()
-                  * (Constants.DriveTrain.MaxVelocityMPS)
+                  * (modifiedSpeed)
                   * invert,
               rotationSupplier.getAsDouble()
                   * Constants.DriveTrain.MaxAngularVelocityRadiansPS,
               drivetrain.getPose().getRotation()));
     }
-    
+
     SmartDashboard.putBoolean("Inputs/Robot Centric", robotCentricMode.getAsBoolean());
     SmartDashboard.putNumber("Inputs/x", translationXSupplier.getAsDouble());
     SmartDashboard.putNumber("Inputs/y", translationYSupplier.getAsDouble());

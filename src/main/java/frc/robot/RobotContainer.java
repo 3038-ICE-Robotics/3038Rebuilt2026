@@ -92,6 +92,9 @@ public class RobotContainer {
     rear = new RearSubsystem();
     driveTrainInit();
     shooter = new ShooterSubsystem(drivetrain::getPose);
+    shooter.speedControl = () -> {
+      return ((rJoystick.getZ() + 1) / 2) * 3500 + 1500;
+    };
     fullCommands = new SystemCommands(intake, transfer, shooter, rear);
     // Configure the trigger bindings
     configureBindings();
@@ -100,9 +103,9 @@ public class RobotContainer {
     sysRoutine1 = new SysIdRoutine(configForSysRoutine1,
         new SysIdRoutine.Mechanism(drivetrain::voltageDrive, drivetrain::sysLog, m_exampleSubsystem));
 
-    SmartDashboard.putNumber("Tuning/pvalue", Constants.DriveTrain.RotationkP);
-    SmartDashboard.putNumber("Tuning/ivalue", Constants.DriveTrain.RotationkI);
-    SmartDashboard.putNumber("Tuning/dvalue", Constants.DriveTrain.RotationkD);
+    // SmartDashboard.putNumber("Tuning/pvalue", Constants.DriveTrain.RotationkP);
+    // SmartDashboard.putNumber("Tuning/ivalue", Constants.DriveTrain.RotationkI);
+    // SmartDashboard.putNumber("Tuning/dvalue", Constants.DriveTrain.RotationkD);
 
     subSystemChooser.setDefaultOption("Swerve", drivetrain);
 
@@ -128,7 +131,8 @@ public class RobotContainer {
         ControllerForwardAxisSupplier,
         ControllerSidewaysAxisSupplier,
 
-        () -> StateOfRobot.isAimAssistOn ? StateOfRobot.getAimBotRotation(drivetrain::getDesiredRobotAngle, ()-> drivetrain.getPose().getRotation())
+        () -> StateOfRobot.isAimAssistOn
+            ? StateOfRobot.getAimBotRotation(drivetrain::getDesiredRobotAngle, () -> drivetrain.getPose().getRotation())
             : ControllerZAxisSupplier.getAsDouble());
     drivetrain.setDefaultCommand(defaultDriveCommand);
 

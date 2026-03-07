@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.8384698795180725,
-        "y": 5.914566265060241
+        "x": 3.528863636363636,
+        "y": 4.045306818181818
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.845950435273444,
-        "y": 5.88312723138284
+        "x": 2.8484734691719678,
+        "y": 3.3089417911103873
       },
       "isLocked": false,
-      "linkedName": "intake 1 ready"
+      "linkedName": "middle start"
     },
     {
       "anchor": {
-        "x": 8.586903614457832,
-        "y": 5.914566265060241
+        "x": 0.5192727272725446,
+        "y": 0.674977272730996
       },
       "prevControl": {
-        "x": 7.7751263392245935,
-        "y": 5.929939579610601
+        "x": 1.0985707474114967,
+        "y": 1.2846539748575703
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "end of pass 1"
+      "linkedName": "Human player station"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 5.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

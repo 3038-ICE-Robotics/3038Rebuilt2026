@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.597831325301206,
-        "y": 4.996638554216868
+        "x": 4.621386363636364,
+        "y": 0.6852840909090911
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.342053393800184,
-        "y": 4.998347613582021
+        "x": 5.009534985816026,
+        "y": 0.6016885721523875
       },
       "isLocked": false,
-      "linkedName": "intake 2 ready"
+      "linkedName": "right trench blue"
     },
     {
       "anchor": {
-        "x": 6.882180722891565,
-        "y": 4.996638554216868
+        "x": 0.5192727272725446,
+        "y": 0.674977272730996
       },
       "prevControl": {
-        "x": 6.407878183904141,
-        "y": 4.991727553486901
+        "x": 0.136252500872233,
+        "y": 0.6751305639437916
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "end of pass 2"
+      "linkedName": "Human player station"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 5.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 178.8982938847937
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": -179.43829466743347
+    "velocity": 2.0,
+    "rotation": 89.30972280213493
   },
   "useDefaultConstraints": true
 }
