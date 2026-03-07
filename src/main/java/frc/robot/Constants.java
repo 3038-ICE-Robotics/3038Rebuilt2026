@@ -60,7 +60,7 @@ public final class Constants {
 
   public static class AimBotData {
     public static double[] RotationPID = new double[] { // measure
-        0.01, // kP
+        0.1, // kP
         0, // kI
         0 // kD
     };
@@ -70,15 +70,15 @@ public final class Constants {
         120,
         160,
         200,
-        225 // farthest possible distance
+        240, 
     };
     public static double[] shooterSpeeds = new double[] { // TODO measure (RPM)
         1350,
-        1575,
-        1800,
-        1935,
-        2115,
-        2340
+        2710,
+        3060,
+        3450,
+        3850,
+        4300
     };
   }
 
@@ -89,12 +89,12 @@ public final class Constants {
   }
 
   public static class HippoData {
-    public static final double RetractLimitL = 0.141;
-    public static final double RetractLimitR = 0.141;
-    public static final double ExtendLimitL = 0.502;
-    public static final double ExtendLimitR = 0.502;
-    public static final double AgitateLimitL = 0.417;
-    public static final double AgitateLimitR = 0.417;
+    public static final double RetractLimitL = 0.843;
+    public static final double RetractLimitR = 0.669;
+    public static final double ExtendLimitL = 0.496;
+    public static final double ExtendLimitR = 0.313;
+    public static final double AgitateLimitL = 0.597;
+    public static final double AgitateLimitR = 0.428;
   }
 
   public static class LeftButtonIDs {
@@ -157,7 +157,7 @@ public final class Constants {
     public static final double TranslationkD = 0;
     public static final double RotationTolerance = 0;
     public static final String[] MotorKeys = new String[] { "FL", "FR", "BL", "BR" };
-    public static final Pose2d DriveOdometryOrigin = new Pose2d(5, 5, new Rotation2d());
+    public static final Pose2d DriveOdometryOrigin = new Pose2d(0, 4, new Rotation2d());
     public static final double MaxVelocityMPS = 5; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
         / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure

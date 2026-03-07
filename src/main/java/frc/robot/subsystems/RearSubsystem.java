@@ -52,18 +52,30 @@ public class RearSubsystem extends SubsystemBase {
         rearLeft.configure(configL, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         rearRight.configure(configR, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         rearIntake.configure(configIntake, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        extendLeft = new FunctionalCommand(() -> rearLeft.set(Constants.MotorSpeeds.RearSpeed),
+        extendLeft = new FunctionalCommand(
+                () -> rearLeft.set(Constants.MotorSpeeds.RearSpeed),
                 () -> {
-                }, (interrupted) -> rearLeft.set(0), () -> getAdjustedLeft() >= Constants.HippoData.ExtendLimitL);
-        extendRight = new FunctionalCommand(() -> rearRight.set(Constants.MotorSpeeds.RearSpeed),
+                },
+                (interrupted) -> rearLeft.set(0),
+                () -> isExtendedL());
+        extendRight = new FunctionalCommand(
+                () -> rearRight.set(Constants.MotorSpeeds.RearSpeed),
                 () -> {
-                }, (interrupted) -> rearRight.set(0), () -> getAdjustedRight() >= Constants.HippoData.ExtendLimitR);
-        retractLeft = new FunctionalCommand(() -> rearLeft.set(-Constants.MotorSpeeds.RearSpeed),
+                },
+                (interrupted) -> rearRight.set(0),
+                () -> isExtendedR());
+        retractLeft = new FunctionalCommand(
+                () -> rearLeft.set(-Constants.MotorSpeeds.RearSpeed),
                 () -> {
-                }, (interrupted) -> rearLeft.set(0), () -> getAdjustedLeft() <= Constants.HippoData.RetractLimitL);
-        retractRight = new FunctionalCommand(() -> rearRight.set(-Constants.MotorSpeeds.RearSpeed),
+                },
+                (interrupted) -> rearLeft.set(0),
+                () -> isRetractedL());
+        retractRight = new FunctionalCommand(
+                () -> rearRight.set(-Constants.MotorSpeeds.RearSpeed),
                 () -> {
-                }, (interrupted) -> rearRight.set(0), () -> getAdjustedRight() <= Constants.HippoData.RetractLimitR);
+                },
+                (interrupted) -> rearRight.set(0),
+                () -> isRetractedR());
     }
 
     public void startIntake() {
@@ -76,10 +88,12 @@ public class RearSubsystem extends SubsystemBase {
 
     public void extend() {
         rearRight.set(Constants.MotorSpeeds.RearSpeed);
+        rearLeft.set(Constants.MotorSpeeds.RearSpeed);
     }
 
     public void retract() {
         rearRight.set(-Constants.MotorSpeeds.RearSpeed);
+        rearLeft.set(-Constants.MotorSpeeds.RearSpeed);
     }
 
     public void stop() {
@@ -87,11 +101,11 @@ public class RearSubsystem extends SubsystemBase {
     }
 
     private boolean isLeftPastBoundary() {
-        return getAdjustedLeft() <= Constants.HippoData.AgitateLimitL;
+        return getAdjustedLeft() >= Constants.HippoData.AgitateLimitL;
     }
 
     private boolean isRightPastBoundary() {
-        return getAdjustedRight() <= Constants.HippoData.AgitateLimitR;
+        return getAdjustedRight() >= Constants.HippoData.AgitateLimitR;
     }
 
     public void agitate() {
@@ -114,28 +128,28 @@ public class RearSubsystem extends SubsystemBase {
             }
             agitateUp = (isExtendedL() && isExtendedR());
         }
-        rearRight.set(rightSpeed);
-        rearLeft.set(leftSpeed);
+        rearRight.set(rightSpeed/2);
+        rearLeft.set(leftSpeed/2);
     }
 
     public boolean isRetractedL() {
-        return getAdjustedRight() <= Constants.HippoData.RetractLimitL;
+        return getAdjustedRight() >= Constants.HippoData.RetractLimitL;
     }
 
     public boolean isRetractedR() {
-        return getAdjustedRight() <= Constants.HippoData.RetractLimitR;
+        return getAdjustedRight() >= Constants.HippoData.RetractLimitR;
     }
 
     public boolean isExtendedL() {
-        return getAdjustedRight() >= Constants.HippoData.ExtendLimitL;
+        return getAdjustedRight() <= Constants.HippoData.ExtendLimitL;
     }
 
     public boolean isExtendedR() {
-        return getAdjustedRight() >= Constants.HippoData.ExtendLimitR;
+        return getAdjustedRight() <= Constants.HippoData.ExtendLimitR;
     }
 
     private double getAdjustedRight() {
-        return MathUtil.inputModulus(rearRightEncoder.getPosition(), 0, 1);
+        return MathUtil.inputModulus(-rearRightEncoder.getPosition(), 0, 1);
     }
 
     private double getAdjustedLeft() {
@@ -146,8 +160,8 @@ public class RearSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Rear/PositionL", getAdjustedLeft());
         SmartDashboard.putNumber("Rear/PositionR", getAdjustedRight());
-        // SmartDashboard.putBoolean("Rear/isExtended", isExtended());
-        // SmartDashboard.putBoolean("Rear/isRetracted", isRetracted());
+        SmartDashboard.putBoolean("Rear/isExtended", isExtendedL());
+        SmartDashboard.putBoolean("Rear/isRetracted", isRetractedL());
         SmartDashboard.putNumber("Rear/Intake Velocity", rearIntake.getEncoder().getVelocity());
     }
 }

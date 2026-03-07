@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AimBotData;
 
 public class StateOfRobot {
@@ -36,11 +37,23 @@ public class StateOfRobot {
         }
 
     }
-    public static double getAimBotRotation(Supplier <Rotation2d> desiredAngle,Supplier <Rotation2d> botPose2d) {
-        return MathUtil.clamp(aimAssistPID.calculate(desiredAngle.get().getRotations() - botPose2d.get().getRotations()), -1, 1);
+
+    public static double getAimBotRotation(Supplier<Rotation2d> desiredAngle, Supplier<Rotation2d> botPose2d) {
+        SmartDashboard.putNumber("Angles/desired Angle", desiredAngle.get().getRotations());
+        SmartDashboard.putNumber("Angles/desired Angle Degrees", desiredAngle.get().getDegrees());
+        SmartDashboard.putNumber("Angles/pose 2d", botPose2d.get().getRotations());
+        SmartDashboard.putNumber("Angles/pose 2d Degrees", botPose2d.get().getDegrees());
+
+        // double value = MathUtil.clamp(
+        //         aimAssistPID.calculate(desiredAngle.get().getRotations() - botPose2d.get().getRotations()), -1, 1);
+        double value = MathUtil.clamp(
+                desiredAngle.get().getRotations() - botPose2d.get().getRotations(), -1, 1);
+        SmartDashboard.putNumber("Angles/Value", value);
+        return value;
 
     }
-public static double getSpeedFromDistance(double distance) {
+
+    public static double getSpeedFromDistance(double distance) {
         int rightIndex = -1;
         for (int i = 0; i < Constants.AimBotData.distancesToHub.length; i++) {
             if (distance < Constants.AimBotData.distancesToHub[i]) {
@@ -59,6 +72,7 @@ public static double getSpeedFromDistance(double distance) {
         return MathUtil.interpolate(Constants.AimBotData.shooterSpeeds[rightIndex - 1],
                 Constants.AimBotData.shooterSpeeds[rightIndex], percent);
     }
+
     public static double distanceBetweenTargetAnd(Pose2d start) {
         double dx = target.getX() - start.getX();
         double dy = target.getY() - start.getY();

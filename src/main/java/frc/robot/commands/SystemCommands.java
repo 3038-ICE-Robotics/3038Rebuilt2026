@@ -125,7 +125,7 @@ public class SystemCommands {
             return transfer.isHopperEmpty();
         }, transfer);
 
-        shootBallFromHopper = new ParallelCommandGroup(shooting, agitate,
+        shootBallFromHopper = new ParallelCommandGroup(shooting,
                 new SequentialCommandGroup(
                         new ParallelRaceGroup(new WaitCommand(2),
                                 new FunctionalCommand(
@@ -137,9 +137,9 @@ public class SystemCommands {
                                         },
                                         () -> false)),
 
-                        transferToShooter));
-        rearExtend = new ParallelCommandGroup(rear.extendLeft, rear.extendRight);
-        rearRetract = new ParallelCommandGroup(rear.retractLeft, rear.retractRight);
+                        new ParallelCommandGroup(transferToShooter, agitate)));
+        rearExtend = new ParallelCommandGroup(rear.extendLeft,rear.extendRight);
+        rearRetract = new ParallelCommandGroup(rear.retractLeft,rear.retractRight);
         rearIntake = new FunctionalCommand(
                 rear::startIntake,
                 () -> {

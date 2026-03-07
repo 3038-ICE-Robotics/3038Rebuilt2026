@@ -647,11 +647,11 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
             m.periodic();
         }
 
-        if (Preferences.getBoolean("Use Limelight", true)) {
-            updateOdometryWithVision();
-        } else {
-            // RobotState.getInstance().LimelightsUpdated = false;
-        }
+        // if (Preferences.getBoolean("Use Limelight", true)) {
+        //     updateOdometryWithVision();
+        // } else {
+        //     // RobotState.getInstance().LimelightsUpdated = false;
+        // }
 
         m_field.setRobotPose(odometer.getEstimatedPosition());
         // RobotState.getInstance().odometerOrientation =
@@ -719,7 +719,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() != Alliance.Blue) {
             target = Constants.Field.RedHub;
         }
-        target.minus(targetOffset);
+        // target.minus(targetOffset);
         return Rotation2d.fromRadians(Math.atan2(target.getY() - robotPosition.getY(), target.getX() - robotPosition.getX()));
     }
 
