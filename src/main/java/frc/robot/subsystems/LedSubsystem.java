@@ -44,12 +44,13 @@ public class LedSubsystem extends SubsystemBase {
         }
     }
 
+    /*
+    *  Nothing is added to the periodic yet as no LEDs have been added to the robot
+    */
     @Override
     public void periodic() {
         if (!disablePeriodicEval) {
-            
-
-
+        
         }
     }
 

@@ -20,6 +20,7 @@ public final class Autos {
 
   public static void loadAutos() {
     auto1 = new PathPlannerAuto("Auto1");
+    
   }
 
   private Autos() {

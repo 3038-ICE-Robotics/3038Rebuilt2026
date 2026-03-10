@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj.Joystick;
 
 import java.io.IOException;
 import java.util.function.DoubleSupplier;
+import java.util.stream.Stream;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
@@ -35,6 +37,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -72,6 +75,8 @@ public class RobotContainer {
   private SysIdRoutine sysRoutine1;
   private Config configForSysRoutine1;
   private SendableChooser<ITunable> subSystemChooser = new SendableChooser<ITunable>();
+  private SendableChooser<Command> autoChooser;
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -110,8 +115,16 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Tuning/ivalue", Constants.DriveTrain.RotationkI);
     // SmartDashboard.putNumber("Tuning/dvalue", Constants.DriveTrain.RotationkD);
 
+    NamedCommands.registerCommand("flip out right",rear.extendRight);
+    NamedCommands.registerCommand("flip out left", rear.extendLeft);
+    NamedCommands.registerCommand("intake", new ParallelCommandGroup(fullCommands.intakeBall, fullCommands.rearIntake));
+
     subSystemChooser.setDefaultOption("Swerve", drivetrain);
 
+    configureAutoBuilder();
+    autoChooser =AutoBuilder.buildAutoChooser();
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     SmartDashboard.putData("Tuning/set", new InstantCommand(this::updatePID));
     SmartDashboard.putData("Tuning/Selection", subSystemChooser);
 
@@ -237,7 +250,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return autoChooser.getSelected();
   }
 
   // This function only gets called when the "Tuning/set" button is pressed on
