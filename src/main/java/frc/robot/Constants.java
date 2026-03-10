@@ -102,8 +102,13 @@ public final class Constants {
     public static final int IntakeToHopper = 1;
     public static final int ToggleAimBot = 3; // fix
     public static final int RearIntake = 1;
-    public static final int RearExtend = 7;
-    public static final int RearRetract = 8;
+    public static final int RearExtend = 4;
+    public static final int RearRetract = 5;
+  }
+
+  public static class LEDs {
+    public static final int testLedChannel = 0;
+
   }
 
   public static class RightButtonIDs {

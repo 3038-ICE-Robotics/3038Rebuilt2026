@@ -15,6 +15,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 // Work on calling buttons next week.
 public class SystemCommands {
+    
     public Command intakeBall;
     public Command outtakeBall;
     public Command shootBallFromGround;
@@ -103,6 +104,7 @@ public class SystemCommands {
 
         // picks balls from intake and skips hopper to fire.
         shootBallFromGround = new FunctionalCommand(() -> {
+            rear.startIntake();
             intake.startIntake();
             transfer.toLauncher();
         }, () -> {
@@ -111,9 +113,10 @@ public class SystemCommands {
             intake.stop();
             transfer.stopMotors();
             shooter.startIdle();
+            rear.stopIntake();
         }, () -> {
             return false;
-        }, intake, transfer, shooter);
+        }, intake, transfer, shooter, rear);
 
         // Takes balls from hopper and shoots them.
         transferToShooter = new FunctionalCommand(() -> {
