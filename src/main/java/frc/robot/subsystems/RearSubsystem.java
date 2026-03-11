@@ -29,7 +29,11 @@ public class RearSubsystem extends SubsystemBase {
     private boolean agitateUp = true;
 
     public Command extendLeft;
+    public Command extendLeftTest;
+
     public Command extendRight;
+    public Command extendRightTest;
+
     public Command retractLeft;
     public Command retractRight;
 
@@ -64,6 +68,19 @@ public class RearSubsystem extends SubsystemBase {
                 },
                 (interrupted) -> rearRight.set(0),
                 () -> isExtendedR());
+        extendLeftTest = new FunctionalCommand(
+                () -> rearLeft.set(Constants.MotorSpeeds.RearSpeed),
+                () -> {
+                },
+                (interrupted) -> rearLeft.set(0),
+                () -> isExtendedL());
+        extendRightTest = new FunctionalCommand(
+                () -> rearRight.set(Constants.MotorSpeeds.RearSpeed),
+                () -> {
+                },
+                (interrupted) -> rearRight.set(0),
+                () -> isExtendedR());
+                
         retractLeft = new FunctionalCommand(
                 () -> rearLeft.set(-Constants.MotorSpeeds.RearSpeed),
                 () -> {
