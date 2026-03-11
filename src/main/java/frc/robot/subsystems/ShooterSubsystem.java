@@ -126,7 +126,7 @@ SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
                 targetSpeed = 0;
                 break;
             case INTAKE:
-                targetSpeed = 100;
+                targetSpeed = 200;
                 break;
         }
         if (DriverStation.isTest()) {

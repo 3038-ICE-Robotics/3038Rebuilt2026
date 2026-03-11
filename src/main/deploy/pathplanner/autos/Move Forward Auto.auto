@@ -5,22 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "flip out right"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "flip out left"
-                }
-              }
-            ]
+            "name": "flip out"
           }
         },
         {

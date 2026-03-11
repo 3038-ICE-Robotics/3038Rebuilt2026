@@ -115,16 +115,15 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Tuning/ivalue", Constants.DriveTrain.RotationkI);
     // SmartDashboard.putNumber("Tuning/dvalue", Constants.DriveTrain.RotationkD);
 
-    NamedCommands.registerCommand("flip out right",rear.extendRight);
-    NamedCommands.registerCommand("flip out left", rear.extendLeft);
-    NamedCommands.registerCommand("intake", new ParallelCommandGroup(fullCommands.intakeBall, fullCommands.rearIntake));
+    
 
     subSystemChooser.setDefaultOption("Swerve", drivetrain);
 
-    configureAutoBuilder();
-    autoChooser =AutoBuilder.buildAutoChooser();
-
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    // configureNamedCommands();
+    // configureAutoBuilder();
+    // autoChooser =AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Auto Chooser", autoChooser);
+    
     SmartDashboard.putData("Tuning/set", new InstantCommand(this::updatePID));
     SmartDashboard.putData("Tuning/Selection", subSystemChooser);
 
@@ -183,6 +182,12 @@ public class RobotContainer {
       System.out.println("got IOException thrown trying to configure autobuilder " + b.getMessage());
     }
     Autos.loadAutos();
+  }
+
+  private void configureNamedCommands() {
+  
+    NamedCommands.registerCommand("flip out", new ParallelCommandGroup(rear.extendLeft,rear.extendRight));
+    NamedCommands.registerCommand("intake", new ParallelCommandGroup(fullCommands.intakeBall, fullCommands.rearIntake));
   }
 
   /**

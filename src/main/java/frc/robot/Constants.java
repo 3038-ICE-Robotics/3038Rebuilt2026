@@ -84,7 +84,7 @@ public final class Constants {
 
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.75;
-    public static final double RearIntakeSpeed = -0.40;
+    public static final double RearIntakeSpeed = -0.60;
     public static final double RearSpeed = 0.28;
   }
 
@@ -162,7 +162,7 @@ public final class Constants {
     public static final double TranslationkD = 0;
     public static final double RotationTolerance = 0;
     public static final String[] MotorKeys = new String[] { "FL", "FR", "BL", "BR" };
-    public static final Pose2d DriveOdometryOrigin = new Pose2d(0, 4, new Rotation2d());
+    public static final Pose2d DriveOdometryOrigin = new Pose2d(0, 0, new Rotation2d());
     public static final double MaxVelocityMPS = 5; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
         / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure

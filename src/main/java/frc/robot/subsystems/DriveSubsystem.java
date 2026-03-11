@@ -647,11 +647,11 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
             m.periodic();
         }
 
-        // if (Preferences.getBoolean("Use Limelight", true)) {
-        //     updateOdometryWithVision();
-        // } else {
-        //     // RobotState.getInstance().LimelightsUpdated = false;
-        // }
+        if (Preferences.getBoolean("Use Limelight", true)) {
+            updateOdometryWithVision();
+        } else {
+            // RobotState.getInstance().LimelightsUpdated = false;
+        }
 
         m_field.setRobotPose(odometer.getEstimatedPosition());
         // RobotState.getInstance().odometerOrientation =
