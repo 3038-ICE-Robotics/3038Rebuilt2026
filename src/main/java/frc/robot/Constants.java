@@ -83,7 +83,7 @@ public final class Constants {
   }
 
   public static class MotorSpeeds {
-    public static final double IntakeSpeed = 0.75;
+    public static final double IntakeSpeed = 0;
     public static final double RearIntakeSpeed = -0.60;
     public static final double RearSpeed = 0.28;
   }
@@ -122,8 +122,10 @@ public final class Constants {
   }
 
   public static class MotorIDs {
-    public static final int[] DriveIDs = new int[] { 8, 1, 2, 3 };
+    // Order of drive motors - BL, BR, FL, FR
+    public static final int[] DriveIDs = new int[] { 8, 1 , 2, 3 }; 
     public static final int[] SteerIDs = new int[] { 4, 5, 6, 7 };
+
     public static final int ShooterPrime = 15;
     public static final int ShooterFollow = 9;
     public static final int Intake = 10;

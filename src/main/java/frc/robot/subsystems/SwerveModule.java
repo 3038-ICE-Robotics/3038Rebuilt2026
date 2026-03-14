@@ -251,7 +251,8 @@ public class SwerveModule implements ITunable {
     }
 
     public void periodic() {
-        // SmartDashboard.putNumber("Offset/Angle" + moduleName, -swerveEncoder.getPosition());
+        SmartDashboard.putNumber("Offset/Angle" + moduleName, swerveEncoder.getPosition());
+
     }
 
     @Override

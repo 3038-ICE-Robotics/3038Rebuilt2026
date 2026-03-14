@@ -119,10 +119,10 @@ public class RobotContainer {
 
     subSystemChooser.setDefaultOption("Swerve", drivetrain);
 
-    // configureNamedCommands();
-    // configureAutoBuilder();
-    // autoChooser =AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData("Auto Chooser", autoChooser);
+    configureNamedCommands();
+    configureAutoBuilder();
+    autoChooser =AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     
     SmartDashboard.putData("Tuning/set", new InstantCommand(this::updatePID));
     SmartDashboard.putData("Tuning/Selection", subSystemChooser);
@@ -187,7 +187,7 @@ public class RobotContainer {
   private void configureNamedCommands() {
   
     NamedCommands.registerCommand("flip out", new ParallelCommandGroup(rear.extendLeft,rear.extendRight));
-    NamedCommands.registerCommand("intake", new ParallelCommandGroup(fullCommands.intakeBall, fullCommands.rearIntake));
+    NamedCommands.registerCommand("intake", fullCommands.intakeBall);
   }
 
   /**
