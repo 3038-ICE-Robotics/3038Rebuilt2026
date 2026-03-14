@@ -11,40 +11,52 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Testing Blue Path"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "Drive Forward Test"
+                  "waitTime": 6.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "intake"
+                  "name": "shoot"
                 }
               }
             ]
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "flip out"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Turn Around"
+            "pathName": "New Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Test Autos",
+  "folder": "Blue Alliance",
   "choreoAuto": false
 }

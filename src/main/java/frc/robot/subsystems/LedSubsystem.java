@@ -12,7 +12,7 @@ public class LedSubsystem extends SubsystemBase {
 
     private LEDStatusMode currentStatusMode;
     
-    private boolean disablePeriodicEval;
+    private boolean disablePeriodicEval = false;
 
 
     private LedSubsystem() {
@@ -50,9 +50,34 @@ public class LedSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (!disablePeriodicEval) {
-        
+            currentStatusMode = LEDStatusMode.INTAKE;
+            int code = currentStatusMode.code;
+
+
+            testLed.set((code & 1) > 0);
         }
     }
 
     
+    public void setLedStatusMode(LEDStatusMode selectedMode) {
+        if (!disablePeriodicEval) {
+            currentStatusMode = selectedMode;
+        }
+    }
+
+    public void clearLedStatus() {
+        if (!disablePeriodicEval) {
+            currentStatusMode = LEDStatusMode.OFF;
+        }
+    }
+
+    public void disableLEDs() {
+        disablePeriodicEval = true;
+    }
+    
+
+    public void enableLEDs() {
+         disablePeriodicEval = false;
+    }
+
 }

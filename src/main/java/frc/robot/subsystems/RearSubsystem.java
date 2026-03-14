@@ -105,7 +105,7 @@ public class RearSubsystem extends SubsystemBase {
 
     public void extend() {
         rearRight.set(Constants.MotorSpeeds.RearSpeed);
-        rearLeft.set(Constants.MotorSpeeds.RearSpeed);
+        rearLeft.set(Constants.MotorSpeeds.RearSpeed + 0.1);
     }
 
     public void retract() {

@@ -78,9 +78,8 @@ public class SwerveModule implements ITunable {
         driveConfig = new SparkFlexConfig();
         steerConfig = new SparkMaxConfig();
         driveConfig.closedLoop.pid(0, 0, 0, ClosedLoopSlot.kSlot0);
-        if (moduleName != "BR") {
-            driveConfig.inverted(true);
-        }
+        
+        driveConfig.inverted(true);
         steerConfig.closedLoop.pid(0.5, 0, 0.001, ClosedLoopSlot.kSlot0);
         // Apply the configurations.
         driveMotor.configure(driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);

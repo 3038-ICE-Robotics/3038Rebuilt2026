@@ -16,6 +16,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.RearSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,6 +29,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.revrobotics.ColorSensorV3.LEDCurrent;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -71,6 +73,7 @@ public class RobotContainer {
   private ShooterSubsystem shooter;
   private TransferSubsystem transfer;
   private ClimberSubsystem climb;
+  private LedSubsystem led;
   private RearSubsystem rear;
   private SysIdRoutine sysRoutine1;
   private Config configForSysRoutine1;
@@ -94,6 +97,7 @@ public class RobotContainer {
     intake = new IntakeSubsystem();
     transfer = new TransferSubsystem();
     climb = new ClimberSubsystem();
+    // led = LedSubsystem.getInstance();
     rear = new RearSubsystem();
     driveTrainInit();
     shooter = new ShooterSubsystem(drivetrain::getPose);
@@ -119,9 +123,18 @@ public class RobotContainer {
 
     subSystemChooser.setDefaultOption("Swerve", drivetrain);
 
-    configureNamedCommands();
+
+    // Configure Auto's
+    // configureNamedCommands();
     configureAutoBuilder();
-    autoChooser =AutoBuilder.buildAutoChooser();
+
+    NamedCommands.registerCommand("shoot", fullCommands.shootBallFromHopper);
+    NamedCommands.registerCommand("flip out", fullCommands.rearExtend);
+    NamedCommands.registerCommand("intake", fullCommands.rearIntake);
+    // NamedCommands.registerCommand("flip out", new ParallelCommandGroup(rear.extendLeft,rear.extendRight));
+    // NamedCommands.registerCommand("intake", fullCommands.intakeBall);
+
+    autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     
     SmartDashboard.putData("Tuning/set", new InstantCommand(this::updatePID));
@@ -154,7 +167,7 @@ public class RobotContainer {
   }
 
   // Pathplanner TODO
-  private void configureAutoBuilder() {
+  public void configureAutoBuilder() {
     try {
       AutoBuilder.configure(
           drivetrain::getPose, // Pose2d supplier
@@ -174,7 +187,7 @@ public class RobotContainer {
           // rotation controller)
           ),
           RobotConfig.fromGUISettings(),
-          () -> DriverStation.getAlliance().get().equals(Alliance.Red),
+          () -> DriverStation.getAlliance().get().equals(Alliance.Blue),
           drivetrain);
     } catch (org.json.simple.parser.ParseException a) {
       System.out.println("got ParseException trying to configure AutoBuilder");
@@ -184,10 +197,8 @@ public class RobotContainer {
     Autos.loadAutos();
   }
 
-  private void configureNamedCommands() {
-  
-    NamedCommands.registerCommand("flip out", new ParallelCommandGroup(rear.extendLeft,rear.extendRight));
-    NamedCommands.registerCommand("intake", fullCommands.intakeBall);
+  public void configureNamedCommands() {
+    
   }
 
   /**

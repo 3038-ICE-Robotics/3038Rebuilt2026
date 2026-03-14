@@ -91,8 +91,8 @@ public final class Constants {
   public static class HippoData {
     public static final double RetractLimitL = 0.843;
     public static final double RetractLimitR = 0.669;
-    public static final double ExtendLimitL = 0.496;
-    public static final double ExtendLimitR = 0.313;
+    public static final double ExtendLimitL = 0.470;
+    public static final double ExtendLimitR = 0.301;
     public static final double AgitateLimitL = 0.597;
     public static final double AgitateLimitR = 0.428;
   }
@@ -107,7 +107,7 @@ public final class Constants {
   }
 
   public static class LEDs {
-    public static final int testLedChannel = 0;
+    public static final int testLedChannel = 2;
 
   }
 
@@ -183,7 +183,7 @@ public final class Constants {
   public static class Limelight {
     public static final String LimelightName = "limelight-two";
     public static final Translation2d FieldCorner = new Translation2d(17.54, 8.02);
-    public static final double MaxTagDistance = 3;
+    public static final double MaxTagDistance = 5.2;
   }
 
   public static class Field {
