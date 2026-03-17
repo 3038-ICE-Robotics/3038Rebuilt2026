@@ -83,18 +83,18 @@ public final class Constants {
   }
 
   public static class MotorSpeeds {
-    public static final double IntakeSpeed = 0;
+    public static final double IntakeSpeed = 0.28;
     public static final double RearIntakeSpeed = -0.60;
     public static final double RearSpeed = 0.28;
   }
 
   public static class HippoData {
-    public static final double RetractLimitL = 0.843;
-    public static final double RetractLimitR = 0.669;
-    public static final double ExtendLimitL = 0.470;
-    public static final double ExtendLimitR = 0.301;
-    public static final double AgitateLimitL = 0.597;
-    public static final double AgitateLimitR = 0.428;
+    public static final double RetractLimitL = 0.860;
+    public static final double RetractLimitR = 0.693;
+    public static final double ExtendLimitL = 0.493;
+    public static final double ExtendLimitR = 0.314;
+    public static final double AgitateLimitL = 0.641;
+    public static final double AgitateLimitR = 0.477;
   }
 
   public static class LeftButtonIDs {

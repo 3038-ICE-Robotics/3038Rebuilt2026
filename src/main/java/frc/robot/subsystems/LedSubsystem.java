@@ -35,7 +35,15 @@ public class LedSubsystem extends SubsystemBase {
     public static enum LEDStatusMode {
     
         OFF(0),
-        INTAKE(1);
+        BLUE_NEUTRAL(1),
+        RED_NEUTRAL(2),
+        HUB_PREPARE(3),
+        HUB_ACTIVE(4),
+        HUB_LOCK(5),
+        HUB_WARNING(6),
+        MATCH_ENDING(7),
+        BLUE_AUTO(8),
+        RED_AUTO(9);
         /* 
         5 sec before shift starts/ flash tell 2 or 1 second left then go white when pre shoot
         5 seconds before shift ends/ c
