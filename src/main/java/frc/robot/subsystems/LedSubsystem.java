@@ -36,6 +36,14 @@ public class LedSubsystem extends SubsystemBase {
     
         OFF(0),
         INTAKE(1);
+        /* 
+        5 sec before shift starts/ flash tell 2 or 1 second left then go white when pre shoot
+        5 seconds before shift ends/ c
+        change color when hub lock active /green
+        15, 10, 5, 4, 3, 2, 1 tell match end /flash allience color
+        alliance color constant / red or blue
+        team blue or rainbow when disabled
+        */
 
         private final int code;
 

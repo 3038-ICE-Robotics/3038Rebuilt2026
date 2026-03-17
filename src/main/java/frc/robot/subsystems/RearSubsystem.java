@@ -29,7 +29,7 @@ public class RearSubsystem extends SubsystemBase {
     private boolean agitateUp = true;
 
     public Command extendLeft;
-    public Command extendLeftTest;
+    public Command MaintainExtend;
 
     public Command extendRight;
     public Command extendRightTest;
@@ -68,19 +68,22 @@ public class RearSubsystem extends SubsystemBase {
                 },
                 (interrupted) -> rearRight.set(0),
                 () -> isExtendedR());
-        extendLeftTest = new FunctionalCommand(
-                () -> rearLeft.set(Constants.MotorSpeeds.RearSpeed),
-                () -> {
+        MaintainExtend = new FunctionalCommand(
+                () -> {},
+                this::maintainExtend,
+                (interrupted) -> {
+                    rearLeft.set(0);
+                    rearRight.set(0);
                 },
-                (interrupted) -> rearLeft.set(0),
-                () -> isExtendedL());
+                () -> false
+        );
         extendRightTest = new FunctionalCommand(
                 () -> rearRight.set(Constants.MotorSpeeds.RearSpeed),
                 () -> {
                 },
                 (interrupted) -> rearRight.set(0),
                 () -> isExtendedR());
-                
+
         retractLeft = new FunctionalCommand(
                 () -> rearLeft.set(-Constants.MotorSpeeds.RearSpeed),
                 () -> {
@@ -145,12 +148,25 @@ public class RearSubsystem extends SubsystemBase {
             }
             agitateUp = (isExtendedL() && isExtendedR());
         }
-        rearRight.set(rightSpeed/2);
-        rearLeft.set(leftSpeed/2);
+        rearRight.set(rightSpeed / 2);
+        rearLeft.set(leftSpeed / 2);
+    }
+
+    public void maintainExtend() {
+        double leftSpeed = 0.0;
+        double rightSpeed = 0.0;
+        if (!isExtendedL()) {
+            leftSpeed = Constants.MotorSpeeds.RearSpeed;
+        }
+        if (!isExtendedR()) {
+            rightSpeed = Constants.MotorSpeeds.RearSpeed;
+        }
+        rearRight.set(rightSpeed / 2);
+        rearLeft.set(leftSpeed / 2);
     }
 
     public boolean isRetractedL() {
-        return getAdjustedRight() >= Constants.HippoData.RetractLimitL;
+        return getAdjustedLeft() >= Constants.HippoData.RetractLimitL;
     }
 
     public boolean isRetractedR() {
@@ -158,7 +174,7 @@ public class RearSubsystem extends SubsystemBase {
     }
 
     public boolean isExtendedL() {
-        return getAdjustedRight() <= Constants.HippoData.ExtendLimitL;
+        return getAdjustedLeft() <= Constants.HippoData.ExtendLimitL;
     }
 
     public boolean isExtendedR() {
