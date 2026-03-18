@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
     private SparkFlex intakePrime;
-    private DigitalInput hopperFullSensor;
+    //private DigitalInput hopperFullSensor;
 
     private SparkBaseConfig config;
 
     public IntakeSubsystem() {
         intakePrime = new SparkFlex(Constants.MotorIDs.Intake,MotorType.kBrushless);
-        hopperFullSensor = new DigitalInput(Constants.DigitalChannels.HopperFull);
+       // hopperFullSensor = new DigitalInput(Constants.DigitalChannels.HopperFull);
         config = new SparkFlexConfig();
         config
         //TODO: this is where the 211 is coming from, we should update this.
@@ -44,7 +44,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean isHopperFull() {
-        return !hopperFullSensor.get();
+        return false;
     }
     
     @Override

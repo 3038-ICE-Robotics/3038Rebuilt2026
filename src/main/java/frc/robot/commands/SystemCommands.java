@@ -15,7 +15,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 // Work on calling buttons next week.
 public class SystemCommands {
-    
+
     public Command intakeBall;
     public Command outtakeBall;
     public Command shootBallFromGround;
@@ -64,15 +64,18 @@ public class SystemCommands {
         }, intake, transfer),
                 // ---------------------------------------------
                 rollOverIntake,
-                rear.MaintainExtend 
-                );
+                rear.MaintainExtend);
 
         // spits out balls from inside the robot.
         outtakeBall = new ParallelCommandGroup(new FunctionalCommand(() -> {
             intake.startOuttake();
             transfer.outTake();
         }, () -> {
+            rear.agitate();
+            rear.startIntake();
         }, interrupted -> {
+            rear.stop();
+            rear.stopIntake();
             intake.stop();
             transfer.stopMotors();
         }, () -> {
@@ -94,8 +97,7 @@ public class SystemCommands {
                 shooter);
 
         agitate = new FunctionalCommand(
-                rear::startIntake
-                ,
+                rear::startIntake,
                 rear::agitate,
                 (interrupted) -> {
                     rear.stop();
@@ -143,8 +145,8 @@ public class SystemCommands {
                                         () -> false)),
 
                         new ParallelCommandGroup(transferToShooter, agitate)));
-        rearExtend = new ParallelCommandGroup(rear.extendLeft,rear.extendRight);
-        rearRetract = new ParallelCommandGroup(rear.retractLeft,rear.retractRight);
+        rearExtend = new ParallelCommandGroup(rear.extendLeft, rear.extendRight);
+        rearRetract = new ParallelCommandGroup(rear.retractLeft, rear.retractRight);
         rearIntake = new FunctionalCommand(
                 rear::startIntake,
                 () -> {

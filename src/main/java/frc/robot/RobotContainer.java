@@ -79,7 +79,6 @@ public class RobotContainer {
   private Config configForSysRoutine1;
   private SendableChooser<ITunable> subSystemChooser = new SendableChooser<ITunable>();
   private SendableChooser<Command> autoChooser;
-  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -119,24 +118,24 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Tuning/ivalue", Constants.DriveTrain.RotationkI);
     // SmartDashboard.putNumber("Tuning/dvalue", Constants.DriveTrain.RotationkD);
 
-    
-
     subSystemChooser.setDefaultOption("Swerve", drivetrain);
-
 
     // Configure Auto's
     // configureNamedCommands();
+    NamedCommands.registerCommand("intake", fullCommands.intakeBall);
+    NamedCommands.registerCommand("filp out", fullCommands.rearExtend);
     configureAutoBuilder();
 
     NamedCommands.registerCommand("shoot", fullCommands.shootBallFromHopper);
     NamedCommands.registerCommand("flip out", fullCommands.rearExtend);
     NamedCommands.registerCommand("intake", fullCommands.rearIntake);
-    // NamedCommands.registerCommand("flip out", new ParallelCommandGroup(rear.extendLeft,rear.extendRight));
+    // NamedCommands.registerCommand("flip out", new
+    // ParallelCommandGroup(rear.extendLeft,rear.extendRight));
     // NamedCommands.registerCommand("intake", fullCommands.intakeBall);
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    
+
     SmartDashboard.putData("Tuning/set", new InstantCommand(this::updatePID));
     SmartDashboard.putData("Tuning/Selection", subSystemChooser);
 
@@ -198,7 +197,7 @@ public class RobotContainer {
   }
 
   public void configureNamedCommands() {
-    
+
   }
 
   /**

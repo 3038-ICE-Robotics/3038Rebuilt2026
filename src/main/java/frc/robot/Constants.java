@@ -89,8 +89,8 @@ public final class Constants {
   }
 
   public static class HippoData {
-    public static final double RetractLimitL = 0.860;
-    public static final double RetractLimitR = 0.693;
+    public static final double RetractLimitL = 0.750;
+    public static final double RetractLimitR = 0.564;
     public static final double ExtendLimitL = 0.493;
     public static final double ExtendLimitR = 0.314;
     public static final double AgitateLimitL = 0.641;

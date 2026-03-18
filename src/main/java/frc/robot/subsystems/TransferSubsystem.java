@@ -10,7 +10,7 @@ import frc.robot.Constants;
 public class TransferSubsystem extends SubsystemBase {
     private SparkFlex TransferLow;
     private SparkFlex TransferHigh;
-    private DigitalInput emptySensor;
+   // private DigitalInput emptySensor;
     private double intakeSpeed = .5;
     private double outTakeSpeed = -.5;
     private double[] ampHistory = new double[25];
@@ -23,7 +23,7 @@ public class TransferSubsystem extends SubsystemBase {
     public TransferSubsystem() {
         TransferLow = new SparkFlex(Constants.MotorIDs.TransferLow, MotorType.kBrushless);
         TransferHigh = new SparkFlex(Constants.MotorIDs.TransferHigh, MotorType.kBrushless);
-        emptySensor = new DigitalInput(Constants.DigitalChannels.HopperEmpty);
+        // = new DigitalInput(Constants.DigitalChannels.HopperEmpty);
     }
 
     public void startIntake() {

@@ -38,11 +38,11 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     private ShooterModes shooterSelect;
-    public Supplier <Double> speedControl;
+    public Supplier<Double> speedControl;
 
     private PIDController shooterPID;
     private LinearFilter filter = LinearFilter.singlePoleIIR(0.05, 0.02);
-    public Supplier <Double> distanceControl;
+    public Supplier<Double> distanceControl;
 
     public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
         shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, MotorType.kBrushless);
@@ -67,11 +67,11 @@ public class ShooterSubsystem extends SubsystemBase {
     public void setMotorSpeed(double speed) {
         double shooterPIDcalculated = shooterPID.calculate(filter.calculate(getCurrentSpeed()) - speed);
         // VelocityControl.setSetpoint(speed, ControlType.kVelocity,
-        //         ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
+        // ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
 
-        //12 * speed / 400
+        // 12 * speed / 400
         shooterPrime.setVoltage(MathUtil.clamp(shooterPIDcalculated + feedforward.calculate(speed), 0, 12));
-SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
+        SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
     }
 
     public void stopMotor() {
@@ -99,16 +99,21 @@ SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
         // This runs constantly!
 
         // // 1. Update Dashboard
-        // SmartDashboard.putNumber("Shooter/Prime shooter Temp", shooterPrime.getMotorTemperature());
-        // SmartDashboard.putNumber("Shooter/Prime Shooter Current", shooterPrime.getOutputCurrent());
-        // SmartDashboard.putNumber("Shooter/Follow shooter Temp", shooterFollow.getMotorTemperature());
-        // SmartDashboard.putNumber("Shooter/Follow Shooter Current", shooterFollow.getOutputCurrent());
+        // SmartDashboard.putNumber("Shooter/Prime shooter Temp",
+        // shooterPrime.getMotorTemperature());
+        // SmartDashboard.putNumber("Shooter/Prime Shooter Current",
+        // shooterPrime.getOutputCurrent());
+        // SmartDashboard.putNumber("Shooter/Follow shooter Temp",
+        // shooterFollow.getMotorTemperature());
+        // SmartDashboard.putNumber("Shooter/Follow Shooter Current",
+        // shooterFollow.getOutputCurrent());
         // 2. Continuous Safety Checks
         if (shooterPrime.getMotorTemperature() > 80) {
             System.out.println("🔥 Shooter OVERHEATING! STOPPING!");
             shooterPrime.set(0);
         }
-        double distanceFromTarget = StateOfRobot.distanceBetweenTargetAnd(robotPoint.get())*Constants.MetersToFeet*12;
+        double distanceFromTarget = StateOfRobot.distanceBetweenTargetAnd(robotPoint.get()) * Constants.MetersToFeet
+                * 12;
         if (DriverStation.isTest()) {
             distanceFromTarget = distanceControl.get();
         }
@@ -129,7 +134,7 @@ SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
                 targetSpeed = 200;
                 break;
         }
-        if (DriverStation.isTest()) {
+        if (DriverStation.isTest() || speedControl.get() > 1600) {
             targetSpeed = speedControl.get();
         }
         setMotorSpeed(targetSpeed);
@@ -138,7 +143,6 @@ SmartDashboard.putNumber("Shooter/PID", shooterPIDcalculated);
         SmartDashboard.putNumber("Shooter/Physical Motor Speed", getCurrentSpeed());
         SmartDashboard.putString("Shooter/Select", shooterSelect.toString());
     }
-
 
     public void intake() {
         shooterSelect = ShooterModes.INTAKE;

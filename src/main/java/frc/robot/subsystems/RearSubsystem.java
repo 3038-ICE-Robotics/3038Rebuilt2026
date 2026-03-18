@@ -118,6 +118,7 @@ public class RearSubsystem extends SubsystemBase {
 
     public void stop() {
         rearRight.set(0);
+        rearLeft.set(0);
     }
 
     private boolean isLeftPastBoundary() {
