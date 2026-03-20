@@ -21,7 +21,7 @@ public class LedSubsystem extends SubsystemBase {
         pin2 = new DigitalOutput(2);
         pin3 = new DigitalOutput(3);
         pin4 = new DigitalOutput(4);
-        currentStatusMode = LEDStatusMode.MODE_BLUE_ENABLED_NEUTRAL;
+        currentStatusMode = LEDStatusMode.MODE_HUB_LOCK;
     }
 
     public static LedSubsystem getInstance() {
@@ -72,13 +72,13 @@ public class LedSubsystem extends SubsystemBase {
             // currentStatusMode = LEDStatusMode.INTAKE;
             int code = currentStatusMode.code;
 
-            pin2.set((code & 1) > 0);
-            pin3.set((code & 2) > 0);
-            pin4.set((code & 4) > 0);
+            pin2.set((code & 1) == 0);
+            pin3.set((code & 2) == 0);
+            pin4.set((code & 4) == 0);
             SmartDashboard.putString("LEDSTATUS", currentStatusMode.toString());
-            SmartDashboard.putBoolean("LED/Pin2", (code & 1) > 0);
-            SmartDashboard.putBoolean("LED/Pin3", (code & 2) > 0);
-            SmartDashboard.putBoolean("LED/Pin4", (code & 4) > 0);
+            SmartDashboard.putBoolean("LED/Pin2", (code & 1) != 0);
+            SmartDashboard.putBoolean("LED/Pin3", (code & 2) != 0);
+            SmartDashboard.putBoolean("LED/Pin4", (code & 4) != 0);
         }
 
     }
