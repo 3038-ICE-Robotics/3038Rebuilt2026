@@ -143,6 +143,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
         odometer = new SwerveDrivePoseEstimator(
                 kinematics, getGyroscopeRotation(), getModulePositions(), Constants.DriveTrain.DriveOdometryOrigin);
         odometer.setVisionMeasurementStdDevs(VecBuilder.fill(0.5, 0.5, 99999999));
+        
 
         SmartDashboard.putData("Swerve Drive", new Sendable() {
             @Override
@@ -471,18 +472,22 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
                 0,
                 0);
 
+        LimelightHelpers.PoseEstimate p1 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Limelight.LimelightOneName);
+        LimelightHelpers.PoseEstimate p2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Limelight.LimelightOneName);
+
+
         Pair<Pose2d, LimelightInputs> estimate = limelight.getTrustedPose();
         if (estimate != null) {
             boolean doRejectUpdate = false;
             if (Math.abs(gyro.getRate()) > 720) {
                 doRejectUpdate = true;
             }
-            // if (estimate.getSecond().tagCount == 0) {
-            //     doRejectUpdate = true;
-            // }
+            if (estimate.getSecond().tagCount == 0) {
+                doRejectUpdate = true;
+            }
             if (!doRejectUpdate) {
-                odometer.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Limelight.LimelightOneName), estimate.getSecond().timeStampSeconds);
-                odometer.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Limelight.LimelightTwoName), estimate.getSecond().timeStampSeconds);
+
+                odometer.addVisionMeasurement(estimate.getFirst(), estimate.getSecond().timeStampSeconds);
 
                 // RobotState.getInstance().LimelightsUpdated = true;
                 // } else {

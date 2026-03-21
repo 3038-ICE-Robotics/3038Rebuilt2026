@@ -76,9 +76,9 @@ public final class Constants {
         1350,
         2710,
         3060,
-        3450,
-        3850,
-        4300
+        3450 + 200,
+        3850 + 200,
+        4300 + 200
     };
   }
 
@@ -86,6 +86,7 @@ public final class Constants {
     public static final double IntakeSpeed = 0.28;
     public static final double RearIntakeSpeed = -0.60;
     public static final double RearSpeed = 0.28;
+    
   }
 
   public static class HippoData {
@@ -165,7 +166,7 @@ public final class Constants {
     public static final double TranslationkD = 0;
     public static final double RotationTolerance = 0;
     public static final String[] MotorKeys = new String[] { "FL", "FR", "BL", "BR" };
-    public static final Pose2d DriveOdometryOrigin = new Pose2d(0, 0, new Rotation2d());
+    public static final Pose2d DriveOdometryOrigin = new Pose2d(16, 7.5, new Rotation2d());
     public static final double MaxVelocityMPS = 5; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
         / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure
