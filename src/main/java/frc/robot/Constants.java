@@ -166,7 +166,7 @@ public final class Constants {
     public static final double TranslationkD = 0;
     public static final double RotationTolerance = 0;
     public static final String[] MotorKeys = new String[] { "FL", "FR", "BL", "BR" };
-    public static final Pose2d DriveOdometryOrigin = new Pose2d(16, 7.5, new Rotation2d());
+    public static Pose2d DriveOdometryOrigin = new Pose2d();
     public static final double MaxVelocityMPS = 5; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
         / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure

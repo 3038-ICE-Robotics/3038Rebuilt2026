@@ -32,6 +32,8 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.revrobotics.ColorSensorV3.LEDCurrent;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -84,6 +86,12 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    if (DriverStation.getAlliance().get() == Alliance.Red) {
+      Constants.DriveTrain.DriveOdometryOrigin = new Pose2d(16,7.5, new Rotation2d());
+    } else {
+       Constants.DriveTrain.DriveOdometryOrigin = new Pose2d(0,0, new Rotation2d());
+    }
+
     lJoystick = new Joystick(Constants.OperatorConstants.LDriverControllerPort);
     rJoystick = new Joystick(Constants.OperatorConstants.RDriverControllerPort);
     // Drive controls
