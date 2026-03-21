@@ -10,7 +10,7 @@ import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.PoseEstimate;
 
 public class LimelightInputs implements LoggableInputs{
-     public String name;
+    public String name;
     public Pose2d megaTag2Pose2d;
     public double tx;
     public double ty;
@@ -84,7 +84,7 @@ public class LimelightInputs implements LoggableInputs{
 
     @Override
     public void fromLog(LogTable table) {
-        megaTag2Pose2d = table.get("MegaTag2Pose2d", Pose2d.struct, (Pose2d) null); // uses a struct so that the get()
+        megaTag2Pose2d = table.get("MegaTag1Pose2d", Pose2d.struct, (Pose2d) null); // uses a struct so that the get()
                                                                                     // method will function with a
                                                                                     // default null
         avgTagDistance = table.get("AvgTagDistance", avgTagDistance);

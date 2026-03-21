@@ -20,7 +20,9 @@ public class Limelight {
     
   private static Limelight limelight;
   /** DO NOT edit anywhere other than periodic() of Limelight class */
-  public LimelightInputs limelightA = new LimelightInputs(Constants.Limelight.LimelightName);
+  public LimelightInputs limelightA = new LimelightInputs(Constants.Limelight.LimelightOneName);
+  public LimelightInputs limelightB = new LimelightInputs(Constants.Limelight.LimelightTwoName);
+
   public static final AprilTagFieldLayout FIELD_LAYOUT;
 
   static {
@@ -80,6 +82,7 @@ public class Limelight {
    */
   public Pair<Pose2d, LimelightInputs> getTrustedPose() {
     Pose2d poseA = limelightA.megaTag2Pose2d;
+    Pose2d poseB = limelightB.megaTag2Pose2d;
     // we aren't using isTrustworthy here becuase as LL readings have gotten more
     // reliable, we care
     // less about tag distance
@@ -89,12 +92,21 @@ public class Limelight {
     }
     logTrustToSmartDashboard(poseATrust, limelightA, "Left");
 
+    Boolean poseBTrust = false;
+    if (poseB != null && limelightB.isConnected && limelightB.getClosestTagDistCameraSpace() < Constants.Limelight.MaxTagDistance) {
+      poseATrust = isInField(limelightA);
+    }
+    logTrustToSmartDashboard(poseBTrust, limelightB, "Right");
+
     // if the limelight positions will be merged, let SmartDashboard know!
     boolean mergingPoses = false;
     SmartDashboard.putBoolean("LL poses merged", mergingPoses);
     List<LimelightInputs> limelightNames = new ArrayList<>();
     if (poseATrust) {
       limelightNames.add(limelightA);
+    }
+    if (poseBTrust) {
+      limelightNames.add(limelightB);
     }
     if (limelightNames.size() == 0) {
       return null;
@@ -270,6 +282,7 @@ public class Limelight {
 
   public void periodic() {
     limelightA.updateInputs();
+    limelightB.updateInputs();
     // Logger.processInputs("Limelights/Left", limelightA);
   }
 }

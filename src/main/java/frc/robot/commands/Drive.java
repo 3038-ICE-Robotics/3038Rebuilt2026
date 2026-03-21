@@ -18,7 +18,7 @@ public class Drive extends Command {
   private final DoubleSupplier translationXSupplier;
   private final DoubleSupplier translationYSupplier;
   private final DoubleSupplier rotationSupplier;
-  private int invert;
+  private int invert=1;
 
   /**
    * drives the robot at a specific forward velocity, sideways velocity, and
@@ -56,11 +56,11 @@ public class Drive extends Command {
     // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of
     // field-oriented
     // movement
-    if (DriverStation.getAlliance().get() == Alliance.Red) {
-      invert = -1;
-    } else {
-      invert = 1;
-    }
+   // if (DriverStation.getAlliance().get() == Alliance.Red) {
+   //   invert = -1;
+   // } else {
+    //  invert = 1;
+   // }
     // The two statements are mostly identical, taking X, Y, and Rotation suppliers
     // and multiplying them by maximum velocties and inversions
     // The only difference is that one is relative to the field, and the other to

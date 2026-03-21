@@ -18,6 +18,7 @@ import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -451,7 +452,18 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
     public void updateOdometryWithVision() {
         LimelightHelpers.SetRobotOrientation(
 
-                Constants.Limelight.LimelightName,
+                Constants.Limelight.LimelightOneName,
+                odometer.getEstimatedPosition().getRotation().getDegrees(),
+                0,
+                0,
+                0,
+                0,
+                0);
+        
+
+        LimelightHelpers.SetRobotOrientation(
+
+                Constants.Limelight.LimelightTwoName,
                 odometer.getEstimatedPosition().getRotation().getDegrees(),
                 0,
                 0,
@@ -465,16 +477,19 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
             if (Math.abs(gyro.getRate()) > 720) {
                 doRejectUpdate = true;
             }
-            if (estimate.getSecond().tagCount == 0) {
-                doRejectUpdate = true;
-            }
+            // if (estimate.getSecond().tagCount == 0) {
+            //     doRejectUpdate = true;
+            // }
             if (!doRejectUpdate) {
-                odometer.addVisionMeasurement(estimate.getFirst(), estimate.getSecond().timeStampSeconds);
+                odometer.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Limelight.LimelightOneName), estimate.getSecond().timeStampSeconds);
+                odometer.addVisionMeasurement(LimelightHelpers.getBotPose2d_wpiBlue(Constants.Limelight.LimelightTwoName), estimate.getSecond().timeStampSeconds);
+
                 // RobotState.getInstance().LimelightsUpdated = true;
                 // } else {
                 // RobotState.getInstance().LimelightsUpdated = false;
-            }
+            }  
         }
+       
     }
 
     /**
@@ -654,7 +669,10 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
         }
 
         m_field.setRobotPose(odometer.getEstimatedPosition());
-        // RobotState.getInstance().odometerOrientation =
+
+        SmartDashboard.putNumberArray("Pose: ", new double[]{odometer.getEstimatedPosition().getX(), odometer.getEstimatedPosition().getY()});
+
+       // RobotState.getInstance().odometerOrientation =
         // getOdometryRotation().getDegrees();
         // updates logging for all drive motors on the swerve modules
 

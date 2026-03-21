@@ -145,6 +145,7 @@ public final class Constants {
 
   public static class DriveTrain {
     public static final double SteerGearRatio = (94.0 / 18.0) * 2.89 * 3.61;
+    public static final double DriveGearRatio = 7.5;
     public static final double[] ModuleOffsets = new double[] {
         -0.269,
         -0.438,
@@ -154,7 +155,7 @@ public final class Constants {
     public static final double WheelDiameter = (4.0 / 12.0) / MetersToFeet;
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;
     public static final double DrivetrainWheelbase = (20.5 / 12.0) / MetersToFeet;
-    public static final double RotationsToMeters = Math.PI * WheelDiameter;
+    public static final double RotationsToMeters = (Math.PI * WheelDiameter) / DriveGearRatio;
     public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet) / RotationsToMeters;
     public static final double RotationkP = 0;
     public static final double RotationkI = 0;
@@ -181,16 +182,17 @@ public final class Constants {
   }
 
   public static class Limelight {
-    public static final String LimelightName = "limelight-two";
-    public static final Translation2d FieldCorner = new Translation2d(17.54, 8.02);
-    public static final double MaxTagDistance = 5.2;
+    public static final String LimelightTwoName = "limelight-two";
+    public static final String LimelightOneName = "limelight-one";
+    public static final Translation2d FieldCorner = new Translation2d(17, 8.02);
+    public static final double MaxTagDistance = 10;
   }
 
   public static class Field {
-    public static final Translation2d BlueHub = new Translation2d(4.6, 4); // meters \/
-    public static final Translation2d RedHub = new Translation2d(11.9, 4);
-    public static final Translation2d BlueZone = new Translation2d(2, 2); // TODO find coords
-    public static final Translation2d RedZone = new Translation2d(1, 1); // TODO find coords.
+    public static final Translation2d BlueHub = new Translation2d(4.626, 4.035); // meters \/
+    public static final Translation2d RedHub = new Translation2d(11.915, 4.035);
+    public static final Translation2d BlueZone = new Translation2d(0, 0); // TODO find coords
+    public static final Translation2d RedZone = new Translation2d(16.5, 0); // TODO find coords.
     public static final double FieldLength = 650.12; // inches \/
     public static final double FieldWidth = 316.64;
     public static final double BlueBoundary = 180;
