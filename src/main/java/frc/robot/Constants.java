@@ -108,8 +108,9 @@ public final class Constants {
   }
 
   public static class LEDs {
-    public static final int testLedChannel = 2;
-
+    public static final int CHANNEL_2_PIN = 2;
+    public static final int CHANNEL_3_PIN = 3;
+    public static final int CHANNEL_4_PIN = 4;
   }
 
   public static class RightButtonIDs {
