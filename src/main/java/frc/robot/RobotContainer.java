@@ -23,14 +23,11 @@ import edu.wpi.first.wpilibj.Joystick;
 
 import java.io.IOException;
 import java.util.function.DoubleSupplier;
-import java.util.stream.Stream;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.revrobotics.ColorSensorV3.LEDCurrent;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -38,10 +35,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -116,17 +111,6 @@ public class RobotContainer {
       return ((lJoystick.getZ() + 1) / 2) * 185 + 40;
     };
     fullCommands = new SystemCommands(intake, transfer, shooter, rear);
-    
-
-    configForSysRoutine1 = new Config(null, null, null);
-    sysRoutine1 = new SysIdRoutine(configForSysRoutine1,
-        new SysIdRoutine.Mechanism(drivetrain::voltageDrive, drivetrain::sysLog, m_exampleSubsystem));
-
-    // SmartDashboard.putNumber("Tuning/pvalue", Constants.DriveTrain.RotationkP);
-    // SmartDashboard.putNumber("Tuning/ivalue", Constants.DriveTrain.RotationkI);
-    // SmartDashboard.putNumber("Tuning/dvalue", Constants.DriveTrain.RotationkD);
-
-    subSystemChooser.setDefaultOption("Swerve", drivetrain);
 
     // Configure Auto's
     // configureNamedCommands();
@@ -178,7 +162,7 @@ public class RobotContainer {
 
   }
 
-  // Pathplanner TODO
+  // Pathplanner
   public void configureAutoBuilder() {
     try {
       AutoBuilder.configure(
@@ -186,6 +170,7 @@ public class RobotContainer {
           drivetrain::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
           drivetrain::getChassisSpeeds,
           (speeds) -> {
+            //TODO: remove this speed adjustment
             speeds.omegaRadiansPerSecond*=.65;
             drivetrain.drive(speeds);
           },

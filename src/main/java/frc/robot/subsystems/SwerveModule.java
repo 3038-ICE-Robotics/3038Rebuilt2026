@@ -34,7 +34,6 @@ public class SwerveModule implements ITunable {
     private final AbsoluteEncoder swerveEncoder;
     private final Rotation2d m_steerEncoderOffset;
     private SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0, 1);
-    private SimpleMotorFeedforward steerFF = new SimpleMotorFeedforward(0, 0);
     private SparkBaseConfig driveConfig;
     private SparkBaseConfig steerConfig;
     private double currentAngle;
@@ -49,8 +48,7 @@ public class SwerveModule implements ITunable {
     // Controls
     private SparkClosedLoopController driveControl;
     private SparkClosedLoopController steerControl;
-    // private PositionDutyCycle steerControl = new PositionDutyCycle(0);
-    private double previousDeltaAngle = 0;
+    private double previousDeltaAngle=0;
 
     /**
      * Constructs a SwerveModule with a drive motor, steering motor, and steering
@@ -179,6 +177,7 @@ public class SwerveModule implements ITunable {
      * @return The target speed of the wheel in meters/second.
      */
     public double getTargetSpeedMetersPerSecond() {
+        //TODO: desiredDriveSpeed is in rotations/second, this should return a value in meters/second
         return desiredDriveSpeed;
     }
 
@@ -192,20 +191,11 @@ public class SwerveModule implements ITunable {
         if (desiredState.angle == null) {
             DriverStation.reportWarning("Cannot set module angle to null.", true);
         }
-
-        // desiredSteerAngle = (desiredState.angle.getRotations());
-        // desiredSteerAngle += desiredSteerAngle < 0 ? 1 : 0;
         double steerPose = steerMotor.getEncoder().getPosition();
         posSwerve = MathUtil
                 .inputModulus(steerPose / Constants.DriveTrain.SteerGearRatio, -.5, .5);
-        // desiredState.optimize(Rotation2d.fromRotations(posSwerve));
-        // SmartDashboard.putNumber("Current/Angle" + moduleName, posSwerve);
-        // SmartDashboard.putNumber("Desired/Angle" + moduleName, desiredState.angle.getRotations());
         double inverted = 1;
         double maxDelta = desiredState.angle.getRotations() - posSwerve;
-        // double altMaxDelta = (1 - Math.abs(maxDelta)) * (maxDelta < 0 ? -1 : 1);
-        // SmartDashboard.putNumber("Delta/Angle" + moduleName, maxDelta);
-        // double shortestDelta = (Math.abs(maxDelta) < Math.abs(altMaxDelta)) ? maxDelta : altMaxDelta;
         double shortestDelta = maxDelta;
         if (Math.abs(maxDelta) > 0.5) {
             shortestDelta = Math.copySign(1-Math.abs(maxDelta), maxDelta)*-1;
@@ -214,29 +204,8 @@ public class SwerveModule implements ITunable {
             shortestDelta = Math.copySign(.5-Math.abs(shortestDelta), shortestDelta)*-1;
             inverted = -1;
         }
-
-        // SmartDashboard.putNumber("180/Angle" + moduleName, shortestDelta);
-        // if (Math.abs(shortestDelta) > 0.25) {
-        //     shortestDelta = (0.5 - Math.abs(shortestDelta)) * (shortestDelta < 0 ? -1 : 1);
-        //     inverted = -1;
-        // }
-        // if (Math.abs(posSwerve) == 0.5 && Math.abs(desiredState.angle.getRotations()) == 0.5) {
-        //     shortestDelta = 0;
-        // }
-        // SmartDashboard.putNumber("Invert/Angle " + moduleName, maxDelta);
-
-        // if (Math.abs(deltaAngle) > 0.25) {
-        // deltaAngle = 0.5 - deltaAngle;
-        // inverted = -1;
-        // }
-        // if (Math.abs(deltaAngle) > 0.25) {
-        // deltaAngle = 0;
-        // }
-
-        // = MathUtil.inputModulus(currentAngle+deltaAngle, -.5, .5);
-
-        // SmartDashboard.putNumber("Optimized/DeltaAngle" + moduleName, shortestDelta);
         desiredDriveSpeed = (inverted * desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters);
+        //TODO: we should not need this division after we update the PID values for PathPlanner in the Constants.
         if (DriverStation.isAutonomous()) {
             desiredDriveSpeed/= 7.5;
         }

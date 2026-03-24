@@ -32,6 +32,7 @@ public class StateOfRobot {
         if (isAimAssistOn) {
             isAimAssistOn = false;
             aimAssistPID.reset();
+            aimAssistPID.enableContinuousInput(-.5, .5);
         } else {
             isAimAssistOn = true;
         }
@@ -46,11 +47,12 @@ public class StateOfRobot {
 
         // double value = MathUtil.clamp(
         //         aimAssistPID.calculate(desiredAngle.get().getRotations() - botPose2d.get().getRotations()), -1, 1);
-        double value = (
-                desiredAngle.get().getRotations() - botPose2d.get().getRotations());
-        if (Math.abs(value) > 1) {
-             value = Math.copySign(1-Math.abs(value), -value);
-        } 
+        // double value = (
+        //         desiredAngle.get().getRotations() - botPose2d.get().getRotations());
+        // if (Math.abs(value) > 1) {
+        //      value = Math.copySign(1-Math.abs(value), -value);
+        // } 
+        double value = aimAssistPID.calculate(botPose2d.get().getRotations(), desiredAngle.get().getRotations());
         SmartDashboard.putNumber("Angles/Value", value);
         return value;
 

@@ -4,14 +4,11 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Meter;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import frc.robot.commands.Drive;
 
 /*
  * To access the Rio logs
@@ -59,7 +56,7 @@ public final class Constants {
   }
 
   public static class AimBotData {
-    public static double[] RotationPID = new double[] { // measure
+    public static double[] RotationPID = new double[] { // TODO: adjust this to control how aggressive the aimbot turn is
         0.1, // kP
         0, // kI
         0 // kD
@@ -101,7 +98,7 @@ public final class Constants {
   public static class LeftButtonIDs {
     public static final int Intake = 10;
     public static final int IntakeToHopper = 1;
-    public static final int ToggleAimBot = 3; // fix
+    public static final int ToggleAimBot = 3;
     public static final int RearIntake = 1;
     public static final int RearExtend = 4;
     public static final int RearRetract = 5;
@@ -116,7 +113,6 @@ public final class Constants {
   public static class RightButtonIDs {
     public static final int ShootFromHopper = 1;
     public static final int ShootFromIntake = 2;
-    // public static final int OuttakeFirstMotor = 3;
     public static final int OutTakeToGround = 3;
     public static final int RightClimbRetract = 4;
     public static final int RightClimbExtend = 5;
@@ -124,7 +120,7 @@ public final class Constants {
   }
 
   public static class MotorIDs {
-    // Order of drive motors - BL, BR, FL, FR
+    // Order of drive motors - FL, FR, BL, BR
     public static final int[] DriveIDs = new int[] { 8, 1 , 2, 3 }; 
     public static final int[] SteerIDs = new int[] { 4, 5, 6, 7 };
 
@@ -159,19 +155,25 @@ public final class Constants {
     public static final double DrivetrainWheelbase = (20.5 / 12.0) / MetersToFeet;
     public static final double RotationsToMeters = (Math.PI * WheelDiameter) / DriveGearRatio;
     public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet) / RotationsToMeters;
+    //TODO: adjust these to make pathplanner correct for heading errors.
     public static final double RotationkP = 0;
     public static final double RotationkI = 0;
     public static final double RotationkD = 0;
+    //TODO: adjust these to make pathplanner correct for position errors
     public static final double TranslationkP = 0;
     public static final double TranslationkI = 0;
     public static final double TranslationkD = 0;
     public static final double RotationTolerance = 0;
     public static final String[] MotorKeys = new String[] { "FL", "FR", "BL", "BR" };
     public static Pose2d DriveOdometryOrigin = new Pose2d();
-    public static final double MaxVelocityMPS = 5; // measure actual velocity
+    //TODO: the theoretical max is closer to 8 or 9
+    // measuring the actual max means pointing the wheels forward and just sending full power to the drive wheels and measuring the top speed reached.
+    public static final double MaxVelocityMPS = 5;
+    //TODO: This is is just some guestimate math and should be updated similar to MaxVelocityMPS
+    // measuring the actual max means point the wheels in a rotating orientation and then sending full power to the wheels and measure the top Radians per second reached.
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
-        / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure
-    public static final double DriveDeadbandMPS = 0.1; // measure
+        / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0); 
+    public static final double DriveDeadbandMPS = 0.1;
     public static final PIDController DRIVE_TO_POSE_X_CONTROLLER = getTranslationPIDController();
     public static final PIDController DRIVE_TO_POSE_Y_CONTROLLER = getTranslationPIDController();
 
@@ -193,8 +195,9 @@ public final class Constants {
   public static class Field {
     public static final Translation2d BlueHub = new Translation2d(4.626, 4.035); // meters \/
     public static final Translation2d RedHub = new Translation2d(11.915, 4.035);
-    public static final Translation2d BlueZone = new Translation2d(0, 0); // TODO find coords
-    public static final Translation2d RedZone = new Translation2d(16.5, 0); // TODO find coords.
+    public static final Translation2d BlueZone = new Translation2d(.5, 0);
+    public static final Translation2d RedZone = new Translation2d(16.5, 0);
+    //TODO: update to meters and 
     public static final double FieldLength = 650.12; // inches \/
     public static final double FieldWidth = 316.64;
     public static final double BlueBoundary = 180;
