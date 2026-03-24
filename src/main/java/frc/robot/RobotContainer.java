@@ -171,7 +171,6 @@ public class RobotContainer {
           drivetrain::getChassisSpeeds,
           (speeds) -> {
             //TODO: remove this speed adjustment
-            speeds.omegaRadiansPerSecond*=.65;
             drivetrain.drive(speeds);
           },
           new PPHolonomicDriveController(
