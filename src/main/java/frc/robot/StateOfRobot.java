@@ -46,8 +46,11 @@ public class StateOfRobot {
 
         // double value = MathUtil.clamp(
         //         aimAssistPID.calculate(desiredAngle.get().getRotations() - botPose2d.get().getRotations()), -1, 1);
-        double value = MathUtil.clamp(
-                desiredAngle.get().getRotations() - botPose2d.get().getRotations(), -1, 1);
+        double value = (
+                desiredAngle.get().getRotations() - botPose2d.get().getRotations());
+        if (Math.abs(value) > 1) {
+             value = Math.copySign(1-Math.abs(value), -value);
+        } 
         SmartDashboard.putNumber("Angles/Value", value);
         return value;
 

@@ -743,7 +743,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
             target = Constants.Field.RedHub;
         }
         // target.minus(targetOffset);
-        return Rotation2d.fromRadians(Math.atan2(target.getY() - robotPosition.getY(), target.getX() - robotPosition.getX()));
+        return Rotation2d.fromRadians(Math.atan2(target.getY() - robotPosition.getY(), target.getX() - robotPosition.getX())).rotateBy(Rotation2d.k180deg);
     }
 
     public static double getDistanceToHub() {

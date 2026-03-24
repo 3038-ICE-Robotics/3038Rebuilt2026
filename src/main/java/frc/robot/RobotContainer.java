@@ -116,8 +116,7 @@ public class RobotContainer {
       return ((lJoystick.getZ() + 1) / 2) * 185 + 40;
     };
     fullCommands = new SystemCommands(intake, transfer, shooter, rear);
-    // Configure the trigger bindings
-    configureBindings();
+    
 
     configForSysRoutine1 = new Config(null, null, null);
     sysRoutine1 = new SysIdRoutine(configForSysRoutine1,
@@ -149,6 +148,9 @@ public class RobotContainer {
 
     SmartDashboard.putData("Tuning/set", new InstantCommand(this::updatePID));
     SmartDashboard.putData("Tuning/Selection", subSystemChooser);
+
+    // Configure the trigger bindings
+    configureBindings();
 
   }
 
@@ -183,7 +185,10 @@ public class RobotContainer {
           drivetrain::getPose, // Pose2d supplier
           drivetrain::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
           drivetrain::getChassisSpeeds,
-          (speeds) -> drivetrain.drive(speeds),
+          (speeds) -> {
+            speeds.omegaRadiansPerSecond*=.65;
+            drivetrain.drive(speeds);
+          },
           new PPHolonomicDriveController(
               new com.pathplanner.lib.config.PIDConstants(
                   Constants.DriveTrain.TranslationkP,

@@ -125,7 +125,7 @@ public class SwerveModule implements ITunable {
      */
     public double getSpeedMetersPerSecond() {
         return (driveMotor.getEncoder().getVelocity()
-                * Constants.DriveTrain.RotationsToMeters);
+                * Constants.DriveTrain.RotationsToMeters)/60;
     }
 
     /**
@@ -236,7 +236,10 @@ public class SwerveModule implements ITunable {
         // = MathUtil.inputModulus(currentAngle+deltaAngle, -.5, .5);
 
         // SmartDashboard.putNumber("Optimized/DeltaAngle" + moduleName, shortestDelta);
-        desiredDriveSpeed = inverted * desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters;
+        desiredDriveSpeed = (inverted * desiredState.speedMetersPerSecond / Constants.DriveTrain.RotationsToMeters);
+        if (DriverStation.isAutonomous()) {
+            desiredDriveSpeed/= 7.5;
+        }
         driveControl
                 .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
                         driveFF.calculate(desiredDriveSpeed));

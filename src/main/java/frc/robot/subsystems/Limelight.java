@@ -94,7 +94,7 @@ public class Limelight {
 
     Boolean poseBTrust = false;
     if (poseB != null && limelightB.isConnected && limelightB.getClosestTagDistCameraSpace() < Constants.Limelight.MaxTagDistance) {
-      poseATrust = isInField(limelightA);
+      poseBTrust = isInField(limelightB);
     }
     logTrustToSmartDashboard(poseBTrust, limelightB, "Right");
 
