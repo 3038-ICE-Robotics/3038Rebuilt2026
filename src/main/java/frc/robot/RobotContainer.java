@@ -116,10 +116,11 @@ public class RobotContainer {
     // configureNamedCommands();
     NamedCommands.registerCommand("shoot", fullCommands.shootBallFromHopper);
     NamedCommands.registerCommand("intake", fullCommands.intakeBall);
-    NamedCommands.registerCommand("filp out", fullCommands.rearExtend);
-    NamedCommands.registerCommand("filp in", fullCommands.rearRetract);
+    NamedCommands.registerCommand("flip out", fullCommands.rearExtend);
+    NamedCommands.registerCommand("flip in", fullCommands.rearRetract);
     NamedCommands.registerCommand("climb extend", climb.extend);
     NamedCommands.registerCommand("climb retract", climb.retract);
+    NamedCommands.registerCommand("outtake", fullCommands.outtakeBall);
 
 
     configureAutoBuilder();

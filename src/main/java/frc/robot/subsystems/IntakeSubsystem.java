@@ -25,7 +25,6 @@ public class IntakeSubsystem extends SubsystemBase {
        // hopperFullSensor = new DigitalInput(Constants.DigitalChannels.HopperFull);
         config = new SparkFlexConfig();
         config
-        //TODO: this is where the 211 is coming from, we should update this.
                 .smartCurrentLimit(Constants.NeoVortex.StallCurrent)
                 .idleMode(IdleMode.kCoast);
         intakePrime.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);

@@ -382,7 +382,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
      * @param chassisSpeeds the desired speed and direction
      */
     public void drive(ChassisSpeeds chassisSpeeds) {
-        if (Preferences.getBoolean("AntiTipActive", false)) {
+        if (Preferences.getBoolean("AntiTipActive", true)) {
             if (getPigeonRoll() > 3) {
                 chassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond
                         + (getPigeonRoll() / 10);

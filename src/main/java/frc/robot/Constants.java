@@ -159,10 +159,10 @@ public final class Constants {
     public static final double DrivetrainWheelbase = (20.5 / 12.0) / MetersToFeet;
     public static final double RotationsToMeters = (Math.PI * WheelDiameter) / DriveGearRatio;
     public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet) / RotationsToMeters;
-    public static final double RotationkP = 0;
+    public static final double RotationkP = 3;
     public static final double RotationkI = 0;
     public static final double RotationkD = 0;
-    public static final double TranslationkP = 0;
+    public static final double TranslationkP = 1;
     public static final double TranslationkI = 0;
     public static final double TranslationkD = 0;
     public static final double RotationTolerance = 0;
@@ -171,7 +171,7 @@ public final class Constants {
     public static final double MaxVelocityMPS = 5; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
         / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure
-    public static final double DriveDeadbandMPS = 0.1; // measure
+    public static final double DriveDeadbandMPS = 0.05; // measure
     public static final PIDController DRIVE_TO_POSE_X_CONTROLLER = getTranslationPIDController();
     public static final PIDController DRIVE_TO_POSE_Y_CONTROLLER = getTranslationPIDController();
 
