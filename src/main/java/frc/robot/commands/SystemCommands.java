@@ -61,7 +61,7 @@ public class SystemCommands {
             transfer.stopMotors();
         }, () -> {
             return intake.isHopperFull();
-        }, intake, transfer),
+        }),
                 // ---------------------------------------------
                 rollOverIntake,
                 rear.MaintainExtend);

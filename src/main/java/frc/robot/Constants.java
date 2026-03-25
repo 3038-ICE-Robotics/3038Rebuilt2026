@@ -84,7 +84,7 @@ public final class Constants {
 
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.28;
-    public static final double RearIntakeSpeed = -0.60;
+    public static final double RearIntakeSpeed = -0.8;
     public static final double RearSpeed = 0.28;
     
   }
