@@ -11,32 +11,25 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "left start to trench"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "intake"
+                  "pathName": "blue left claw"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Drive"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.0
-                      }
-                    }
-                  ]
+                  "name": "intake"
                 }
               }
             ]
@@ -45,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Drive Next"
+            "pathName": "blue left trench to fire"
           }
         },
         {
@@ -55,13 +48,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 12.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "outtake"
+                  "name": "shoot"
                 }
               }
             ]
@@ -71,6 +64,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Test Autos",
+  "folder": null,
   "choreoAuto": false
 }

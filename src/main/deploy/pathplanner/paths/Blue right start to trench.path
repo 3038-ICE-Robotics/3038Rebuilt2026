@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.0,
-        "y": 0.71623395149786
+        "x": 3.9720568181818177,
+        "y": 0.6646704545454554
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.999999999999999,
-        "y": 0.71623395149786
+        "x": 4.771204168316847,
+        "y": 0.6523263965451415
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.996519258202567,
-        "y": 0.71623395149786
+        "x": 4.621386363636364,
+        "y": 0.6852840909090911
       },
       "prevControl": {
-        "x": 3.996519258202567,
-        "y": 0.7162339514978601
+        "x": 3.735011747146812,
+        "y": 0.6906744122241069
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "end of test drive forward path"
+      "linkedName": "right trench blue"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 5.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 2.0,
+    "rotation": 178.56436448711722
   },
   "reversed": false,
-  "folder": "Test Paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 178.6628180573794
   },
   "useDefaultConstraints": true
 }

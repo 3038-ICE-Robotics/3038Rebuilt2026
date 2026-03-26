@@ -41,8 +41,8 @@ public final class Constants {
   public static final double MetersToFeet = 3.28084;
 
   public static class OperatorConstants {
-    public static final int LDriverControllerPort = 2;
-    public static final int RDriverControllerPort = 3;
+    public static final int LDriverControllerPort = 0;
+    public static final int RDriverControllerPort = 1;
   }
 
   public static class DigitalChannels {
@@ -120,6 +120,7 @@ public final class Constants {
     public static final int OutTakeToGround = 3;
     public static final int RightClimbRetract = 4;
     public static final int RightClimbExtend = 5;
+    public static final int ResetGyro = 7;
 
   }
 

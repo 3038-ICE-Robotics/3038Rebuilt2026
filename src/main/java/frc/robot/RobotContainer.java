@@ -84,17 +84,17 @@ public class RobotContainer {
    */
   public RobotContainer() {
     if (DriverStation.getAlliance().get() == Alliance.Red) {
-      Constants.DriveTrain.DriveOdometryOrigin = new Pose2d(16,7.5, new Rotation2d());
+      Constants.DriveTrain.DriveOdometryOrigin = new Pose2d(16, 7.5, new Rotation2d());
     } else {
-       Constants.DriveTrain.DriveOdometryOrigin = new Pose2d(0,0, new Rotation2d());
+      Constants.DriveTrain.DriveOdometryOrigin = new Pose2d(0, 0, new Rotation2d());
     }
 
     lJoystick = new Joystick(Constants.OperatorConstants.LDriverControllerPort);
     rJoystick = new Joystick(Constants.OperatorConstants.RDriverControllerPort);
     // Drive controls
-    ControllerSidewaysAxisSupplier = () -> modifyAxis(-lJoystick.getX(), 0.05);
-    ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0.05);
-    ControllerZAxisSupplier = () -> modifyAxis(-rJoystick.getX(), 0.05);
+    ControllerSidewaysAxisSupplier = () -> modifyAxis(-lJoystick.getX(), 0.075);
+    ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0.075);
+    ControllerZAxisSupplier = () -> modifyAxis(-rJoystick.getX(), 0.075);
     // set stuff
     commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
     commandJoystickR = new CommandJoystick(Constants.OperatorConstants.RDriverControllerPort);
@@ -111,7 +111,7 @@ public class RobotContainer {
     shooter.distanceControl = () -> {
       return ((lJoystick.getZ() + 1) / 2) * 185 + 40;
     };
-    fullCommands = new SystemCommands(intake, transfer, shooter, rear);
+    fullCommands = new SystemCommands(intake, transfer, shooter, rear, drivetrain);
 
     // Configure Auto's
     // configureNamedCommands();
@@ -122,7 +122,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("climb extend", climb.extend);
     NamedCommands.registerCommand("climb retract", climb.retract);
     NamedCommands.registerCommand("outtake", fullCommands.outtakeBall);
-
 
     configureAutoBuilder();
     // NamedCommands.registerCommand("flip out", new
@@ -172,7 +171,7 @@ public class RobotContainer {
           drivetrain::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
           drivetrain::getChassisSpeeds,
           (speeds) -> {
-            //TODO: remove this speed adjustment
+            // TODO: remove this speed adjustment
             drivetrain.drive(speeds);
           },
           new PPHolonomicDriveController(
@@ -256,6 +255,8 @@ public class RobotContainer {
     commandJoystickL.button(Constants.LeftButtonIDs.RearIntake)
         .onTrue(fullCommands.rearIntake)
         .onFalse(new InstantCommand(fullCommands.rearIntake::cancel));
+    commandJoystickR.button(Constants.RightButtonIDs.ResetGyro)
+        .onTrue(fullCommands.resetGyro);
     // .onTrue(new IntakeCommand(intake))
     // .onFalse(new StopIntakeCommand(intake));
   }

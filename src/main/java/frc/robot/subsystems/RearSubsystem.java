@@ -5,6 +5,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -18,8 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class RearSubsystem extends SubsystemBase {
-    private SparkFlex rearLeft;
-    private SparkFlex rearRight;
+    private SparkMax rearLeft;
+    private SparkMax rearRight;
     private SparkFlex rearIntake;
 
     private SparkBaseConfig configL;
@@ -41,8 +42,8 @@ public class RearSubsystem extends SubsystemBase {
     private AbsoluteEncoder rearLeftEncoder;
 
     public RearSubsystem() {
-        rearLeft = new SparkFlex(Constants.MotorIDs.RearLeft, MotorType.kBrushless);
-        rearRight = new SparkFlex(Constants.MotorIDs.RearRight, MotorType.kBrushless);
+        rearLeft = new SparkMax(Constants.MotorIDs.RearLeft, MotorType.kBrushless);
+        rearRight = new SparkMax(Constants.MotorIDs.RearRight, MotorType.kBrushless);
         rearIntake = new SparkFlex(Constants.MotorIDs.RearIntake, MotorType.kBrushless);
         rearRightEncoder = rearRight.getAbsoluteEncoder();
         rearLeftEncoder = rearLeft.getAbsoluteEncoder();

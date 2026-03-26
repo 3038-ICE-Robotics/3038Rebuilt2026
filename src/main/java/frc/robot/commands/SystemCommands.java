@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.RearSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -28,9 +29,11 @@ public class SystemCommands {
     private Command transferToShooter;
     private Command rollOverIntake;
     private Command rollOverOuttake;
+    public Command resetGyro;
+    
 
     public SystemCommands(IntakeSubsystem intake, TransferSubsystem transfer, ShooterSubsystem shooter,
-            RearSubsystem rear) {
+            RearSubsystem rear, DriveSubsystem drive) {
         // Takes in balls to use later.
         rollOverIntake = new FunctionalCommand(
                 shooter::intake,
@@ -156,6 +159,6 @@ public class SystemCommands {
                 },
                 () -> false,
                 rear);
+                resetGyro = new InstantCommand(drive::zeroGyroscope);
     }
-
 }

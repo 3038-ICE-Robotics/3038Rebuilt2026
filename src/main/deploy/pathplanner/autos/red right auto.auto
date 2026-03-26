@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "blue left to trench"
+            "pathName": "red right to trench"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "blue ball sweep left"
+            "pathName": "red right claw"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "blue left trench to fire"
+            "pathName": "red right trench to fire"
           }
         }
       ]

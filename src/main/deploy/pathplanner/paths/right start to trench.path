@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5936519258202564,
-        "y": 7.0
+        "x": 12.547329545454545,
+        "y": 0.6543636363636369
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.593651925820255,
-        "y": 7.0
+        "x": 12.29812837366614,
+        "y": 0.6343942603271703
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "red left start"
     },
     {
       "anchor": {
-        "x": 16.072011412268186,
-        "y": 7.5996005706134095
+        "x": 12.542734939759034,
+        "y": 0.6543636363636369
       },
       "prevControl": {
-        "x": 15.072011412268186,
-        "y": 7.5996005706134095
+        "x": 13.097497785256607,
+        "y": 0.6345264280185292
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "red left trench"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 5.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 2.0,
+    "rotation": -1.116765588276126
   },
   "reversed": false,
-  "folder": "Red Alliance",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.2071468710829543
   },
   "useDefaultConstraints": true
 }
