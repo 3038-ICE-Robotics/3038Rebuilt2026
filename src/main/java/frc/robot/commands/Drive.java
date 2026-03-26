@@ -68,6 +68,9 @@ public class Drive extends Command {
     double distancefromBoundary = Math.abs(drivetrain.getPose().getX() - Constants.Field.BlueBoundary);
     double boundarySpeedModifier = (distancefromBoundary <= 40) ? 0.5 : 1;
     double modifiedSpeed = Constants.DriveTrain.MaxVelocityMPS * boundarySpeedModifier;
+    double x = translationXSupplier.getAsDouble();
+    double y = translationYSupplier.getAsDouble();
+    double r = rotationSupplier.getAsDouble();
     if (robotCentricMode.getAsBoolean()) {
       drivetrain.drive(
           new ChassisSpeeds(
@@ -80,21 +83,22 @@ public class Drive extends Command {
     } else {
       drivetrain.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
-              translationXSupplier.getAsDouble()
+              x
                   * (modifiedSpeed)
                   * invert,
-              translationYSupplier.getAsDouble()
+              y
                   * (modifiedSpeed)
                   * invert,
-              rotationSupplier.getAsDouble()
+              r
                   * Constants.DriveTrain.MaxAngularVelocityRadiansPS,
               drivetrain.getPose().getRotation()));
     }
 
     SmartDashboard.putBoolean("Inputs/Robot Centric", robotCentricMode.getAsBoolean());
-    SmartDashboard.putNumber("Inputs/x", translationXSupplier.getAsDouble());
-    SmartDashboard.putNumber("Inputs/y", translationYSupplier.getAsDouble());
-    SmartDashboard.putNumber("Inputs/z", rotationSupplier.getAsDouble());
+    SmartDashboard.putNumber("Inputs/x", x);
+    SmartDashboard.putNumber("Inputs/y", y);
+    SmartDashboard.putNumber("Inputs/z", r);
+    SmartDashboard.putNumber("Inputs/Modifier", modifiedSpeed);
   }
 
   @Override

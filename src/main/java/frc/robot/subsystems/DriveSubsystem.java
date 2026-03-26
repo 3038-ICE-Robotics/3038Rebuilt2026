@@ -143,7 +143,6 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
         odometer = new SwerveDrivePoseEstimator(
                 kinematics, getGyroscopeRotation(), getModulePositions(), Constants.DriveTrain.DriveOdometryOrigin);
         odometer.setVisionMeasurementStdDevs(VecBuilder.fill(0.5, 0.5, 99999999));
-        
 
         SmartDashboard.putData("Swerve Drive", new Sendable() {
             @Override
@@ -351,10 +350,11 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
                 desiredStates, Constants.DriveTrain.MaxVelocityMPS);
         for (int i = 0; i < 4; i++) {
             setModule(i, desiredStates[i]);
-            // SmartDashboard.putNumber("Inputs/Desaturated" + Constants.DriveTrain.MotorKeys[i],
-            //         desiredStates[i].speedMetersPerSecond);
+            // SmartDashboard.putNumber("Inputs/Desaturated" +
+            // Constants.DriveTrain.MotorKeys[i],
+            // desiredStates[i].speedMetersPerSecond);
             // SmartDashboard.putNumber("Inputs/Angle" + Constants.DriveTrain.MotorKeys[i],
-            //         desiredStates[i].angle.getDegrees());
+            // desiredStates[i].angle.getDegrees());
         }
     }
 
@@ -382,7 +382,11 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
      * @param chassisSpeeds the desired speed and direction
      */
     public void drive(ChassisSpeeds chassisSpeeds) {
-        if (Preferences.getBoolean("AntiTipActive", true)) {
+        SmartDashboard.putNumber("CS/X", chassisSpeeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("CS/Y", chassisSpeeds.vyMetersPerSecond);
+        SmartDashboard.putNumber("CS/R", chassisSpeeds.omegaRadiansPerSecond);
+
+        if (Preferences.getBoolean("AntiTipActive", false)) {
             if (getPigeonRoll() > 3) {
                 chassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond
                         + (getPigeonRoll() / 10);
@@ -460,7 +464,6 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
                 0,
                 0,
                 0);
-        
 
         LimelightHelpers.SetRobotOrientation(
 
@@ -472,9 +475,10 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
                 0,
                 0);
 
-        LimelightHelpers.PoseEstimate p1 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Limelight.LimelightOneName);
-        LimelightHelpers.PoseEstimate p2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Limelight.LimelightOneName);
-
+        LimelightHelpers.PoseEstimate p1 = LimelightHelpers
+                .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Limelight.LimelightOneName);
+        LimelightHelpers.PoseEstimate p2 = LimelightHelpers
+                .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.Limelight.LimelightOneName);
 
         Pair<Pose2d, LimelightInputs> estimate = limelight.getTrustedPose();
         if (estimate != null) {
@@ -492,9 +496,9 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
                 // RobotState.getInstance().LimelightsUpdated = true;
                 // } else {
                 // RobotState.getInstance().LimelightsUpdated = false;
-            }  
+            }
         }
-       
+
     }
 
     /**
@@ -675,9 +679,10 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
 
         m_field.setRobotPose(odometer.getEstimatedPosition());
 
-        SmartDashboard.putNumberArray("Pose: ", new double[]{odometer.getEstimatedPosition().getX(), odometer.getEstimatedPosition().getY()});
+        SmartDashboard.putNumberArray("Pose: ",
+                new double[] { odometer.getEstimatedPosition().getX(), odometer.getEstimatedPosition().getY() });
 
-       // RobotState.getInstance().odometerOrientation =
+        // RobotState.getInstance().odometerOrientation =
         // getOdometryRotation().getDegrees();
         // updates logging for all drive motors on the swerve modules
 
@@ -733,17 +738,20 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
 
         double distanceToHub2D = StateOfRobot.distanceBetweenTargetAnd(robotPosition);
         // we need to add here a way to calculate the length of the ball's flight path
-        double tof = distanceToHub2D/((Math.cos(65 * Math.PI/180))/(StateOfRobot.getSpeedFromDistance(distanceToHub2D)/6.111));
+        double tof = distanceToHub2D
+                / ((Math.cos(65 * Math.PI / 180)) / (StateOfRobot.getSpeedFromDistance(distanceToHub2D) / 6.111));
         double currentXSpeed = this.getChassisSpeeds().vxMetersPerSecond;
         double currentYSpeed = this.getChassisSpeeds().vyMetersPerSecond;
-        Translation2d targetOffset = new Translation2d(currentXSpeed*tof, currentYSpeed*tof);
+        Translation2d targetOffset = new Translation2d(currentXSpeed * tof, currentYSpeed * tof);
         Translation2d target = Constants.Field.BlueHub;
-        
+
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() != Alliance.Blue) {
             target = Constants.Field.RedHub;
         }
         // target.minus(targetOffset);
-        return Rotation2d.fromRadians(Math.atan2(target.getY() - robotPosition.getY(), target.getX() - robotPosition.getX())).rotateBy(Rotation2d.k180deg);
+        return Rotation2d
+                .fromRadians(Math.atan2(target.getY() - robotPosition.getY(), target.getX() - robotPosition.getX()))
+                .rotateBy(Rotation2d.k180deg);
     }
 
     public static double getDistanceToHub() {
