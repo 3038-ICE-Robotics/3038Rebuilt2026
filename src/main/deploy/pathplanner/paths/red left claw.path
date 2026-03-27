@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 10.532036144578313,
-        "y": 0.27586746987951755
+        "y": 0.2758674698795177
       },
       "isLocked": false,
       "linkedName": "red left trench"
@@ -36,8 +36,8 @@
         "y": 0.6543636363636369
       },
       "prevControl": {
-        "x": 8.794530120481927,
-        "y": 0.12287951807229036
+        "x": 8.541711840228244,
+        "y": -0.124778887303851
       },
       "nextControl": null,
       "isLocked": false,

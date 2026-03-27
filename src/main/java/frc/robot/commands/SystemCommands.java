@@ -67,7 +67,16 @@ public class SystemCommands {
         }),
                 // ---------------------------------------------
                 rollOverIntake,
-                rear.MaintainExtend);
+                rear.MaintainExtend, 
+                new FunctionalCommand(
+                rear::startIntake,
+                () -> {
+                },
+                (interrupted) -> {
+                    rear.stopIntake();
+                },
+                () -> false,
+                rear));
 
         // spits out balls from inside the robot.
         outtakeBall = new ParallelCommandGroup(new FunctionalCommand(() -> {

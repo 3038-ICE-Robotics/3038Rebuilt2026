@@ -155,17 +155,21 @@ public class LedSubsystem extends SubsystemBase {
                 }
                 if(isHubActive() == false){
                     time.start();
-                    if(time.get() == 20){
+                    if(time.get() > 20){
                         currentStatusMode = LEDStatusMode.ActiveShift;
-                        time.restart();
+                        if(time.get() == 2){
+                            time.restart();
+                        }
                     }
                 }
                 if(isHubActive() == true){
                     time.start();  
                     currentStatusMode = LEDStatusMode.HubActive;
-                    if(time.get() == 20){
+                    if(time.get() > 20){
                         currentStatusMode = LEDStatusMode.CountdownShift;
-                        time.restart();
+                        if(time.get() == 25){
+                            time.restart();
+                        }
                     }
                 } 
             }

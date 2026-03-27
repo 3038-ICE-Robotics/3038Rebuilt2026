@@ -5,21 +5,59 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "flip out"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "red right to trench"
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "red right claw"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "red right claw"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "red right trench to fire"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 12.0
+                }
+              }
+            ]
           }
         }
       ]

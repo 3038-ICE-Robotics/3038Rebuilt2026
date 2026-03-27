@@ -252,9 +252,9 @@ public class RobotContainer {
     commandJoystickL.button(Constants.LeftButtonIDs.RearRetract)
         .onTrue(fullCommands.rearRetract)
         .onFalse(new InstantCommand(fullCommands.rearRetract::cancel));
-    commandJoystickL.button(Constants.LeftButtonIDs.RearIntake)
-        .onTrue(fullCommands.rearIntake)
-        .onFalse(new InstantCommand(fullCommands.rearIntake::cancel));
+    //commandJoystickL.button(Constants.LeftButtonIDs.RearIntake)
+       // .onTrue(fullCommands.rearIntake)
+       // .onFalse(new InstantCommand(fullCommands.rearIntake::cancel));
     commandJoystickR.button(Constants.RightButtonIDs.ResetGyro)
         .onTrue(fullCommands.resetGyro);
     // .onTrue(new IntakeCommand(intake))
