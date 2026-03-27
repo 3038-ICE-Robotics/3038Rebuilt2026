@@ -54,7 +54,7 @@ public final class Constants {
 
   public static class Climb {
     public static final double ExtendSpeed = 0.4;
-    public static final double RetractSpeed = 0.15;
+    public static final double RetractSpeed = 0.30;
     public static final double ExtendHeight = 90;
   }
 
@@ -74,8 +74,8 @@ public final class Constants {
     };
     public static double[] shooterSpeeds = new double[] { // TODO measure (RPM)
         1350,
-        2710,
-        3060,
+        2710 + 200,
+        3060 + 200,
         3450 + 200,
         3850 + 200,
         4300 + 200
@@ -169,7 +169,7 @@ public final class Constants {
     public static final double RotationTolerance = 0;
     public static final String[] MotorKeys = new String[] { "FL", "FR", "BL", "BR" };
     public static Pose2d DriveOdometryOrigin = new Pose2d();
-    public static final double MaxVelocityMPS = 5; // measure actual velocity
+    public static final double MaxVelocityMPS = 6; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
         / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure
     public static final double DriveDeadbandMPS = 0.05; // measure

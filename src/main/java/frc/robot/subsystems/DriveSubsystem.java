@@ -315,12 +315,7 @@ public class DriveSubsystem extends SubsystemBase implements ITunable {
      * Sets the gyroscope angle to zero.
      */
     public void zeroGyroscope() {
-        if (DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == Alliance.Red) {
-            setGyroscope(180);
-        } else {
-            setGyroscope(0);
-        }
+        setGyroscope(0);
     }
 
     // This is the set section that sends commands to the modules
