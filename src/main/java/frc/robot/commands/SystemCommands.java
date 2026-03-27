@@ -146,7 +146,7 @@ public class SystemCommands {
 
         shootBallFromHopper = new ParallelCommandGroup(shooting,
                 new SequentialCommandGroup(
-                        new ParallelRaceGroup(new WaitCommand(4),
+                        new ParallelRaceGroup(new WaitCommand(1.5),
                                 new FunctionalCommand(
                                         transfer::agitate,
                                         () -> {

@@ -73,9 +73,9 @@ public final class Constants {
         240, 
     };
     public static double[] shooterSpeeds = new double[] { // TODO measure (RPM)
-        1350,
-        2710 + 200,
-        3060 + 200,
+        1350 + 500,
+        2710 + 250,
+        3060 + 300,
         3450 + 200,
         3850 + 200,
         4300 + 200
