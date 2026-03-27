@@ -125,7 +125,7 @@ public final class Constants {
   }
 
   public static class MotorIDs {
-    // Order of drive motors - BL, BR, FL, FR
+    // Order of drive motors - FL, FR, BL, BR
     public static final int[] DriveIDs = new int[] { 8, 1 , 2, 3 }; 
     public static final int[] SteerIDs = new int[] { 4, 5, 6, 7 };
 
@@ -149,11 +149,12 @@ public final class Constants {
   public static class DriveTrain {
     public static final double SteerGearRatio = (94.0 / 18.0) * 2.89 * 3.61;
     public static final double DriveGearRatio = 7.5;
+    // Order of drive motors - FL, FR, BL, BR
     public static final double[] ModuleOffsets = new double[] {
         -0.269,
         -0.438,
         -0.766,
-        -0.959
+        -.607//-0.959
     };
     public static final double WheelDiameter = (4.0 / 12.0) / MetersToFeet;
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;

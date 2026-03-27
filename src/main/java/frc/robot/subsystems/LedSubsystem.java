@@ -139,40 +139,41 @@ public class LedSubsystem extends SubsystemBase {
                 if(alliance.get() == Alliance.Blue){
                     currentStatusMode = LEDStatusMode.BlueAlliance;
                 }
-            }
-            if(DriverStation.isTeleopEnabled()){
+                if(DriverStation.isTeleopEnabled()){
                 
-                if(matchTime < 30){
-                    time.start();
-                    SmartDashboard.putBoolean("CountdownEndGame", matchTime < 30);
-                    currentStatusMode = LEDStatusMode.CountdownEndGame;
-                    if(time.get() == 0){
-                        time.restart();
-                    }
-                }
-                if(isHubActive() == false){
-                    time.start();
-                    if(time.get() > 20){
-                        SmartDashboard.putBoolean("5 sec before Active", time.get()==20 && isHubActive()== false);
-                        currentStatusMode = LEDStatusMode.ActiveShift;
-                        if(time.get() == 2){
+                    if(matchTime < 30){
+                        time.start();
+                        SmartDashboard.putBoolean("CountdownEndGame", matchTime < 30);
+                        currentStatusMode = LEDStatusMode.CountdownEndGame;
+                        if(time.get() == 0){
                             time.restart();
                         }
                     }
-                }
-                if(isHubActive() == true){
-                    time.start();  
-                    SmartDashboard.putBoolean("Active Hub", isHubActive() == true);
-                    currentStatusMode = LEDStatusMode.HubActive;
-                    if(time.get() > 20){
-                        SmartDashboard.putBoolean("5 sec end to Active", time.get()==20 && isHubActive() == true);
-                        currentStatusMode = LEDStatusMode.CountdownShift;
-                        if(time.get() == 25){
-                            time.restart();
-                        }
+                    if(isHubActive() == false){
+                        time.start();
+                        if(time.get() > 20){
+                            SmartDashboard.putBoolean("5 sec before Active", time.get()==20 && isHubActive()== false);
+                            currentStatusMode = LEDStatusMode.ActiveShift;
+                            if(time.get() == 2){
+                                time.restart();
+                            }
+                         }
                     }
-                } 
+                    if(isHubActive() == true){
+                        time.start();  
+                        SmartDashboard.putBoolean("Active Hub", isHubActive() == true);
+                        currentStatusMode = LEDStatusMode.HubActive;
+                        if(time.get() > 20){
+                            SmartDashboard.putBoolean("5 sec end to Active", time.get()==20 && isHubActive() == true);
+                            currentStatusMode = LEDStatusMode.CountdownShift;
+                            if(time.get() == 25){
+                                time.restart();
+                            }
+                        }
+                    } 
+                }
             }
+            
         }
         int code = currentStatusMode.code;
 
