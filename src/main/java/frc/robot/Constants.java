@@ -41,8 +41,8 @@ public final class Constants {
   public static final double MetersToFeet = 3.28084;
 
   public static class OperatorConstants {
-    public static final int LDriverControllerPort = 2;
-    public static final int RDriverControllerPort = 3;
+    public static final int LDriverControllerPort = 0;
+    public static final int RDriverControllerPort = 1;
   }
 
   public static class DigitalChannels {
@@ -150,10 +150,10 @@ public final class Constants {
     public static final double SteerGearRatio = (94.0 / 18.0) * 2.89 * 3.61;
     public static final double DriveGearRatio = 7.5;
     public static final double[] ModuleOffsets = new double[] {
-        -0.269,
-        -0.438,
-        -0.766,
-        -0.959
+        -0.101, //FL
+        -0.114, //FR
+        -0.781, //BL
+        -0.964 //BR
     };
     public static final double WheelDiameter = (4.0 / 12.0) / MetersToFeet;
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;
