@@ -3,55 +3,44 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.064935805991441,
-        "y": 7.405520684736091
+        "x": 12.539757489300998,
+        "y": 0.6127246790299581
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8757510795015198,
-        "y": 7.4072484125169336
+        "x": 11.025934379457917,
+        "y": 0.6127246790299583
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.227646219686162,
-        "y": 7.405520684736091
+        "x": 8.774607703281026,
+        "y": 1.2337803138373749
       },
       "prevControl": {
-        "x": 3.0954704078431337,
-        "y": 7.4675400853905485
-      },
-      "nextControl": {
-        "x": 1.9782821975035452,
-        "y": 7.38769978574341
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.162952924393723,
-        "y": 5.814065620542083
-      },
-      "prevControl": {
-        "x": 2.2612751086342033,
-        "y": 6.043919374233819
+        "x": 8.709914407988586,
+        "y": 0.5350927246790309
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Test Endpoint Finished Shooting"
+      "linkedName": "Red Bottom Start"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -179.6188807019788
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 2.0,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 2.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -72,13 +61,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 143.13010235415607
+    "rotation": -88.31531568210347
   },
   "reversed": false,
-  "folder": "Blue Alliance",
+  "folder": "Red Alliance",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

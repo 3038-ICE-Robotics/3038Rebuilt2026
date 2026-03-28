@@ -11,13 +11,19 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Red Top Start"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "intake test path"
+                  "pathName": "Red Pickup Top"
                 }
               },
               {
@@ -28,36 +34,11 @@
               }
             ]
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "return to launch"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "shoot"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
-              }
-            ]
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Red Alliance",
   "choreoAuto": false
 }

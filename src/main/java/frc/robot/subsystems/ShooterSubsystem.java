@@ -40,14 +40,18 @@ public class ShooterSubsystem extends SubsystemBase {
     private ShooterModes shooterSelect;
     public Supplier<Double> speedControl;
 
+
     private PIDController shooterPID;
+    private double kf = 0;
+
     private LinearFilter filter = LinearFilter.singlePoleIIR(0.05, 0.02);
     public Supplier<Double> distanceControl;
 
     public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
         shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, MotorType.kBrushless);
         shooterFollow = new SparkFlex(Constants.MotorIDs.ShooterFollow, MotorType.kBrushless);
-        shooterPID = new PIDController(0.0045, 0, 0.001);
+        shooterPID = new PIDController(0.4, 0, 0);
+        
         configP = new SparkFlexConfig();
         configP.closedLoop.pid(0.1, 0, 0.001, ClosedLoopSlot.kSlot0);
         configF = new SparkFlexConfig();
@@ -65,7 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setMotorSpeed(double speed) {
-        double shooterPIDcalculated = shooterPID.calculate(filter.calculate(getCurrentSpeed()) - speed);
+        double shooterPIDcalculated = shooterPID.calculate(filter.calculate(getCurrentSpeed()) - speed) + kf;
         // VelocityControl.setSetpoint(speed, ControlType.kVelocity,
         // ClosedLoopSlot.kSlot0, feedforward.calculate(speed));
 

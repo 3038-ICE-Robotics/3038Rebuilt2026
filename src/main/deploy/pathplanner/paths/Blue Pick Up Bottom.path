@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5192727272725446,
-        "y": 0.674977272730996
+        "x": 7.752453637660485,
+        "y": 0.9491298145506415
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.8918762301867882,
-        "y": 0.8404745644142818
+        "x": 7.7653922967189715,
+        "y": 1.6090014265335242
       },
       "isLocked": false,
-      "linkedName": "Human player station"
+      "linkedName": "Bottom Blue Start"
     },
     {
       "anchor": {
-        "x": 0.9624659090909093,
-        "y": 1.0254090909068418
+        "x": 7.752453637660485,
+        "y": 3.2780884450784593
       },
       "prevControl": {
-        "x": 0.81018960386208,
-        "y": 0.82713673563295
+        "x": 7.7653922967189715,
+        "y": 2.4629529243937234
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "blue shoot far right"
+      "linkedName": "Bottom Pickup Blue "
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 37.116860683055314
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Blue Alliance",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

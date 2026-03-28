@@ -84,7 +84,7 @@ public final class Constants {
 
   public static class MotorSpeeds {
     public static final double IntakeSpeed = 0.28;
-    public static final double RearIntakeSpeed = -0.60;
+    public static final double RearIntakeSpeed = -0.85;
     public static final double RearSpeed = 0.28;
     
   }
@@ -159,10 +159,10 @@ public final class Constants {
     public static final double DrivetrainWheelbase = (20.5 / 12.0) / MetersToFeet;
     public static final double RotationsToMeters = (Math.PI * WheelDiameter) / DriveGearRatio;
     public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet) / RotationsToMeters;
-    public static final double RotationkP = 0;
+    public static final double RotationkP = 3;
     public static final double RotationkI = 0;
     public static final double RotationkD = 0;
-    public static final double TranslationkP = 0;
+    public static final double TranslationkP = 1;
     public static final double TranslationkI = 0;
     public static final double TranslationkD = 0;
     public static final double RotationTolerance = 0;

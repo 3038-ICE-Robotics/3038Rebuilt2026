@@ -13,50 +13,32 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Testing Blue Path"
+            "pathName": "Red Bottom Start"
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 6.0
+                  "pathName": "Red Pickup Bottom"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "intake"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "flip out"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "New Path"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Blue Alliance",
+  "folder": "Red Alliance",
   "choreoAuto": false
 }

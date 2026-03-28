@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.162952924393723,
-        "y": 5.814065620542083
+        "x": 8.774607703281026,
+        "y": 1.2337803138373749
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4734807417974314,
-        "y": 7.043238231098431
+        "x": 8.761669044222538,
+        "y": 2.0100998573466473
       },
       "isLocked": false,
-      "linkedName": "Test Endpoint Finished Shooting"
+      "linkedName": "Red Bottom Start"
     },
     {
       "anchor": {
-        "x": 3.418002853067047,
-        "y": 7.53490727532097
+        "x": 8.774607703281026,
+        "y": 3.3427817403708993
       },
       "prevControl": {
-        "x": 2.4346647646219686,
-        "y": 7.53490727532097
-      },
-      "nextControl": {
-        "x": 4.401340941512126,
-        "y": 7.53490727532097
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.713637660485022,
-        "y": 6.745649072753209
-      },
-      "prevControl": {
-        "x": 6.963195435092723,
-        "y": 7.7289871611982885
+        "x": 8.813423680456491,
+        "y": 2.501768901569187
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,7 +33,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 2.0,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -60,18 +44,7 @@
       }
     }
   ],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 0.4,
-        "y": 7.5
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 1.0317353139770349,
-      "maxWaypointRelativePos": 1.5286968264686034,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
@@ -83,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Blue Alliance",
+  "folder": "Red Alliance",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 143.13010235415607
+    "rotation": -88.31531568210347
   },
   "useDefaultConstraints": true
 }
