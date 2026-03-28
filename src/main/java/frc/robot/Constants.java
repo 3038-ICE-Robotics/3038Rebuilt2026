@@ -154,7 +154,7 @@ public final class Constants {
         -0.269,
         -0.438,
         -0.766,
-        -.607//-0.959
+        -0.632//-0.959
     };
     public static final double WheelDiameter = (4.0 / 12.0) / MetersToFeet;
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;

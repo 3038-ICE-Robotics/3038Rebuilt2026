@@ -47,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(Supplier<Pose2d> robotPosition) {
         shooterPrime = new SparkFlex(Constants.MotorIDs.ShooterPrime, MotorType.kBrushless);
         shooterFollow = new SparkFlex(Constants.MotorIDs.ShooterFollow, MotorType.kBrushless);
-        shooterPID = new PIDController(0.007, 0, 0.001);
+        shooterPID = new PIDController(0.02, 0, 0.001);
         configP = new SparkFlexConfig();
         configP.closedLoop.pid(0.1, 0, 0.001, ClosedLoopSlot.kSlot0);
         configF = new SparkFlexConfig();
@@ -125,7 +125,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 targetSpeed = StateOfRobot.getSpeedFromDistance(distanceFromTarget);
                 break;
             case IDLE:
-                targetSpeed = 100;
+                targetSpeed = 2000;
                 break;
             case STOP:
                 targetSpeed = 0;
