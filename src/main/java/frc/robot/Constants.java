@@ -54,7 +54,7 @@ public final class Constants {
 
   public static class Climb {
     public static final double ExtendSpeed = 0.4;
-    public static final double RetractSpeed = 0.15;
+    public static final double RetractSpeed = 0.3;
     public static final double ExtendHeight = 90;
   }
 
@@ -124,7 +124,7 @@ public final class Constants {
   }
 
   public static class MotorIDs {
-    // Order of drive motors - BL, BR, FL, FR
+    // Order of drive motors - FL, FR, BL, BR
     public static final int[] DriveIDs = new int[] { 8, 1 , 2, 3 }; 
     public static final int[] SteerIDs = new int[] { 4, 5, 6, 7 };
 
@@ -145,6 +145,7 @@ public final class Constants {
     public static final double CurrentThreshhold = 40;
   }
 
+  //add 0.5 if wheels are driving backwards
   public static class DriveTrain {
     public static final double SteerGearRatio = (94.0 / 18.0) * 2.89 * 3.61;
     public static final double DriveGearRatio = 7.5;
@@ -158,7 +159,7 @@ public final class Constants {
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;
     public static final double DrivetrainWheelbase = (20.5 / 12.0) / MetersToFeet;
     public static final double RotationsToMeters = (Math.PI * WheelDiameter) / DriveGearRatio;
-    public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet) / RotationsToMeters;
+    public static final double MaxVelocityRPSEmpirical = (10 * MetersToFeet) / RotationsToMeters;+
     public static final double RotationkP = 3;
     public static final double RotationkI = 0;
     public static final double RotationkD = 0;

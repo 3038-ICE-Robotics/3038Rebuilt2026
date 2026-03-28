@@ -116,7 +116,7 @@ public class RobotContainer {
     // Configure Auto's
     // configureNamedCommands();
     NamedCommands.registerCommand("shoot", fullCommands.shootBallFromHopper);
-    NamedCommands.registerCommand("intake", new ParallelCommandGroup(fullCommands.intakeBall, fullCommands.rearIntake));
+    NamedCommands.registerCommand("intake", fullCommands.intakeBall);
     NamedCommands.registerCommand("filp out", fullCommands.rearExtend);
     NamedCommands.registerCommand("filp in", fullCommands.rearRetract);
     NamedCommands.registerCommand("climb extend", climb.extend);
@@ -252,9 +252,6 @@ public class RobotContainer {
     commandJoystickL.button(Constants.LeftButtonIDs.RearRetract)
         .onTrue(fullCommands.rearRetract)
         .onFalse(new InstantCommand(fullCommands.rearRetract::cancel));
-    commandJoystickL.button(Constants.LeftButtonIDs.RearIntake)
-        .onTrue(fullCommands.rearIntake)
-        .onFalse(new InstantCommand(fullCommands.rearIntake::cancel));
     // .onTrue(new IntakeCommand(intake))
     // .onFalse(new StopIntakeCommand(intake));
   }

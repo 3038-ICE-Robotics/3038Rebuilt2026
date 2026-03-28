@@ -22,7 +22,7 @@ public class SystemCommands {
     public Command shootBallFromHopper;
     public Command rearExtend;
     public Command rearRetract;
-    public Command rearIntake;
+    private Command rearIntake;
     public Command agitate;
     private Command shooting;
     private Command transferToShooter;
@@ -52,6 +52,15 @@ public class SystemCommands {
                 () -> false,
                 shooter);
         // -------------------------------------------------------------------------------------------
+        rearIntake = new FunctionalCommand(
+                rear::startIntake,
+                () -> {
+                },
+                (interrupted) -> {
+                    rear.stopIntake();
+                },
+                () -> false,
+                rear);
         intakeBall = new ParallelCommandGroup(new FunctionalCommand(() -> {
             intake.startIntake();
             transfer.startIntake();
@@ -64,7 +73,8 @@ public class SystemCommands {
         }, intake, transfer),
                 // ---------------------------------------------
                 rollOverIntake,
-                rear.MaintainExtend);
+                rear.MaintainExtend,
+                rearIntake);
 
         // spits out balls from inside the robot.
         outtakeBall = new ParallelCommandGroup(new FunctionalCommand(() -> {
@@ -147,15 +157,7 @@ public class SystemCommands {
                         new ParallelCommandGroup(transferToShooter, agitate)));
         rearExtend = new ParallelCommandGroup(rear.extendLeft, rear.extendRight);
         rearRetract = new ParallelCommandGroup(rear.retractLeft, rear.retractRight);
-        rearIntake = new FunctionalCommand(
-                rear::startIntake,
-                () -> {
-                },
-                (interrupted) -> {
-                    rear.stopIntake();
-                },
-                () -> false,
-                rear);
+        
     }
 
 }
