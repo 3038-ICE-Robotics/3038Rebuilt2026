@@ -102,6 +102,10 @@ public class RearSubsystem extends SubsystemBase {
         rearIntake.set(Constants.MotorSpeeds.RearIntakeSpeed);
     }
 
+    public void slowAgitate() {
+        rearIntake.set(Constants.MotorSpeeds.RearIntakeSpeed*0.5);
+    }
+
     public void stopIntake() {
         rearIntake.set(0);
     }

@@ -191,7 +191,7 @@ public class SwerveModule implements ITunable {
         if (desiredState.angle == null) {
             DriverStation.reportWarning("Cannot set module angle to null.", true);
         }
-        double steerPose = steerMotor.getEncoder().getPosition();
+        double steerPose = getRotation().getRotations();//steerMotor.getEncoder().getPosition();
         posSwerve = MathUtil
                 .inputModulus(steerPose / Constants.DriveTrain.SteerGearRatio, -.5, .5);
         double inverted = 1;
@@ -209,6 +209,7 @@ public class SwerveModule implements ITunable {
         if (DriverStation.isAutonomous()) {
             desiredDriveSpeed/= 7.5;
         }
+        
         driveControl
                 .setSetpoint(desiredDriveSpeed, ControlType.kVelocity, ClosedLoopSlot.kSlot0,
                         driveFF.calculate(desiredDriveSpeed));

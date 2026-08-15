@@ -150,10 +150,10 @@ public final class Constants {
     public static final double SteerGearRatio = (94.0 / 18.0) * 2.89 * 3.61;
     public static final double DriveGearRatio = 7.5;
     public static final double[] ModuleOffsets = new double[] {
-        -0.101, //FL
-        -0.114, //FR
-        -0.781, //BL
-        -0.964 //BR
+        0.5990417003631592-0.19,//-0.101, //FL
+        0.09751330316066742+0.3,//-0.114, //FR
+        0.59901362657547-0.18,//-0.781, //BL
+        0.9600473642349243-0.41//-0.964 //BR
     };
     public static final double WheelDiameter = (4.0 / 12.0) / MetersToFeet;
     public static final double DrivetrainTrackWidth = (20.5 / 12.0) / MetersToFeet;
@@ -169,7 +169,7 @@ public final class Constants {
     public static final double RotationTolerance = 0;
     public static final String[] MotorKeys = new String[] { "FL", "FR", "BL", "BR" };
     public static Pose2d DriveOdometryOrigin = new Pose2d();
-    public static final double MaxVelocityMPS = 5; // measure actual velocity
+    public static double MaxVelocityMPS = 5; // measure actual velocity
     public static final double MaxAngularVelocityRadiansPS = MaxVelocityMPS
         / Math.hypot(DrivetrainTrackWidth / 2.0, DrivetrainWheelbase / 2.0);; // measure
     public static final double DriveDeadbandMPS = 0.1; // measure

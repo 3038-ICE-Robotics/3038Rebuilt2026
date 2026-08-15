@@ -59,6 +59,7 @@ public class RobotContainer {
   DoubleSupplier ControllerForwardAxisSupplier;
   DoubleSupplier ControllerSidewaysAxisSupplier;
   DoubleSupplier ControllerZAxisSupplier;
+  DoubleSupplier ControllerSpeedSupplier;
   Joystick lJoystick;
   Joystick rJoystick;
   SystemCommands fullCommands;
@@ -95,6 +96,7 @@ public class RobotContainer {
     ControllerSidewaysAxisSupplier = () -> modifyAxis(-lJoystick.getX(), 0.075);
     ControllerForwardAxisSupplier = () -> modifyAxis(-lJoystick.getY(), 0.075);
     ControllerZAxisSupplier = () -> modifyAxis(rJoystick.getX(), 0.075);
+    ControllerSpeedSupplier = () -> (lJoystick.getZ()+1)*.5;
     // set stuff
     commandJoystickL = new CommandJoystick(Constants.OperatorConstants.LDriverControllerPort);
     commandJoystickR = new CommandJoystick(Constants.OperatorConstants.RDriverControllerPort);
@@ -155,10 +157,12 @@ public class RobotContainer {
         () -> false,
         ControllerForwardAxisSupplier,
         ControllerSidewaysAxisSupplier,
+        ControllerSpeedSupplier,
 
         () -> StateOfRobot.isAimAssistOn
             ? StateOfRobot.getAimBotRotation(drivetrain::getDesiredRobotAngle, () -> drivetrain.getPose().getRotation())
-            : ControllerZAxisSupplier.getAsDouble());
+            : ControllerZAxisSupplier.getAsDouble()
+            );
     drivetrain.setDefaultCommand(defaultDriveCommand);
 
   }

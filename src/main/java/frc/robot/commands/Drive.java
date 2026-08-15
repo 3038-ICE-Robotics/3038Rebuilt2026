@@ -18,6 +18,7 @@ public class Drive extends Command {
   private final DoubleSupplier translationXSupplier;
   private final DoubleSupplier translationYSupplier;
   private final DoubleSupplier rotationSupplier;
+  private final DoubleSupplier speedSupplier;
   private int invert=1;
 
   /**
@@ -42,11 +43,13 @@ public class Drive extends Command {
       BooleanSupplier robotCentricMode,
       DoubleSupplier translationXSupplier,
       DoubleSupplier translationYSupplier,
+      DoubleSupplier speedSupplier,
       DoubleSupplier rotationSupplier) {
     this.drivetrain = drivetrainSubsystem;
     this.robotCentricMode = robotCentricMode;
     this.translationXSupplier = translationXSupplier;
     this.translationYSupplier = translationYSupplier;
+    this.speedSupplier = speedSupplier;
     this.rotationSupplier = rotationSupplier;
     addRequirements(drivetrainSubsystem);
   }
@@ -67,7 +70,7 @@ public class Drive extends Command {
     // the robot.
     double distancefromBoundary = Math.abs(drivetrain.getPose().getX() - Constants.Field.BlueBoundary);
     double boundarySpeedModifier = (distancefromBoundary <= 40) ? 0.5 : 1;
-    double modifiedSpeed = Constants.DriveTrain.MaxVelocityMPS * boundarySpeedModifier;
+    double modifiedSpeed = speedSupplier.getAsDouble();//Constants.DriveTrain.MaxVelocityMPS * boundarySpeedModifier;
     if (robotCentricMode.getAsBoolean()) {
       drivetrain.drive(
           new ChassisSpeeds(

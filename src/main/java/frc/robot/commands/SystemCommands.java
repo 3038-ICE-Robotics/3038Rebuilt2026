@@ -107,7 +107,7 @@ public class SystemCommands {
                 shooter);
 
         agitate = new FunctionalCommand(
-                rear::startIntake,
+                rear::slowAgitate,
                 rear::agitate,
                 (interrupted) -> {
                     rear.stop();
@@ -118,7 +118,7 @@ public class SystemCommands {
 
         // picks balls from intake and skips hopper to fire.
         shootBallFromGround = new FunctionalCommand(() -> {
-            rear.startIntake();
+            rear.slowAgitate();
             intake.startIntake();
             transfer.toLauncher();
         }, () -> {

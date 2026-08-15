@@ -126,10 +126,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
         switch (shooterSelect) {
             case FIRING:
-                targetSpeed = StateOfRobot.getSpeedFromDistance(distanceFromTarget);
+                targetSpeed = speedControl.get()*.5;//StateOfRobot.getSpeedFromDistance(distanceFromTarget);
                 break;
             case IDLE:
-                targetSpeed = 100;
+                targetSpeed = 0;
                 break;
             case STOP:
                 targetSpeed = 0;
@@ -139,7 +139,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 break;
         }
         if (DriverStation.isTest() || speedControl.get() > 1600) {
-            targetSpeed = speedControl.get();
+            targetSpeed = speedControl.get()*.5;
         }
         setMotorSpeed(targetSpeed);
         // SmartDashboard.putNumber("Shooter/Accum Error", VelocityControl.getIAccum());
